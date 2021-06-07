@@ -1,0 +1,28 @@
+# This file specifies files that are *not* uploaded to Google Cloud Platform
+# using gcloud. It follows the same syntax as .gitignore, with the addition of
+# "#!include" directives (which insert the entries of the given .gitignore-style
+# file at that point).
+#
+# For more information, run:
+#   $ gcloud topic gcloudignore
+#
+.gcloudignore
+
+.git
+.gitignore
+.browserslistrc
+.editorconfig
+.idea
+
+node_modules/
+src/
+README.md
+app.yaml
+package.json
+tsconfig.app.json
+tsconfig.spec.json
+angular.json
+karma.conf.js
+package-lock.json
+tsconfig.json
+
