@@ -1,0 +1,9 @@
+<div fxLayout="column">
+  <div fxFlex fxLayout="row" fxLayoutAlign="end">
+    <button mat-stroked-button color="primary" (click)="resetZoom()">reset zoom</button>
+  </div>
+  <google-chart #chart [data]="data" [ngStyle]="{'display': chartErrorMsg ? 'none' : ''}"
+                (chartError)="onChartError($event)" (chartReady)="onChartReady(chart, $event)">
+  </google-chart>
+  <div *ngIf="chartErrorMsg" class="empty-list">{{customErrorMsg || chartErrorMsg}}</div>
+</div>
