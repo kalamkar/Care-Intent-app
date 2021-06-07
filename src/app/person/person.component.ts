@@ -20,7 +20,17 @@ export class PersonComponent implements OnInit {
   personId: string | null;
   data: GoogleChartInterface = {
     chartType: 'ScatterChart',
-    options: {},
+    options: {
+      height: 500,
+      series: {
+        0: {targetAxisIndex: 0},
+        1: {targetAxisIndex: 1}
+      },
+      vAxes: {
+        0: {title: 'Glucose mg/dL'},
+        1: {title: 'Steps'}
+      }
+    },
     dataTable: []
   };
 
@@ -48,11 +58,16 @@ export class PersonComponent implements OnInit {
       this.personSubscription.unsubscribe();
     }
     if (this.personId) {
-      this.personSubscription = this.api.getData(this.personId, 'glucose').subscribe((rows: DataPoint[]) => {
+      const names = ['glucose', 'steps'];
+      this.personSubscription = this.api.getData(this.personId, names).subscribe((rows: DataPoint[]) => {
         this.data.dataTable = [];
-        this.data.dataTable.push(['Time', 'Glucose']);
+        this.data.dataTable.push(['Time', 'Glucose', 'Steps']);
         rows.forEach(row => {
-          this.data.dataTable.push([DateTime.fromISO(row.time).toJSDate(), row.number])
+          if (row.name === 'glucose') {
+            this.data.dataTable.push([DateTime.fromISO(row.time).toJSDate(), row.number, null])
+          } else if (row.name === 'steps') {
+            this.data.dataTable.push([DateTime.fromISO(row.time).toJSDate(), null, row.number])
+          }
         });
       });
     }

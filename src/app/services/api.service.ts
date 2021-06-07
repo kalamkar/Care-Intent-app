@@ -39,8 +39,8 @@ export class ApiService {
     console.log(error);
   }
 
-  public getData(source: string, name: string): Observable<Array<any>> {
-    const url = environment.apiUrl + '/data/' + source + '/' + name;
+  public getData(source: string, names: string[]): Observable<Array<any>> {
+    const url = environment.apiUrl + '/data/' + source + '?' + this.encodeQueryData({'name': names});
     return this.get<Array<any>>(url, this.getOptions(false), (data: { rows: Array<any>; }) => data.rows)
   }
 
