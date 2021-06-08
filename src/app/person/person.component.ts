@@ -62,13 +62,21 @@ export class PersonComponent implements OnInit {
       this.personSubscription = this.api.getData(this.personId, names).subscribe((rows: DataPoint[]) => {
         this.data.dataTable = [];
         this.data.dataTable.push(['Time', 'Glucose', 'Steps']);
+        const counts = {'Glucose': 0, 'Steps': 0};
         rows.forEach(row => {
           if (row.name === 'glucose') {
-            this.data.dataTable.push([DateTime.fromISO(row.time).toJSDate(), row.number, null])
+            this.data.dataTable.push([DateTime.fromISO(row.time).toJSDate(), row.number, null]);
+            counts['Glucose'] += 1;
           } else if (row.name === 'steps') {
-            this.data.dataTable.push([DateTime.fromISO(row.time).toJSDate(), null, row.number])
+            this.data.dataTable.push([DateTime.fromISO(row.time).toJSDate(), null, row.number]);
+            counts['Steps'] += 1;
           }
         });
+        if (!counts['Steps']) {
+          this.data.dataTable[1][2] = 0;
+        } else if (!counts['Glucose']) {
+          this.data.dataTable[1][1] = -1;
+        }
       });
     }
   }
