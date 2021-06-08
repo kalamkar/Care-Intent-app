@@ -4,3 +4,10 @@ export interface DataPoint {
   number: number | null
   value: string | null
 }
+
+export interface Message {
+  time: string,
+  status: string,
+  content: string
+  content_type: string
+}

@@ -44,6 +44,10 @@ export class ApiService {
     return this.get<Array<any>>(url, this.getOptions(false), (data: { rows: Array<any>; }) => data.rows)
   }
 
+  public getMessages(source: string): Observable<Array<any>> {
+    const url = environment.apiUrl + '/messages/' + source;
+    return this.get<Array<any>>(url, this.getOptions(false), (data: { rows: Array<any>; }) => data.rows)
+  }
 
   protected get<T>(url: string, options: RequestOptions, mapFxn: any): Observable<T> {
     if (options) {
