@@ -8,6 +8,7 @@ export interface DataPoint {
 export interface Message {
   time: string,
   status: string,
+  tags: string[],
   content: string
   content_type: string
 }

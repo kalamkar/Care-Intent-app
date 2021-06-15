@@ -108,13 +108,20 @@ export class PersonComponent implements OnInit {
           const rowTime = DateTime.fromISO(row.time);
           messages.forEach((message, msgIndex) => {
             const messageTime = DateTime.fromISO(message.time);
-            if (!matchingTimes[msgIndex] || Math.abs(rowTime - messageTime) < Math.abs(matchingTimes[msgIndex] - messageTime)) {
+            if (!matchingTimes[msgIndex]
+                || Math.abs(rowTime - messageTime) < Math.abs(matchingTimes[msgIndex] - messageTime)) {
               matchingTimes[msgIndex] = rowTime;
               indices[msgIndex] = rowIndex;
             }
           });
         });
         messages.forEach((message, index) => {
+          let isFoodMessage = false;
+          const foodTags = ['report.food', 'answer.food'];
+          message.tags.forEach(tag => isFoodMessage = isFoodMessage || foodTags.indexOf(tag) >= 0);
+          if (!isFoodMessage) {
+            return;
+          }
           this.chartData.dataTable[indices[index] + 1][2] = message.content.substr(0, 5) + '...';
           this.chartData.dataTable[indices[index] + 1][3] = message.content;
         });
