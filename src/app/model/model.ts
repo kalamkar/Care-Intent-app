@@ -1,5 +1,6 @@
 export interface DataPoint {
   time: string,
+  duration: number,
   name: string,
   number: number | null
   value: string | null
