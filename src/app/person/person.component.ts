@@ -7,6 +7,7 @@ import {DataPoint, Message} from "../model/model";
 import {DateTime, Duration} from 'luxon';
 import {GoogleChartInterface} from "ng2-google-charts/google-charts-interfaces";
 import {AppGoogleChartComponent} from "../google-chart/app-google-chart.component";
+import {Utils} from "../utils";
 
 @Component({
   selector: 'app-person',
@@ -19,7 +20,7 @@ export class PersonComponent implements OnInit {
   private readonly MIN_MINUTES_FOR_ANNOTATION = 30;
   private readonly MAX_MESSAGE_DIFF = Duration.fromMillis(5 * 60 * 1000);
 
-  @ViewChild('chart') public chartComponent: AppGoogleChartComponent | undefined;
+  @ViewChild('comboChart') public comboChart: AppGoogleChartComponent | undefined;
 
   private readonly routeSubscription: Subscription;
   private dataSubscription: Subscription | null = null;
@@ -27,15 +28,25 @@ export class PersonComponent implements OnInit {
 
   personId: string | null = null;
 
-  chartData: GoogleChartInterface = {
+  comboChartData: GoogleChartInterface = {
     chartType: 'ComboChart',
     options: {
       height: 500,
+      annotations: {
+        textStyle: {
+          color: 'grey',
+        },
+        stem: {length: 20, color: 'red'}
+      },
       series: {
         0: {targetAxisIndex: 0, type: 'line'},
+        1: {targetAxisIndex: 1, type: 'line', lineWidth: 16},
+        2: {targetAxisIndex: 2, type: 'scatter'}
       },
       vAxes: {
-        0: {title: 'Glucose mg/dL'},
+        0: {},
+        1: {gridlines: {color: 'transparent'}, maxValue: 250, minValue: 0},
+        2: {gridlines: {color: 'transparent'}, maxValue: 250, minValue: 0}
       },
     },
     dataTable: []
@@ -70,28 +81,36 @@ export class PersonComponent implements OnInit {
       if (!data || data.length === 0) {
         return;
       }
-      this.chartData.dataTable = [];
-      this.chartData.dataTable.push(['Time', 'Glucose', { role: 'annotation' }, { role: 'annotationText' },
-        {role: 'emphasis'}]);
-      let activityEndTime: DateTime;
-      let activityAnnotation: string | null;
+      this.comboChartData.dataTable = [];
+      this.comboChartData.dataTable.push(['Time',
+        'Glucose', { role: 'annotation' }, { role: 'annotationText' },
+        'Activity', { role: 'annotation' },
+        'Food', { role: 'annotation' }, { role: 'annotationText' }]);
+      const counts = {'Glucose': 0, 'Activity': 0};
       data.forEach(row => {
         if (row.name === 'glucose') {
           const timestamp = DateTime.fromISO(row.time);
-          const emphasis = activityEndTime && activityEndTime > timestamp;
-          this.chartData.dataTable.push([timestamp.toJSDate(), row.number,
-            emphasis && activityAnnotation ? activityAnnotation: null, null, emphasis]);
-          activityAnnotation = null;
+          this.comboChartData.dataTable.push([timestamp.toJSDate(), row.number, null, null, null, null,
+            null, null, null]);
+          counts['Glucose'] += 1;
         } else if (row.name === 'steps') {
           const duration = Duration.fromMillis(row.duration * 1000);
           const startTime = DateTime.fromISO(row.time);
           const minutes = duration.as('minutes');
-          activityEndTime = startTime.plus(duration);
-          activityAnnotation = minutes > this.MIN_MINUTES_FOR_ANNOTATION ? minutes.toFixed().toString() + ' mins' : null;
+          const activityEndTime = startTime.plus(duration);
+          const activityAnnotation = minutes > this.MIN_MINUTES_FOR_ANNOTATION ? minutes.toFixed().toString() + ' mins' : null;
+          this.comboChartData.dataTable.push([startTime.toJSDate(), null, null, null, 10, activityAnnotation, null, null, null]);
+          this.comboChartData.dataTable.push([activityEndTime.toJSDate(), null, null, null, 10, null, null, null, null]);
+          counts['Activity'] += 1;
         }
       });
-      if (this.chartComponent && this.chartComponent.chartComponent) {
-        this.chartComponent.chartComponent.draw();
+      if (!counts['Activity']) {
+        this.comboChartData.dataTable[1][this.comboChartData.dataTable[0].indexOf('Activity')] = 0;
+      } else if (!counts['Glucose']) {
+        this.comboChartData.dataTable[1][1] = -1;
+      }
+      if (this.comboChart && this.comboChart.chartComponent) {
+        this.comboChart.chartComponent.draw();
       }
 
       if (this.messagesSubscription) {
@@ -101,32 +120,28 @@ export class PersonComponent implements OnInit {
         if (!messages || messages.length === 0) {
           return;
         }
-        let indices = Array<number>(messages.length);
-        let stepsRows = 0;
-        data.forEach((row, rowIndex) => {
-          const rowTime = DateTime.fromISO(row.time);
-          if (row.name === 'steps') {
-            stepsRows++;
-          }
-          messages.forEach((message, msgIndex) => {
-            const messageTime = DateTime.fromISO(message.time).minus(Duration.fromMillis(3 * 60 * 60 * 1000));
-            if (Math.abs(rowTime.diff(messageTime)) < this.MAX_MESSAGE_DIFF) {
-              indices[msgIndex] = rowIndex - stepsRows;
-            }
-          });
-        });
+        let prevMessage: {time: null|DateTime, content: null|string} = {time: null, content: null};
         messages.forEach((message, index) => {
           let isFoodMessage = false;
           const foodTags = ['report.food', 'answer.food'];
           message.tags.forEach(tag => isFoodMessage = isFoodMessage || foodTags.indexOf(tag) >= 0);
-          if (isFoodMessage && indices[index]) {
-            const closestDataIndex = indices[index] > -2 ? indices[index] + 1 : 1;
-            this.chartData.dataTable[closestDataIndex][2] = message.content;
-            this.chartData.dataTable[closestDataIndex][3] = message.content;
+          if (isFoodMessage) {
+            let content = message.content;
+            let messageTime = DateTime.fromISO(message.time).minus(Duration.fromMillis(3 * 60 * 60 * 1000));
+            if (prevMessage.time != null && prevMessage.time.diff(messageTime) < Duration.fromMillis(5 * 60 * 1000)) {
+              content = prevMessage.content + ' ' + content;
+              this.comboChartData.dataTable[this.comboChartData.dataTable.length - 2][7] = content;
+              this.comboChartData.dataTable[this.comboChartData.dataTable.length - 2][8] = content;
+            } else {
+              const messageEndTime = messageTime.plus(Duration.fromMillis(5 * 60 * 1000));
+              this.comboChartData.dataTable.push([messageTime.toJSDate(), null, null, null, null, null, 50, content, content]);
+              this.comboChartData.dataTable.push([messageEndTime.toJSDate(), null, null, null, null, null, 50, null, null]);
+              prevMessage = {time: messageTime, content: message.content};
+            }
           }
         });
-        if (this.chartComponent && this.chartComponent.chartComponent) {
-          this.chartComponent.chartComponent.draw();
+        if (this.comboChart && this.comboChart.chartComponent) {
+          this.comboChart.chartComponent.draw();
         }
       });
     });

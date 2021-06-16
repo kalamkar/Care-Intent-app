@@ -6,7 +6,7 @@ import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces
 @Component({
   selector: 'app-google-chart',
   templateUrl: './app-google-chart.component.html',
-  styleUrls: ['./app-google-chart.component.css']
+  styleUrls: ['./app-google-chart.component.scss']
 })
 export class AppGoogleChartComponent implements OnInit, OnChanges {
 
