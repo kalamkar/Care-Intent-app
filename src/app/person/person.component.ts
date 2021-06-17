@@ -44,7 +44,7 @@ export class PersonComponent implements OnInit {
         2: {targetAxisIndex: 2, type: 'scatter'}
       },
       vAxes: {
-        0: {},
+        0: {textPosition: 'none', maxValue: 250, minValue: 0},
         1: {gridlines: {color: 'transparent'}, textPosition: 'none', maxValue: 250, minValue: 0},
         2: {gridlines: {color: 'transparent'}, textPosition: 'none', maxValue: 250, minValue: 0}
       },
@@ -120,25 +120,37 @@ export class PersonComponent implements OnInit {
         if (!messages || messages.length === 0) {
           return;
         }
-        let prevMessage: {time: null|DateTime, content: null|string} = {time: null, content: null};
-        messages.forEach((message, index) => {
+        const foodTags = ['report.food', 'answer.food'];
+        const foodMessages = messages.filter(message => {
           let isFoodMessage = false;
-          const foodTags = ['report.food', 'answer.food'];
           message.tags.forEach(tag => isFoodMessage = isFoodMessage || foodTags.indexOf(tag) >= 0);
-          if (isFoodMessage) {
+          return isFoodMessage;
+        });
+        let otherRows = 0;
+        data.forEach((row, rowIndex) => {
+          if (row.name !== 'glucose') {
+            otherRows++;
+            return
+          }
+          const rowTime = DateTime.fromISO(row.time);
+          let prevMessage: {time: null|DateTime, content: null|string} = {time: null, content: null};
+          foodMessages.forEach(message => {
             let content = message.content;
-            let messageTime = DateTime.fromISO(message.time).minus(Duration.fromMillis(3 * 60 * 60 * 1000));
+            const messageTime = DateTime.fromISO(message.time).minus(Duration.fromMillis(3 * 60 * 60 * 1000));
+            const diff = rowTime.diff(messageTime).as('minutes');
+            if (diff < 0 || 5 < diff) {
+              return
+            }
             if (prevMessage.time != null && Math.abs(prevMessage.time.diff(messageTime).as('minutes')) < 5) {
-              content = prevMessage.content + ' ' + content;
-              this.comboChartData.dataTable[this.comboChartData.dataTable.length - 2][7] = content;
-              this.comboChartData.dataTable[this.comboChartData.dataTable.length - 2][8] = content;
+              content = prevMessage.content + ' + ' + content;
+              this.comboChartData.dataTable[this.comboChartData.dataTable.length - 1][7] = content;
+              this.comboChartData.dataTable[this.comboChartData.dataTable.length - 1][8] = content;
             } else {
-              const messageEndTime = messageTime.plus(Duration.fromMillis(5 * 60 * 1000));
-              this.comboChartData.dataTable.push([messageTime.toJSDate(), null, null, null, null, null, 50, content, content]);
-              this.comboChartData.dataTable.push([messageEndTime.toJSDate(), null, null, null, null, null, 50, null, null]);
+              const value = this.comboChartData.dataTable[rowIndex + otherRows + 1][1];
+              this.comboChartData.dataTable.push([rowTime.toJSDate(), null, null, null, null, null, value, content, content]);
               prevMessage = {time: messageTime, content: message.content};
             }
-          }
+          });
         });
         if (this.comboChart && this.comboChart.chartComponent) {
           this.comboChart.chartComponent.draw();
