@@ -45,8 +45,8 @@ export class PersonComponent implements OnInit {
       },
       vAxes: {
         0: {},
-        1: {gridlines: {color: 'transparent'}, maxValue: 250, minValue: 0},
-        2: {gridlines: {color: 'transparent'}, maxValue: 250, minValue: 0}
+        1: {gridlines: {color: 'transparent'}, textPosition: 'none', maxValue: 250, minValue: 0},
+        2: {gridlines: {color: 'transparent'}, textPosition: 'none', maxValue: 250, minValue: 0}
       },
     },
     dataTable: []
@@ -128,7 +128,7 @@ export class PersonComponent implements OnInit {
           if (isFoodMessage) {
             let content = message.content;
             let messageTime = DateTime.fromISO(message.time).minus(Duration.fromMillis(3 * 60 * 60 * 1000));
-            if (prevMessage.time != null && prevMessage.time.diff(messageTime) < Duration.fromMillis(5 * 60 * 1000)) {
+            if (prevMessage.time != null && Math.abs(prevMessage.time.diff(messageTime).as('minutes')) < 5) {
               content = prevMessage.content + ' ' + content;
               this.comboChartData.dataTable[this.comboChartData.dataTable.length - 2][7] = content;
               this.comboChartData.dataTable[this.comboChartData.dataTable.length - 2][8] = content;
