@@ -39,14 +39,12 @@ export class PersonComponent implements OnInit {
         stem: {length: 20, color: 'red'}
       },
       series: {
-        0: {targetAxisIndex: 0, type: 'line'},
-        1: {targetAxisIndex: 1, type: 'line', lineWidth: 16},
-        2: {targetAxisIndex: 2, type: 'scatter'}
+        0: {type: 'line'},
+        1: {type: 'line', lineWidth: 16},
+        2: {type: 'scatter'}
       },
       vAxes: {
         0: {textPosition: 'none', maxValue: 250, minValue: 0},
-        1: {gridlines: {color: 'transparent'}, textPosition: 'none', maxValue: 250, minValue: 0},
-        2: {gridlines: {color: 'transparent'}, textPosition: 'none', maxValue: 250, minValue: 0}
       },
     },
     dataTable: []
@@ -107,7 +105,7 @@ export class PersonComponent implements OnInit {
       if (!counts['Activity']) {
         this.comboChartData.dataTable[1][this.comboChartData.dataTable[0].indexOf('Activity')] = 0;
       } else if (!counts['Glucose']) {
-        this.comboChartData.dataTable[1][1] = -1;
+        this.comboChartData.dataTable[1][this.comboChartData.dataTable[0].indexOf('Glucose')] = -1;
       }
       if (this.comboChart && this.comboChart.chartComponent) {
         this.comboChart.chartComponent.draw();
@@ -117,9 +115,11 @@ export class PersonComponent implements OnInit {
         this.messagesSubscription.unsubscribe();
       }
       this.messagesSubscription = this.api.getMessages(this.personId || '').subscribe((messages: Message[]) => {
-        if (!messages || messages.length === 0) {
+        if (!messages) {
+          this.comboChartData.dataTable[1][this.comboChartData.dataTable[0].indexOf('Food')] = 0;
           return;
         }
+        let hasMessages = false;
         const foodTags = ['report.food', 'answer.food'];
         const foodMessages = messages.filter(message => {
           let isFoodMessage = false;
@@ -138,7 +138,7 @@ export class PersonComponent implements OnInit {
             let content = message.content;
             const messageTime = DateTime.fromISO(message.time).minus(Duration.fromMillis(3 * 60 * 60 * 1000));
             const diff = rowTime.diff(messageTime).as('minutes');
-            if (diff < 0 || 5 < diff) {
+            if (diff < 0 || 5 <= diff) {
               return
             }
             if (prevMessage.time != null && Math.abs(prevMessage.time.diff(messageTime).as('minutes')) < 5) {
@@ -149,9 +149,13 @@ export class PersonComponent implements OnInit {
               const value = this.comboChartData.dataTable[rowIndex + otherRows + 1][1];
               this.comboChartData.dataTable.push([rowTime.toJSDate(), null, null, null, null, null, value, content, content]);
               prevMessage = {time: messageTime, content: message.content};
+              hasMessages = true;
             }
           });
         });
+        if (!hasMessages) {
+          this.comboChartData.dataTable[1][this.comboChartData.dataTable[0].indexOf('Food')] = 0;
+        }
         if (this.comboChart && this.comboChart.chartComponent) {
           this.comboChart.chartComponent.draw();
         }
