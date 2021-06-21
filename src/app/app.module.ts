@@ -8,13 +8,15 @@ import { PersonComponent } from './person/person.component';
 import {HttpClientModule} from "@angular/common/http";
 import {Ng2GoogleChartsModule} from "ng2-google-charts";
 import {AppGoogleChartComponent} from "./google-chart/app-google-chart.component";
+import { OverlayChartComponent } from './overlay-chart/overlay-chart.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     AppGoogleChartComponent,
-    PersonComponent
+    PersonComponent,
+    OverlayChartComponent
   ],
   imports: [
     BrowserModule,
