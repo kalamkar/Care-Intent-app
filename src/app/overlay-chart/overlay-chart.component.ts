@@ -4,7 +4,6 @@ import {ApiService} from "../services/api.service";
 import {DataPoint, Message} from "../model/model";
 // @ts-ignore
 import {DateTime, Duration} from 'luxon';
-import {GoogleChartInterface} from "ng2-google-charts/google-charts-interfaces";
 import {AppGoogleChartComponent} from "../google-chart/app-google-chart.component";
 
 @Component({
@@ -49,9 +48,14 @@ export class OverlayChartComponent implements OnInit, OnChanges {
           fontSize: 12,
           color: 'gray'
         },
+        gridlines: {color: 'transparent'},
         minorGridlines: {count: 0}
       },
-      vAxis: {textPosition: 'none', maxValue: 250, minValue: 0},
+      vAxis: {
+        gridlines: {color: 'transparent'},
+        maxValue: 250,
+        minValue: 0
+      },
     },
     dataTable: new Array<any>()
   };
