@@ -1,5 +1,4 @@
 import {Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {Subscription} from "rxjs";
 import {ApiService} from "../services/api.service";
 import {DataPoint, Message} from "../model/model";
@@ -15,21 +14,24 @@ import {AppGoogleChartComponent} from "../google-chart/app-google-chart.componen
 })
 export class OverlayChartComponent implements OnInit, OnChanges {
 
-  private readonly MIN_STEPS_FOR_ANNOTATION = 1500;
   private readonly MIN_MINUTES_FOR_ANNOTATION = 30;
-  private readonly MAX_MESSAGE_DIFF = Duration.fromMillis(5 * 60 * 1000);
 
   @Input() personId: string | null = null;
+  @Input() end: DateTime | null = null;
+  @Input() start: DateTime | null = null;
+  @Input() height: number = 500;
+  @Input() legend: boolean = false;
   @ViewChild('comboChart') public comboChart: AppGoogleChartComponent | undefined;
 
   private dataSubscription: Subscription | null = null;
   private messagesSubscription: Subscription | null = null;
 
-  comboChartData: GoogleChartInterface = {
+  comboChartData = {
     chartType: 'ComboChart',
     options: {
-      height: 500,
+      title: null,
       legend: {position: 'top'},
+      height: 500,
       annotations: {
         textStyle: {
           color: 'grey',
@@ -51,7 +53,7 @@ export class OverlayChartComponent implements OnInit, OnChanges {
       },
       vAxis: {textPosition: 'none', maxValue: 250, minValue: 0},
     },
-    dataTable: []
+    dataTable: new Array<any>()
   };
 
   constructor(private api: ApiService) {
@@ -66,14 +68,19 @@ export class OverlayChartComponent implements OnInit, OnChanges {
   }
 
   init(): void {
-    if (!this.personId) {
+    if (!this.personId || !this.start || !this.end) {
       return;
     }
+
+    this.comboChartData.options.height = this.height;
+    this.comboChartData.options.legend = {position: this.legend ? 'top' : 'none'};
+    this.comboChartData.options.title = this.start.toISODate();
 
     if (this.dataSubscription) {
       this.dataSubscription.unsubscribe();
     }
-    this.dataSubscription = this.api.getData(this.personId, ['glucose', 'steps']).subscribe((data: DataPoint[]) => {
+    this.dataSubscription = this.api.getData(this.personId, ['glucose', 'steps'], this.start, this.end).subscribe(
+        (data: DataPoint[]) => {
       if (!data || data.length === 0) {
         return;
       }
@@ -112,7 +119,8 @@ export class OverlayChartComponent implements OnInit, OnChanges {
       if (this.messagesSubscription) {
         this.messagesSubscription.unsubscribe();
       }
-      this.messagesSubscription = this.api.getMessages(this.personId || '').subscribe((messages: Message[]) => {
+      this.messagesSubscription = this.api.getMessages(this.personId || '', this.start, this.end).subscribe(
+          (messages: Message[]) => {
         if (!messages) {
           this.comboChartData.dataTable[1][this.comboChartData.dataTable[0].indexOf('Food')] = 0;
           return;

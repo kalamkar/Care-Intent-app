@@ -1,5 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
+// @ts-ignore
+import {DateTime, Duration} from 'luxon';
 import {Subscription} from "rxjs";
 import {ApiService} from "../services/api.service";
 import {AppGoogleChartComponent} from "../google-chart/app-google-chart.component";
@@ -10,11 +12,10 @@ import {AppGoogleChartComponent} from "../google-chart/app-google-chart.componen
   styleUrls: ['./person.component.scss']
 })
 export class PersonComponent implements OnInit {
-  @ViewChild('bigChart') public bigChart: AppGoogleChartComponent | undefined;
-
   private readonly routeSubscription: Subscription;
 
   personId: string | null = null;
+  times: Array<Array<DateTime>> = new Array<Array<DateTime>>();
 
   constructor(private api: ApiService,
               private router: Router,
@@ -34,5 +35,11 @@ export class PersonComponent implements OnInit {
 
   init(): void {
     this.personId = this.route.snapshot.paramMap.get('id');
+    this.times = [];
+    for (let i = 0; i < 7; i++) {
+      this.times.push([
+        DateTime.now().minus(Duration.fromMillis((i + 1) * 24 * 60 * 60 * 1000)),
+        DateTime.now().minus(Duration.fromMillis(i * 24 * 60 * 60 * 1000))]);
+    }
   }
 }

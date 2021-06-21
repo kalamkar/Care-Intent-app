@@ -39,13 +39,15 @@ export class ApiService {
     console.log(error);
   }
 
-  public getData(source: string, names: string[]): Observable<Array<any>> {
-    const url = environment.apiUrl + '/data/' + source + '?' + this.encodeQueryData({'name': names});
+  public getData(source: string, names: string[], start: DateTime, end: DateTime): Observable<Array<any>> {
+    const url = environment.apiUrl + '/data/' + source + '?' + this.encodeQueryData(
+      {'name': names, 'start': start.toISO(), 'end': end.toISO()});
     return this.get<Array<any>>(url, this.getOptions(false), (data: { rows: Array<any>; }) => data.rows)
   }
 
-  public getMessages(source: string): Observable<Array<any>> {
-    const url = environment.apiUrl + '/messages/' + source;
+  public getMessages(source: string, start: DateTime, end: DateTime): Observable<Array<any>> {
+    const url = environment.apiUrl + '/messages/' + source+ '?' + this.encodeQueryData(
+      {'start': start.toISO(),  'end': end.toISO()});
     return this.get<Array<any>>(url, this.getOptions(false), (data: { rows: Array<any>; }) => data.rows)
   }
 
