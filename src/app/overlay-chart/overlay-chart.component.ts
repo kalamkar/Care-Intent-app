@@ -78,7 +78,7 @@ export class OverlayChartComponent implements OnInit, OnChanges {
 
     this.comboChartData.options.height = this.height;
     this.comboChartData.options.legend = {position: this.legend ? 'top' : 'none'};
-    this.comboChartData.options.title = this.start.toISODate();
+    this.comboChartData.options.title = this.start.toFormat('LLL dd, EEEE');
 
     if (this.dataSubscription) {
       this.dataSubscription.unsubscribe();
