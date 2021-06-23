@@ -36,10 +36,12 @@ export class PersonComponent implements OnInit {
   init(): void {
     this.personId = this.route.snapshot.paramMap.get('id');
     this.times = [];
+    const cacheMillis = 10 * 60 * 1000;
+    const now = DateTime.fromMillis(Math.floor(DateTime.now().toMillis() / cacheMillis) * cacheMillis);
     for (let i = 0; i < 7; i++) {
       this.times.push([
-        DateTime.now().minus(Duration.fromMillis((i + 1) * 24 * 60 * 60 * 1000)),
-        DateTime.now().minus(Duration.fromMillis(i * 24 * 60 * 60 * 1000))]);
+        now.minus(Duration.fromMillis((i + 1) * 24 * 60 * 60 * 1000)),
+        now.minus(Duration.fromMillis(i * 24 * 60 * 60 * 1000))]);
     }
   }
 }
