@@ -1,0 +1,40 @@
+<mat-tab-group>
+  <mat-tab label="Login">
+    <div fxLayout="column" fxLayoutGap="12px" style="padding: 20px 0 20px 0">
+      <mat-form-field>
+        <input matInput placeholder="Email or Phone" [(ngModel)]="identifier" [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Password" type="password" [(ngModel)]="password"
+               [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
+      <div fxLayout="row" fxLayoutAlign="end center">
+        <button mat-raised-button type="submit" (click)="login()" color="primary" disabled="{{isInProcess}}">
+          <span>Login</span>
+          <mat-spinner *ngIf="isInProcess" class="login-spinner" [diameter]="20"></mat-spinner>
+        </button>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Signup">
+    <div fxLayout="column" fxLayoutGap="16px" style="padding: 20px 0 20px 0">
+      <mat-form-field>
+        <input matInput placeholder="Email or Phone" [(ngModel)]="identifier" [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Password" type="password" [(ngModel)]="password"
+               [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Confirm Password" type="password" [(ngModel)]="confirmPassword"
+               [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
+      <div fxLayout="row" fxLayoutAlign="end center">
+        <button mat-raised-button type="submit" (click)="signup()" color="primary" disabled="{{isInProcess}}">
+          <span>Signup</span>
+          <mat-spinner *ngIf="isInProcess" class="login-spinner" [diameter]="20"></mat-spinner>
+        </button>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>

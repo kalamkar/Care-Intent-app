@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
 
-  apiUrl: 'https://us-central1-careintent.cloudfunctions.net/api'
+  apiUrl: 'https://us-central1-careintent.cloudfunctions.net/api',
+  authUrl: 'https://us-central1-careintent.cloudfunctions.net/auth'
 };
 
 /*

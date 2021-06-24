@@ -51,6 +51,17 @@ export class ApiService {
     return this.get<Array<any>>(url, this.getOptions(false), (data: { rows: Array<any>; }) => data.rows)
   }
 
+  public getResource(collection: string, id: string, noCache = false): Observable<any> {
+    const url = environment.apiUrl + '/' + collection + '/' + id;
+    return this.get<any>(url, this.getOptions(noCache), null);
+  }
+
+  public login(id: string, pass: string) {
+    const url = environment.authUrl + '/login';
+    return this.post<any>(url, JSON.stringify({'identifier': id, 'password': pass}),
+      this.getOptions(true, {'Content-Type': 'application/json'}));
+  }
+
   protected get<T>(url: string, options: RequestOptions, mapFxn: any): Observable<T> {
     if (options) {
       return this.httpClient.get<T>(url, options).pipe(
@@ -123,6 +134,11 @@ export class ApiService {
 
   getOptions(noCache = true, extraHeaders?: { [index: string]: string; }): RequestOptions {
     let headers = new HttpHeaders({});
+    const authStr = localStorage.getItem('auth');
+    const auth = authStr ? JSON.parse(authStr) : null;
+    if (auth && auth.token) {
+      headers = headers.append('Authorization', 'Bearer ' + auth.token);
+    }
     if (noCache) {
       headers = headers.append('Pragma', 'no-cache');
       headers = headers.append('Cache-Control', ['no-cache', 'max-age=0', 'max-stale=0', 'private']);

@@ -2,7 +2,7 @@ export interface DataPoint {
   time: string,
   duration: number,
   name: string,
-  number: number | null
+  number: number | null,
   value: string | null
 }
 
@@ -10,6 +10,17 @@ export interface Message {
   time: string,
   status: string,
   tags: string[],
-  content: string
+  content: string,
   content_type: string
+}
+
+export interface Identifier {
+  type: string,
+  value: string,
+  active: boolean
+}
+
+export interface Person {
+  name: {first: string, middle: string, last: string},
+  identifiers: Identifier[]
 }
