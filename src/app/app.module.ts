@@ -14,6 +14,14 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatButtonModule} from "@angular/material/button";
+import { LoginComponent } from './login/login.component';
+import {MatInputModule} from "@angular/material/input";
+import {FormsModule} from "@angular/forms";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatDialogModule} from "@angular/material/dialog";
+import {FlexLayoutModule} from "@angular/flex-layout";
+import { NamePipe } from './pipes/name.pipe';
+import {MatTabsModule} from "@angular/material/tabs";
 
 
 @NgModule({
@@ -21,7 +29,9 @@ import {MatButtonModule} from "@angular/material/button";
     AppComponent,
     AppGoogleChartComponent,
     PersonComponent,
-    OverlayChartComponent
+    OverlayChartComponent,
+    LoginComponent,
+    NamePipe
   ],
   imports: [
     BrowserModule,
@@ -33,7 +43,13 @@ import {MatButtonModule} from "@angular/material/button";
     MatIconModule,
     MatProgressBarModule,
     MatSidenavModule,
-    MatButtonModule
+    MatButtonModule,
+    MatInputModule,
+    MatDialogModule,
+    FormsModule,
+    MatProgressSpinnerModule,
+    FlexLayoutModule,
+    MatTabsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
