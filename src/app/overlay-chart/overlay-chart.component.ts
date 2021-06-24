@@ -145,19 +145,19 @@ export class OverlayChartComponent implements OnInit, OnChanges {
           }
           const rowTime = DateTime.fromISO(row.time);
           foodMessages.forEach(message => {
-            let content = message.content;
             const messageTime = DateTime.fromISO(message.time).minus(Duration.fromMillis(3 * 60 * 60 * 1000));
             const diff = rowTime.diff(messageTime).as('minutes');
             if (diff < 0 || 5 <= diff) {
               return
             }
             if (prevMessage.time != null && Math.abs(prevMessage.time.diff(messageTime).as('minutes')) < 60) {
-              content = prevMessage.content + ' + ' + content;
-              this.comboChartData.dataTable[this.comboChartData.dataTable.length - 1][7] = content;
-              this.comboChartData.dataTable[this.comboChartData.dataTable.length - 1][8] = content;
+              prevMessage.content += ' + ' + message.content;
+              this.comboChartData.dataTable[this.comboChartData.dataTable.length - 1][7] = prevMessage.content;
+              this.comboChartData.dataTable[this.comboChartData.dataTable.length - 1][8] = prevMessage.content;
             } else {
               const value = this.comboChartData.dataTable[rowIndex + otherRows + 1][1];
-              this.comboChartData.dataTable.push([rowTime.toJSDate(), null, null, null, null, null, value, content, content]);
+              this.comboChartData.dataTable.push([rowTime.toJSDate(), null, null, null, null, null, value,
+                message.content, message.content]);
               prevMessage = {time: messageTime, content: message.content};
               hasMessages = true;
             }
