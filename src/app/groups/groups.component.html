@@ -1,0 +1,8 @@
+<mat-nav-list>
+  <ng-container *ngFor="let group of groups">
+    <a mat-list-item [routerLink]="['/group', group.id.value]">
+      <mat-icon>group</mat-icon>&nbsp;
+      <span>{{group.title}}</span>
+    </a>
+  </ng-container>
+</mat-nav-list>

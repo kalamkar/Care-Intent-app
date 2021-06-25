@@ -22,6 +22,9 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import { NamePipe } from './pipes/name.pipe';
 import {MatTabsModule} from "@angular/material/tabs";
+import { GroupsComponent } from './groups/groups.component';
+import { GroupComponent } from './group/group.component';
+import {MatListModule} from "@angular/material/list";
 
 
 @NgModule({
@@ -31,7 +34,9 @@ import {MatTabsModule} from "@angular/material/tabs";
     PersonComponent,
     OverlayChartComponent,
     LoginComponent,
-    NamePipe
+    NamePipe,
+    GroupsComponent,
+    GroupComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +54,8 @@ import {MatTabsModule} from "@angular/material/tabs";
     FormsModule,
     MatProgressSpinnerModule,
     FlexLayoutModule,
-    MatTabsModule
+    MatTabsModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

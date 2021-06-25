@@ -17,10 +17,21 @@ export interface Message {
 export interface Identifier {
   type: string,
   value: string,
-  active: boolean
+  active?: boolean
 }
 
 export interface Person {
+  id: Identifier,
   name: {first: string, middle: string, last: string},
   identifiers: Identifier[]
+}
+
+export interface Group {
+  id: Identifier,
+  title: string
+}
+
+export enum RelationType {
+  adminOf = 'admin_of',
+  memberOf = 'member_of'
 }

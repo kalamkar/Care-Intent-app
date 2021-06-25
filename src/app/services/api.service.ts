@@ -5,6 +5,7 @@ import {DateTime} from 'luxon';
 import {environment} from '../../environments/environment';
 import {Observable, of, throwError as observableThrowError} from "rxjs";
 import {catchError, map} from "rxjs/operators";
+import {Identifier} from "../model/model";
 
 export interface RequestOptions {
   headers?: HttpHeaders | {
@@ -54,6 +55,12 @@ export class ApiService {
   public getResource(collection: string, id: string, noCache = false): Observable<any> {
     const url = environment.apiUrl + '/' + collection + '/' + id;
     return this.get<any>(url, this.getOptions(noCache), null);
+  }
+
+  public query(relation: string, resourceType: string, resourceId: Identifier): Observable<Array<any>> {
+    const url = environment.apiUrl + '/query?' + this.encodeQueryData(
+      {'resource': resourceId.type + ':' + resourceId.value,  'resource_type': resourceType, 'relation_type': relation});
+    return this.get<Array<any>>(url, this.getOptions(false), (data: { results: Array<any>; }) => data.results)
   }
 
   public login(id: string, pass: string) {

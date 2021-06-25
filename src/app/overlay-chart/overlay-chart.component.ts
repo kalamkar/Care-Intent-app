@@ -22,8 +22,8 @@ export class OverlayChartComponent implements OnInit, OnChanges {
   @Input() legend: boolean = false;
   @ViewChild('comboChart') public comboChart: AppGoogleChartComponent | undefined;
 
-  private dataSubscription: Subscription | null = null;
-  private messagesSubscription: Subscription | null = null;
+  private dataSubscription: Subscription | undefined;
+  private messagesSubscription: Subscription | undefined;
 
   comboChartData = {
     chartType: 'ComboChart',

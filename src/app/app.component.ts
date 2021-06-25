@@ -12,11 +12,11 @@ import {LoginComponent} from "./login/login.component";
 export class AppComponent implements OnInit{
   title = 'app';
   isLoading = false;
-  user: Person|null = null;
+  user: Person|undefined;
 
   constructor(private auth: AuthService,
               private dialog: MatDialog) {
-    auth.personChange.subscribe((user: Person|null) => {
+    auth.personChange.subscribe((user: Person) => {
       this.user = user;
       if (!user) {
         this.showLogin();
@@ -44,7 +44,7 @@ export class AppComponent implements OnInit{
 
   signOut(): void {
     localStorage.removeItem('auth');
-    this.user = null;
+    this.user = undefined;
     this.showLogin();
   }
 }
