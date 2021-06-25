@@ -25,7 +25,6 @@ export class LoginComponent implements OnInit {
     this.api.login(this.identifier, this.password).subscribe(result => {
       this.dialogRef.close(result);
     }, error => {
-
     });
   }
 

@@ -3,6 +3,8 @@ import {ApiService} from "../services/api.service";
 import {Person, RelationType} from "../model/model";
 import {Subscription} from "rxjs";
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
+import {MatDialog} from "@angular/material/dialog";
+import {AddPersonComponent} from "../add-person/add-person.component";
 
 @Component({
   selector: 'app-group',
@@ -19,7 +21,8 @@ export class GroupComponent implements OnChanges {
 
   constructor(private api: ApiService,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private dialog: MatDialog) {
     this.routeSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         const urlId = this.route.snapshot.paramMap.get('id');
@@ -50,4 +53,11 @@ export class GroupComponent implements OnChanges {
     });
   }
 
+  add(): void {
+    this.dialog.open(AddPersonComponent, {
+      minWidth: '400px',
+      minHeight: '300px',
+      data: {}
+    });
+  }
 }

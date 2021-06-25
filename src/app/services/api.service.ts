@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable, Output} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/common/http";
 // @ts-ignore
 import {DateTime} from 'luxon';
 import {environment} from '../../environments/environment';
 import {Observable, of, throwError as observableThrowError} from "rxjs";
 import {catchError, map} from "rxjs/operators";
-import {Identifier} from "../model/model";
+import {Identifier, Relation} from "../model/model";
 
 export interface RequestOptions {
   headers?: HttpHeaders | {
@@ -25,6 +25,10 @@ export interface RequestOptions {
 })
 export class ApiService {
 
+  @Output() activityChange: EventEmitter<boolean> = new EventEmitter();
+
+  private reuestCount = 0;
+
   constructor(protected httpClient: HttpClient) { }
 
   public static getPipedObservable(observable: any): Observable<{ response: any, success: boolean }> {
@@ -37,6 +41,7 @@ export class ApiService {
   }
 
   onRequestError(error: HttpErrorResponse | any): void {
+    this.endedRequest(error.url);
     console.log(error);
   }
 
@@ -57,10 +62,22 @@ export class ApiService {
     return this.get<any>(url, this.getOptions(noCache), null);
   }
 
+  public addResource(collection: string, resource: any): Observable<any> {
+    const url = environment.apiUrl + '/' + collection;
+    return this.post<any>(url, JSON.stringify(resource),
+      this.getOptions(true, {'Content-Type': 'application/json'}));
+  }
+
   public query(relation: string, resourceType: string, resourceId: Identifier): Observable<Array<any>> {
     const url = environment.apiUrl + '/query?' + this.encodeQueryData(
       {'resource': resourceId.type + ':' + resourceId.value,  'resource_type': resourceType, 'relation_type': relation});
     return this.get<Array<any>>(url, this.getOptions(false), (data: { results: Array<any>; }) => data.results)
+  }
+
+  public addRelation(relation: Relation) {
+    const url = environment.apiUrl + '/relate';
+    return this.post<any>(url, JSON.stringify(relation),
+      this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
   public login(id: string, pass: string) {
@@ -70,49 +87,55 @@ export class ApiService {
   }
 
   protected get<T>(url: string, options: RequestOptions, mapFxn: any): Observable<T> {
+    this.startingRequest(url);
     if (options) {
       return this.httpClient.get<T>(url, options).pipe(
         // @ts-ignore
-        map(res => mapFxn ? mapFxn(res) : this.extractData(res)),
+        map(res => mapFxn ? mapFxn(res) : this.extractData(res, url)),
         catchError(err => this.handleError(err))
       );
     }
     return this.httpClient.get(url).pipe(
       // @ts-ignore
-      map(res => mapFxn ? mapFxn(res) : this.extractData(res)),
+      map(res => mapFxn ? mapFxn(res) : this.extractData(res, url)),
       catchError(err => this.handleError(err))
     );
   }
 
   protected del<T>(url: string, options: RequestOptions): Observable<T> {
+    this.startingRequest(url);
     return this.httpClient.delete<T>(url, options).pipe(
-      map(res => this.extractData(res)),
+      map(res => this.extractData(res, url)),
       catchError(err => this.handleError(err))
     );
   }
 
   protected put<T>(url: string, body: any, options?: RequestOptions): Observable<T> {
+    this.startingRequest(url);
     return this.httpClient.put<T>(url, body, options).pipe(
-      map(res => this.extractData(res)),
+      map(res => this.extractData(res, url)),
       catchError(err => this.handleError(err))
     );
   }
 
   protected patch<T>(url: string, body: any, options?: RequestOptions): Observable<T> {
+    this.startingRequest(url);
     return this.httpClient.patch<T>(url, body, options).pipe(
-      map(res => this.extractData(res)),
+      map(res => this.extractData(res, url)),
       catchError(err => this.handleError(err))
     );
   }
 
   protected post<T>(url: string, body: any, options?: RequestOptions): Observable<T> {
+    this.startingRequest(url);
     return this.httpClient.post<T>(url, body, options).pipe(
-      map(res => this.extractData(res)),
+      map(res => this.extractData(res, url)),
       catchError(err => this.handleError(err))
     );
   }
 
-  protected extractData<T>(res: T): T {
+  protected extractData<T>(res: T, url: string): T {
+    this.endedRequest(url);
     return res;
   }
 
@@ -136,6 +159,21 @@ export class ApiService {
     }
     console.error(errMsg);
     return observableThrowError(error);
+  }
+
+  private startingRequest(name: string) {
+    this.reuestCount++;
+    if (this.reuestCount === 1) {
+      this.activityChange.emit(true);
+    }
+  }
+
+  private endedRequest(name: string) {
+    this.reuestCount--;
+    if (this.reuestCount <= 0) {
+      this.reuestCount = 0;
+      this.activityChange.emit(false);
+    }
   }
 
 

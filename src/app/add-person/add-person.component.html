@@ -1,0 +1,17 @@
+<div fxLayout="column" fxLayoutGap="12px" style="padding: 20px 0 20px 0">
+  <mat-form-field>
+    <input matInput placeholder="First" [(ngModel)]="person.name.first" [ngModelOptions]="{standalone: true}">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Last" [(ngModel)]="person.name.last" [ngModelOptions]="{standalone: true}">
+  </mat-form-field>
+  <mat-form-field *ngFor="let identifier of person.identifiers">
+    <input matInput placeholder="{{identifier.type}}" [(ngModel)]="identifier.value" [ngModelOptions]="{standalone: true}">
+  </mat-form-field>
+  <div fxLayout="row" fxLayoutAlign="end center">
+    <button mat-raised-button type="submit" (click)="add()" color="primary" disabled="{{isInProcess}}">
+      <span>Login</span>
+      <mat-spinner *ngIf="isInProcess" class="login-spinner" [diameter]="20"></mat-spinner>
+    </button>
+  </div>
+</div>

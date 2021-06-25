@@ -25,6 +25,8 @@ import {MatTabsModule} from "@angular/material/tabs";
 import { GroupsComponent } from './groups/groups.component';
 import { GroupComponent } from './group/group.component';
 import {MatListModule} from "@angular/material/list";
+import { AddPersonComponent } from './add-person/add-person.component';
+import { AddGroupComponent } from './add-group/add-group.component';
 
 
 @NgModule({
@@ -36,7 +38,9 @@ import {MatListModule} from "@angular/material/list";
     LoginComponent,
     NamePipe,
     GroupsComponent,
-    GroupComponent
+    GroupComponent,
+    AddPersonComponent,
+    AddGroupComponent
   ],
   imports: [
     BrowserModule,

@@ -1,11 +1,10 @@
-import {Component, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 // @ts-ignore
 import {DateTime, Duration} from 'luxon';
 import {Subscription} from "rxjs";
 import {ApiService} from "../services/api.service";
-import {AppGoogleChartComponent} from "../google-chart/app-google-chart.component";
-import {Person, RelationType} from "../model/model";
+import {Person} from "../model/model";
 
 @Component({
   selector: 'app-person',

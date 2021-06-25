@@ -21,14 +21,20 @@ export interface Identifier {
 }
 
 export interface Person {
-  id: Identifier,
-  name: {first: string, middle: string, last: string},
+  id?: Identifier,
+  name: {first: string, middle?: string, last: string},
   identifiers: Identifier[]
 }
 
 export interface Group {
-  id: Identifier,
+  id?: Identifier,
   title: string
+}
+
+export interface Relation {
+  source: Identifier,
+  target: Identifier,
+  type: string
 }
 
 export enum RelationType {

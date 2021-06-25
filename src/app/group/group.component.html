@@ -1,6 +1,7 @@
+<button mat-icon-button (click)="add()"><mat-icon>person_add</mat-icon></button>
 <mat-nav-list>
   <ng-container *ngFor="let member of members">
-    <a mat-list-item [routerLink]="['/person', member.id.value]">
+    <a mat-list-item *ngIf="member.id" [routerLink]="['/person', member.id.value]">
       <mat-icon>person</mat-icon>&nbsp;
       <span>{{member | name}}</span>
     </a>

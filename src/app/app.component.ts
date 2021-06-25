@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthService} from "./services/auth.service";
 import {Person} from "./model/model";
 import {MatDialog} from "@angular/material/dialog";
 import {LoginComponent} from "./login/login.component";
+import {ContextService} from "./services/context.service";
+import {ApiService} from "./services/api.service";
 
 @Component({
   selector: 'app-root',
@@ -14,13 +15,17 @@ export class AppComponent implements OnInit{
   isLoading = false;
   user: Person|undefined;
 
-  constructor(private auth: AuthService,
+  constructor(private context: ContextService,
+              private api: ApiService,
               private dialog: MatDialog) {
-    auth.personChange.subscribe((user: Person) => {
+    context.personChange.subscribe((user: Person) => {
       this.user = user;
       if (!user) {
         this.showLogin();
       }
+    });
+    api.activityChange.subscribe((isActive: boolean) => {
+      this.isLoading = isActive;
     });
   }
 
@@ -37,7 +42,7 @@ export class AppComponent implements OnInit{
     }).afterClosed().subscribe((response) => {
       if (response) {
         localStorage.setItem('auth', JSON.stringify(response));
-        this.auth.init();
+        this.context.init();
       }
     });
   }

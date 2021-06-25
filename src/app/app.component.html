@@ -14,7 +14,7 @@
 </div>
 <mat-sidenav-container class="container" autosize [ngStyle]="{'min-height': 'calc(100vh - 64px)'}">
   <mat-sidenav #drawer class="sidenav" mode="side" opened="true" role="navigation">
-    <app-groups *ngIf="user" [userId]="user.id.value"></app-groups>
+    <app-groups *ngIf="user && user.id" [userId]="user.id.value"></app-groups>
   </mat-sidenav>
   <mat-sidenav-content class="sidenav-content"
                        [ngStyle]="{'min-height': 'calc(100vh - 110px)'}">

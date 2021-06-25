@@ -2,13 +2,15 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 import {ApiService} from "../services/api.service";
 import {Group, RelationType} from "../model/model"
 import {Subscription} from "rxjs";
+import {MatDialog} from "@angular/material/dialog";
+import {AddGroupComponent} from "../add-group/add-group.component";
 
 @Component({
   selector: 'app-groups',
   templateUrl: './groups.component.html',
   styleUrls: ['./groups.component.scss']
 })
-export class GroupsComponent implements OnInit, OnChanges {
+export class GroupsComponent implements OnChanges {
 
   @Input() userId: string | undefined;
 
@@ -16,11 +18,8 @@ export class GroupsComponent implements OnInit, OnChanges {
 
   private subscription: Subscription | undefined;
 
-  constructor(private api: ApiService) { }
-
-  ngOnInit(): void {
-    this.init();
-  }
+  constructor(private api: ApiService,
+              private dialog: MatDialog) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.init();
@@ -40,4 +39,12 @@ export class GroupsComponent implements OnInit, OnChanges {
     });
   }
 
+
+  add(): void {
+    this.dialog.open(AddGroupComponent, {
+      minWidth: '400px',
+      minHeight: '300px',
+      data: {}
+    });
+  }
 }

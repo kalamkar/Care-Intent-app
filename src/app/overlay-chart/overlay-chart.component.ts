@@ -117,7 +117,7 @@ export class OverlayChartComponent implements OnInit, OnChanges {
         this.comboChartData.dataTable[1][this.comboChartData.dataTable[0].indexOf('Glucose')] = -1;
       }
       if (this.comboChart && this.comboChart.chartComponent) {
-        this.comboChart.chartComponent.draw();
+        this.comboChart.reDrawChart();
       }
 
       if (this.messagesSubscription) {
@@ -167,7 +167,7 @@ export class OverlayChartComponent implements OnInit, OnChanges {
           this.comboChartData.dataTable[1][this.comboChartData.dataTable[0].indexOf('Food')] = 0;
         }
         if (this.comboChart && this.comboChart.chartComponent) {
-          this.comboChart.chartComponent.draw();
+          this.comboChart.reDrawChart();
         }
       });
     });
