@@ -1,20 +1,23 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 // @ts-ignore
 import {DateTime, Duration} from 'luxon';
 import {Subscription} from "rxjs";
 import {ApiService} from "../services/api.service";
 import {AppGoogleChartComponent} from "../google-chart/app-google-chart.component";
+import {Person, RelationType} from "../model/model";
 
 @Component({
   selector: 'app-person',
   templateUrl: './person.component.html',
   styleUrls: ['./person.component.scss']
 })
-export class PersonComponent implements OnInit {
+export class PersonComponent {
   private readonly routeSubscription: Subscription;
+  private subscription: Subscription | undefined;
 
-  personId: string | null = null;
+  personId: string | undefined;
+  person: Person | undefined;
   times: Array<Array<DateTime>> = new Array<Array<DateTime>>();
 
   constructor(private api: ApiService,
@@ -22,19 +25,27 @@ export class PersonComponent implements OnInit {
               private route: ActivatedRoute,) {
     this.routeSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        if (this.personId !== this.route.snapshot.paramMap.get('id')) {
+        const urlId = this.route.snapshot.paramMap.get('id');
+        if (this.personId !== urlId && urlId) {
+          this.personId = urlId;
           this.init();
         }
       }
     });
   }
 
-  ngOnInit(): void {
-    this.init();
-  }
-
   init(): void {
-    this.personId = this.route.snapshot.paramMap.get('id');
+    if (!this.personId) {
+      return;
+    }
+
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+    this.subscription = this.api.getResource('persons', this.personId).subscribe((person) => {
+      this.person = person;
+    });
+
     this.times = [];
     const cacheMillis = 10 * 60 * 1000;
     const now = DateTime.fromMillis(Math.floor(DateTime.now().toMillis() / cacheMillis) * cacheMillis);

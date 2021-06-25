@@ -15,9 +15,9 @@ export class OverlayChartComponent implements OnInit, OnChanges {
 
   private readonly MIN_MINUTES_FOR_ANNOTATION = 30;
 
-  @Input() personId: string | null = null;
-  @Input() end: DateTime | null = null;
-  @Input() start: DateTime | null = null;
+  @Input() personId: string | undefined;
+  @Input() end: DateTime | undefined;
+  @Input() start: DateTime | undefined;
   @Input() height: number = 500;
   @Input() legend: boolean = false;
   @ViewChild('comboChart') public comboChart: AppGoogleChartComponent | undefined;

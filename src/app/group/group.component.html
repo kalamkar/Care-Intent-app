@@ -1,1 +1,8 @@
-<p>group works!</p>
+<mat-nav-list>
+  <ng-container *ngFor="let member of members">
+    <a mat-list-item [routerLink]="['/person', member.id.value]">
+      <mat-icon>person</mat-icon>&nbsp;
+      <span>{{member | name}}</span>
+    </a>
+  </ng-container>
+</mat-nav-list>

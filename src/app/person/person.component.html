@@ -1,3 +1,4 @@
+<h1 *ngIf="person">{{person | name}}</h1>
 <ng-container *ngFor="let pair of times; first as isFirst">
   <app-overlay-chart *ngIf="isFirst" [personId]="personId" [start]="pair[0]" [end]="pair[1]" [legend]="true">
   </app-overlay-chart>
