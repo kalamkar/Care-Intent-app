@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ApiService} from "../services/api.service";
-import {Person, RelationType} from "../model/model";
+import {Group, Person, RelationType} from "../model/model";
 import {Subscription} from "rxjs";
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
@@ -14,10 +14,13 @@ import {AddPersonComponent} from "../add-person/add-person.component";
 export class GroupComponent implements OnChanges {
 
   @Input() groupId: string | undefined;
+  group: Group | undefined;
   members: Array<Person> = [];
+  isMainPage = false;
 
   private readonly routeSubscription: Subscription;
-  private subscription: Subscription | undefined;
+  private groupSubscription: Subscription | undefined;
+  private membersSubscription: Subscription | undefined;
 
   constructor(private api: ApiService,
               private router: Router,
@@ -28,6 +31,7 @@ export class GroupComponent implements OnChanges {
         const urlId = this.route.snapshot.paramMap.get('id');
         if (this.groupId !== urlId && urlId) {
           this.groupId = urlId;
+          this.isMainPage = true;
           this.init();
         }
       }
@@ -44,10 +48,17 @@ export class GroupComponent implements OnChanges {
       return;
     }
 
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+    if (this.groupSubscription) {
+      this.groupSubscription.unsubscribe();
     }
-    this.subscription = this.api.query(RelationType.memberOf, 'target',
+    this.groupSubscription = this.api.getResource('groups', this.groupId).subscribe(group => {
+      this.group = group;
+    });
+
+    if (this.membersSubscription) {
+      this.membersSubscription.unsubscribe();
+    }
+    this.membersSubscription = this.api.query(RelationType.memberOf, 'target',
       {'type': 'group', 'value': this.groupId}).subscribe((members) => {
       this.members = members;
     });

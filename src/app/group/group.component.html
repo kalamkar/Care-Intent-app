@@ -1,3 +1,4 @@
+<h1 *ngIf="group && isMainPage">{{group.title}}</h1>
 <button mat-icon-button (click)="add()"><mat-icon>person_add</mat-icon></button>
 <mat-nav-list>
   <ng-container *ngFor="let member of members">
