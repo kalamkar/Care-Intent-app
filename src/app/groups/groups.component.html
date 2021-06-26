@@ -1,4 +1,6 @@
-<button mat-icon-button (click)="add()"><mat-icon>group_add</mat-icon></button>
+<div class="toolbar">
+  <button mat-icon-button (click)="add()"><mat-icon>group_add</mat-icon></button>
+</div>
 <mat-nav-list>
   <ng-container *ngFor="let group of groups">
     <a mat-list-item *ngIf="group.id" [routerLink]="['/group', group.id.value]">

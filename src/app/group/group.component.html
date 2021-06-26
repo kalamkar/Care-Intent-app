@@ -1,5 +1,8 @@
-<h1 *ngIf="group && isMainPage">{{group.title}}</h1>
-<button mat-icon-button (click)="add()"><mat-icon>person_add</mat-icon></button>
+<div fxLayout="row" fxLayoutGap="12px" *ngIf="group && isMainPage">
+  <h1>{{group.title}}</h1>
+  <button mat-icon-button (click)="add()"><mat-icon>person_add</mat-icon></button>
+  <button mat-icon-button (click)="addAdmin()"><mat-icon>add_moderator</mat-icon></button>
+</div>
 <mat-nav-list>
   <ng-container *ngFor="let member of members">
     <a mat-list-item *ngIf="member.id" [routerLink]="['/person', member.id.value]">

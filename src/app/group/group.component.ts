@@ -71,4 +71,8 @@ export class GroupComponent implements OnChanges {
       data: {groupId: {'type': 'group', 'value': this.groupId}}
     });
   }
+
+  addAdmin(): void {
+
+  }
 }
