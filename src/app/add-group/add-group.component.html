@@ -3,9 +3,9 @@
     <input matInput placeholder="Title" [(ngModel)]="group.title" [ngModelOptions]="{standalone: true}">
   </mat-form-field>
   <div fxLayout="row" fxLayoutAlign="end center">
-    <button mat-raised-button type="submit" (click)="add()" color="primary" disabled="{{isInProcess}}">
-      <span>Login</span>
-      <mat-spinner *ngIf="isInProcess" class="login-spinner" [diameter]="20"></mat-spinner>
+    <button mat-raised-button type="submit" (click)="add()" color="primary"
+            disabled="{{isInProcess || !group.title}}">
+      <span>Add</span>
     </button>
   </div>
 </div>

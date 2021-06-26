@@ -10,7 +10,7 @@ import {Group, Identifier, Person, RelationType} from "../model/model";
 })
 export class AddPersonComponent implements OnInit {
 
-  person: Person = {name: {first: '', last: ''}, identifiers: [{type: 'phone', value: ''}]};
+  person: Person = {name: {first: '', last: ''}, identifiers: [{type: 'phone', value: '', active: true}]};
 
   isInProcess = false;
 

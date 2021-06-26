@@ -57,7 +57,7 @@ export class GroupComponent implements OnChanges {
     this.dialog.open(AddPersonComponent, {
       minWidth: '400px',
       minHeight: '300px',
-      data: {}
+      data: {groupId: {'type': 'group', 'value': this.groupId}}
     });
   }
 }

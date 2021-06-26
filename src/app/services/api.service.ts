@@ -57,7 +57,7 @@ export class ApiService {
     return this.get<Array<any>>(url, this.getOptions(false), (data: { rows: Array<any>; }) => data.rows)
   }
 
-  public getResource(collection: string, id: string, noCache = false): Observable<any> {
+  public getResource(collection: string, id: string, noCache = true): Observable<any> {
     const url = environment.apiUrl + '/' + collection + '/' + id;
     return this.get<any>(url, this.getOptions(noCache), null);
   }
@@ -71,7 +71,7 @@ export class ApiService {
   public query(relation: string, resourceType: string, resourceId: Identifier): Observable<Array<any>> {
     const url = environment.apiUrl + '/query?' + this.encodeQueryData(
       {'resource': resourceId.type + ':' + resourceId.value,  'resource_type': resourceType, 'relation_type': relation});
-    return this.get<Array<any>>(url, this.getOptions(false), (data: { results: Array<any>; }) => data.results)
+    return this.get<Array<any>>(url, this.getOptions(true), (data: { results: Array<any>; }) => data.results)
   }
 
   public addRelation(relation: Relation) {
