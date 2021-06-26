@@ -10,21 +10,33 @@ import {Group} from "../model/model";
 })
 export class AddGroupComponent implements OnInit {
 
-  group: Group = {title: ''};
+  group: Group;
 
   isInProcess = false;
 
   constructor(private api: ApiService,
               public dialogRef: MatDialogRef<AddGroupComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: {}) { }
+              @Inject(MAT_DIALOG_DATA) public data: {group: Group | undefined}) {
+    if (!this.data.group) {
+      this.group = {title: ''};
+    } else {
+      this.group = this.data.group;
+    }
+  }
 
   ngOnInit(): void {
   }
 
   add(): void {
     this.isInProcess = true;
-    this.api.addResource('groups', this.group).subscribe(result => {
-      this.dialogRef.close();
-    }, error => this.isInProcess = false);
+    if (this.data.group) {
+      this.api.editResource('groups', this.group).subscribe(result => {
+        this.dialogRef.close();
+      }, error => this.isInProcess = false);
+    } else {
+      this.api.addResource('groups', this.group).subscribe(result => {
+        this.dialogRef.close();
+      }, error => this.isInProcess = false);
+    }
   }
 }

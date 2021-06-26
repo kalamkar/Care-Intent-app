@@ -68,6 +68,14 @@ export class ApiService {
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
+  public editResource(collection: string, resource: any): Observable<any> {
+    const id = resource.id.value;
+    delete resource.id;
+    const url = environment.apiUrl + '/' + collection + '/' + id;
+    return this.patch<any>(url, JSON.stringify(resource),
+      this.getOptions(true, {'Content-Type': 'application/json'}));
+  }
+
   public query(relation: string, resourceType: string, resourceId: Identifier): Observable<Array<any>> {
     const url = environment.apiUrl + '/query?' + this.encodeQueryData(
       {'resource': resourceId.type + ':' + resourceId.value,  'resource_type': resourceType, 'relation_type': relation});

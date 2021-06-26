@@ -5,6 +5,9 @@ import {DateTime, Duration} from 'luxon';
 import {Subscription} from "rxjs";
 import {ApiService} from "../services/api.service";
 import {Person} from "../model/model";
+import {AddGroupComponent} from "../add-group/add-group.component";
+import {AddPersonComponent} from "../add-person/add-person.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-person',
@@ -21,7 +24,8 @@ export class PersonComponent {
 
   constructor(private api: ApiService,
               private router: Router,
-              private route: ActivatedRoute,) {
+              private route: ActivatedRoute,
+              private dialog: MatDialog) {
     this.routeSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         const urlId = this.route.snapshot.paramMap.get('id');
@@ -53,5 +57,11 @@ export class PersonComponent {
         now.minus(Duration.fromMillis((i + 1) * 24 * 60 * 60 * 1000)),
         now.minus(Duration.fromMillis(i * 24 * 60 * 60 * 1000))]);
     }
+  }
+
+  edit(): void {
+    this.dialog.open(AddPersonComponent, {
+      data: {person: this.person}
+    });
   }
 }

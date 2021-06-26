@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {ApiService} from "../services/api.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Group, Identifier, Person, RelationType} from "../model/model";
+import {Identifier, Person, RelationType} from "../model/model";
 
 @Component({
   selector: 'app-add-person',
@@ -10,35 +10,52 @@ import {Group, Identifier, Person, RelationType} from "../model/model";
 })
 export class AddPersonComponent implements OnInit {
 
-  person: Person = {name: {first: '', last: ''}, identifiers: [{type: 'phone', value: '', active: true}]};
+  person: Person;
 
   isInProcess = false;
 
   constructor(private api: ApiService,
               public dialogRef: MatDialogRef<AddPersonComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: {groupId: Identifier}) { }
+              @Inject(MAT_DIALOG_DATA) public data: {person: Person | undefined,
+                groupId: Identifier, relationType: string}) {
+    if (this.data.person) {
+      this.person = this.data.person;
+    } else {
+      this.person = {name: {first: '', last: ''}, identifiers: [{type: 'phone', value: '', active: true}]};
+    }
+  }
 
   ngOnInit(): void {
   }
 
   add(): void {
     this.isInProcess = true;
-    this.api.addResource('persons', this.person).subscribe((person: Person) => {
-      if (!person || !person.id) {
-        this.onError(true);
-        return;
-      }
-      const relation = {source: person.id, type: RelationType.memberOf, target: this.data.groupId};
-      this.api.addRelation(relation).subscribe(result => {
-        this.dialogRef.close();
+    if (this.data.person) {
+      this.api.editResource('persons', this.person).subscribe((person: Person) => {
+        this.dialogRef.close(true);
       }, error => this.onError());
-    }, error => this.onError());
+    } else {
+      this.api.addResource('persons', this.person).subscribe((person: Person) => {
+        if (!person || !person.id) {
+          this.onError(true);
+          return;
+        }
+        if (this.data.groupId && this.data.relationType) {
+          const relation = {source: person.id, type: this.data.relationType, target: this.data.groupId};
+          this.api.addRelation(relation).subscribe(result => {
+            this.dialogRef.close(true);
+          }, error => this.onError());
+        } else {
+          this.dialogRef.close(true);
+        }
+      }, error => this.onError());
+    }
   }
 
   onError(close: boolean = false) {
     this.isInProcess = false;
     if (close) {
-      this.dialogRef.close();
+      this.dialogRef.close(false);
     }
   }
 }

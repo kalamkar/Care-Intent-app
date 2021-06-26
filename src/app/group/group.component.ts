@@ -5,6 +5,7 @@ import {Subscription} from "rxjs";
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {AddPersonComponent} from "../add-person/add-person.component";
+import {AddGroupComponent} from "../add-group/add-group.component";
 
 @Component({
   selector: 'app-group',
@@ -64,15 +65,17 @@ export class GroupComponent implements OnChanges {
     });
   }
 
-  add(): void {
+  add(relationType: string): void {
     this.dialog.open(AddPersonComponent, {
       minWidth: '400px',
       minHeight: '300px',
-      data: {groupId: {'type': 'group', 'value': this.groupId}}
+      data: {groupId: {'type': 'group', 'value': this.groupId}, relationType}
     });
   }
 
-  addAdmin(): void {
-
+  edit(): void {
+    this.dialog.open(AddGroupComponent, {
+      data: {group: this.group}
+    });
   }
 }

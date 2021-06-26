@@ -1,4 +1,7 @@
-<h1 *ngIf="person">{{person | name}}</h1>
+<div fxLayout="row" fxLayoutGap="12px">
+  <h1 *ngIf="person">{{person | name}}</h1>
+  <button mat-icon-button (click)="edit()"><mat-icon>edit</mat-icon></button>
+</div>
 <ng-container *ngFor="let pair of times; first as isFirst">
   <app-overlay-chart *ngIf="isFirst" [personId]="personId" [start]="pair[0]" [end]="pair[1]" [legend]="true">
   </app-overlay-chart>
