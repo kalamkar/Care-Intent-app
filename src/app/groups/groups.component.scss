@@ -1,6 +1,4 @@
-@import "~src/theme";
-
 .toolbar {
   padding: 0 0 0 12px;
-  background-color: $light-background;
+  background-color: var(--primary-lighter-color);
 }
