@@ -130,10 +130,9 @@ export class OverlayChartComponent implements OnInit, OnChanges {
           return;
         }
         let hasMessages = false;
-        const foodTags = ['report.food', 'answer.food'];
         const foodMessages = messages.filter(message => {
           let isFoodMessage = false;
-          message.tags.forEach(tag => isFoodMessage = isFoodMessage || foodTags.indexOf(tag) >= 0);
+          message.tags.forEach(tag => isFoodMessage = isFoodMessage || tag === 'food.report');
           return isFoodMessage;
         });
         let otherRows = 0;
