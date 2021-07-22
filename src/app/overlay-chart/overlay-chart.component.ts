@@ -40,7 +40,9 @@ export class OverlayChartComponent implements OnInit, OnChanges {
       series: {
         0: {type: 'line'},
         1: {type: 'line', lineWidth: 16},
-        2: {type: 'scatter'}
+        2: {type: 'scatter'},
+        3: {type: 'scatter'},
+        4: {type: 'scatter'}
       },
       hAxis: {
         format: 'ha',
@@ -49,7 +51,9 @@ export class OverlayChartComponent implements OnInit, OnChanges {
           color: 'gray'
         },
         gridlines: {color: 'transparent'},
-        minorGridlines: {count: 0}
+        minorGridlines: {count: 0},
+        maxValue: 0,
+        minValue: 0
       },
       vAxis: {
         gridlines: {color: 'transparent'},
@@ -79,11 +83,13 @@ export class OverlayChartComponent implements OnInit, OnChanges {
     this.comboChartData.options.height = this.height;
     this.comboChartData.options.legend = {position: this.legend ? 'top' : 'none'};
     this.comboChartData.options.title = this.start.toFormat('LLL dd, EEEE');
+    this.comboChartData.options.hAxis.minValue = this.start.toJSDate();
+    this.comboChartData.options.hAxis.maxValue = this.end.toJSDate();
 
     if (this.dataSubscription) {
       this.dataSubscription.unsubscribe();
     }
-    this.dataSubscription = this.api.getData(this.personId, ['glucose', 'steps'], this.start, this.end).subscribe(
+    this.dataSubscription = this.api.getData(this.personId, ['glucose', 'steps', 'sys', 'dia'], this.start, this.end).subscribe(
         (data: DataPoint[]) => {
       if (!data || data.length === 0) {
         return;
@@ -92,30 +98,41 @@ export class OverlayChartComponent implements OnInit, OnChanges {
       this.comboChartData.dataTable.push(['Time',
         'Glucose', { role: 'annotation' }, { role: 'annotationText' },
         'Activity', { role: 'annotation' },
-        'Food', { role: 'annotation' }, { role: 'annotationText' }]);
-      const counts = {'Glucose': 0, 'Activity': 0};
+        'Food', { role: 'annotation' }, { role: 'annotationText' },
+        'BP Sys', 'BP Dia'
+      ]);
+      let missing = ['Glucose', 'Activity', 'BP Sys', 'BP Dia'];
       data.forEach(row => {
+        const timestamp = DateTime.fromISO(row.time);
         if (row.name === 'glucose') {
-          const timestamp = DateTime.fromISO(row.time);
           this.comboChartData.dataTable.push([timestamp.toJSDate(), row.number, null, null, null, null,
-            null, null, null]);
-          counts['Glucose'] += 1;
+            null, null, null, null, null]);
+          missing = missing.filter(value => value !== 'Glucose');
         } else if (row.name === 'steps') {
           const duration = Duration.fromMillis(row.duration * 1000);
           const startTime = DateTime.fromISO(row.time);
           const minutes = duration.as('minutes');
           const activityEndTime = startTime.plus(duration);
-          const activityAnnotation = minutes > this.MIN_MINUTES_FOR_ANNOTATION ? minutes.toFixed().toString() + ' mins' : null;
-          this.comboChartData.dataTable.push([startTime.toJSDate(), null, null, null, 10, activityAnnotation, null, null, null]);
-          this.comboChartData.dataTable.push([activityEndTime.toJSDate(), null, null, null, 10, null, null, null, null]);
-          counts['Activity'] += 1;
+          const activityAnnotation = minutes > this.MIN_MINUTES_FOR_ANNOTATION
+            ? minutes.toFixed().toString() + ' mins' : null;
+          this.comboChartData.dataTable.push([startTime.toJSDate(), null, null, null, 10, activityAnnotation, null,
+            null, null, null, null]);
+          this.comboChartData.dataTable.push([activityEndTime.toJSDate(), null, null, null, 10, null, null, null, null,
+            null, null]);
+          missing = missing.filter(value => value !== 'Activity');
+        } else if (row.name === 'sys') {
+          this.comboChartData.dataTable.push([timestamp.toJSDate(), null, null, null, null, null, null, null, null,
+            row.number, null]);
+          missing = missing.filter(value => value !== 'BP Sys');
+        } else if (row.name === 'dia') {
+          this.comboChartData.dataTable.push([timestamp.toJSDate(), null, null, null, null, null, null, null, null,
+            null, row.number]);
+          missing = missing.filter(value => value !== 'BP Dia');
         }
       });
-      if (!counts['Activity']) {
-        this.comboChartData.dataTable[1][this.comboChartData.dataTable[0].indexOf('Activity')] = 0;
-      } else if (!counts['Glucose']) {
-        this.comboChartData.dataTable[1][this.comboChartData.dataTable[0].indexOf('Glucose')] = -1;
-      }
+      missing.forEach(value => {
+        this.comboChartData.dataTable[1][this.comboChartData.dataTable[0].indexOf(value)] = -1
+      });
       if (this.comboChart && this.comboChart.chartComponent) {
         this.comboChart.reDrawChart();
       }
@@ -156,7 +173,7 @@ export class OverlayChartComponent implements OnInit, OnChanges {
             } else {
               const value = this.comboChartData.dataTable[rowIndex + otherRows + 1][1];
               this.comboChartData.dataTable.push([rowTime.toJSDate(), null, null, null, null, null, value,
-                message.content, message.content]);
+                message.content, message.content, null, null]);
               prevMessage = {time: messageTime, content: message.content};
               hasMessages = true;
             }
