@@ -27,6 +27,9 @@ import { GroupComponent } from './group/group.component';
 import {MatListModule} from "@angular/material/list";
 import { AddPersonComponent } from './add-person/add-person.component';
 import { AddGroupComponent } from './add-group/add-group.component';
+import {PersonChatComponent} from "./person/person-chat/person-chat.component";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatCardModule} from "@angular/material/card";
 
 
 @NgModule({
@@ -34,6 +37,7 @@ import { AddGroupComponent } from './add-group/add-group.component';
     AppComponent,
     AppGoogleChartComponent,
     PersonComponent,
+    PersonChatComponent,
     OverlayChartComponent,
     LoginComponent,
     NamePipe,
@@ -59,7 +63,9 @@ import { AddGroupComponent } from './add-group/add-group.component';
     MatProgressSpinnerModule,
     FlexLayoutModule,
     MatTabsModule,
-    MatListModule
+    MatListModule,
+    MatTooltipModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

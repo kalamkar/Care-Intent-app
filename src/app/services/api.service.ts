@@ -51,9 +51,12 @@ export class ApiService {
     return this.get<Array<any>>(url, this.getOptions(false), (data: { rows: Array<any>; }) => data.rows)
   }
 
-  public getMessages(source: string, start: DateTime, end: DateTime): Observable<Array<any>> {
-    const url = environment.apiUrl + '/messages/' + source+ '?' + this.encodeQueryData(
-      {'start': start.toISO(),  'end': end.toISO()});
+  public getMessages(source: string, start: DateTime, end: DateTime, bothDirections = false): Observable<Array<any>> {
+    const params: { [index: string]: string; } = {'start': start.toISO(),  'end': end.toISO()};
+    if (bothDirections) {
+      params['both'] = '1';
+    }
+    const url = environment.apiUrl + '/messages/' + source+ '?' + this.encodeQueryData(params);
     return this.get<Array<any>>(url, this.getOptions(false), (data: { rows: Array<any>; }) => data.rows)
   }
 

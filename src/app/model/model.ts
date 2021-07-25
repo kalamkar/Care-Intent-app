@@ -9,6 +9,8 @@ export interface DataPoint {
 export interface Message {
   time: string,
   status: string,
+  sender: Identifier,
+  receiver: Identifier,
   tags: string[],
   content: string,
   content_type: string
