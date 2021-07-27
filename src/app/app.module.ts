@@ -16,7 +16,7 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatButtonModule} from "@angular/material/button";
 import { LoginComponent } from './login/login.component';
 import {MatInputModule} from "@angular/material/input";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatDialogModule} from "@angular/material/dialog";
 import {FlexLayoutModule} from "@angular/flex-layout";
@@ -30,6 +30,9 @@ import { AddGroupComponent } from './add-group/add-group.component';
 import {PersonChatComponent} from "./person/person-chat/person-chat.component";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatCardModule} from "@angular/material/card";
+import { BiomarkersComponent } from './biomarkers/biomarkers.component';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
 
 
 @NgModule({
@@ -44,7 +47,8 @@ import {MatCardModule} from "@angular/material/card";
     GroupsComponent,
     GroupComponent,
     AddPersonComponent,
-    AddGroupComponent
+    AddGroupComponent,
+    BiomarkersComponent
   ],
   imports: [
     BrowserModule,
@@ -64,8 +68,11 @@ import {MatCardModule} from "@angular/material/card";
     FlexLayoutModule,
     MatTabsModule,
     MatListModule,
+    MatNativeDateModule,
     MatTooltipModule,
-    MatCardModule
+    MatCardModule,
+    MatDatepickerModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

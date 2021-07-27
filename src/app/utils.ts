@@ -13,4 +13,14 @@ export class Utils {
     });
     return formatted;
   }
+
+  static removeColumn(index: number, data: Array<Array<any>>) : Array<Array<any>> {
+    if (!data) {
+      return data;
+    }
+    data.forEach((row: Array<any>) => {
+      row.splice(index, 1);
+    });
+    return data;
+  }
 }
