@@ -39,6 +39,16 @@ export interface Relation {
   type: string
 }
 
+export interface Schedule {
+  name: string,
+  timings: Timing[]
+}
+
+export interface Timing {
+  day_of_week: string,
+  time_of_day: string
+}
+
 export enum RelationType {
   adminOf = 'admin_of',
   memberOf = 'member_of'
