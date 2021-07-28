@@ -60,21 +60,21 @@ export class ApiService {
     return this.get<Array<any>>(url, this.getOptions(false), (data: { rows: Array<any>; }) => data.rows)
   }
 
-  public getResource(collection: string, id: string, noCache = true): Observable<any> {
-    const url = environment.apiUrl + '/' + collection + '/' + id;
+  public getResource(collection: string | string[], id: string, noCache = true): Observable<any> {
+    const url = environment.apiUrl + '/' + (collection instanceof Array ? collection.join('/') : collection) + '/' + id;
     return this.get<any>(url, this.getOptions(noCache), null);
   }
 
-  public addResource(collection: string, resource: any): Observable<any> {
-    const url = environment.apiUrl + '/' + collection;
+  public addResource(collection: string | string[], resource: any): Observable<any> {
+    const url = environment.apiUrl + '/' + (collection instanceof Array ? collection.join('/') : collection);
     return this.post<any>(url, JSON.stringify(resource),
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
-  public editResource(collection: string, resource: any): Observable<any> {
+  public editResource(collection: string | string[], resource: any): Observable<any> {
     const id = resource.id.value;
     delete resource.id;
-    const url = environment.apiUrl + '/' + collection + '/' + id;
+    const url = environment.apiUrl + '/' + (collection instanceof Array ? collection.join('/') : collection) + '/' + id;
     return this.patch<any>(url, JSON.stringify(resource),
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
