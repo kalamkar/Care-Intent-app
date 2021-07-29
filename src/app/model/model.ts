@@ -7,6 +7,7 @@ export interface DataPoint {
 }
 
 export interface Message {
+  id?: Identifier,
   time: string,
   status: string,
   sender: Identifier,
@@ -40,13 +41,15 @@ export interface Relation {
 }
 
 export interface Schedule {
+  id?: Identifier,
   name: string,
+  action_id?: string,
   timings: Timing[]
 }
 
 export interface Timing {
-  day_of_week: string,
-  time_of_day: string
+  day: string,
+  time: string
 }
 
 export enum RelationType {

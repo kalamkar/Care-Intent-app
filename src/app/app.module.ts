@@ -34,6 +34,9 @@ import { BiomarkersComponent } from './biomarkers/biomarkers.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import { MessageQueueComponent } from './person/message-queue/message-queue.component';
+import { SchedulesComponent } from './person/schedules/schedules.component';
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatSelectModule} from "@angular/material/select";
 
 
 @NgModule({
@@ -50,7 +53,8 @@ import { MessageQueueComponent } from './person/message-queue/message-queue.comp
     AddPersonComponent,
     AddGroupComponent,
     BiomarkersComponent,
-    MessageQueueComponent
+    MessageQueueComponent,
+    SchedulesComponent
   ],
   imports: [
     BrowserModule,
@@ -74,7 +78,9 @@ import { MessageQueueComponent } from './person/message-queue/message-queue.comp
     MatTooltipModule,
     MatCardModule,
     MatDatepickerModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatExpansionModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]
