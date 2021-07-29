@@ -38,11 +38,28 @@ export class SchedulesComponent implements OnInit {
     });
   }
 
-  addSchedule(title: string): void {
-    this.schedules.push({name: title, timings: []});
+  addTiming(schedule: Schedule, day: string, time: string): void {
+    schedule.timings.push({day, time});
+    this.update(schedule);
   }
 
-  addTiming(schedule: Schedule, day: string, time: string): void {
-    schedule.timings.push({day, time})
+  create(data: Schedule): void {
+    if ((this.apiSubscription && !this.apiSubscription.closed) || !this.personId) {
+      return;
+    }
+
+    this.apiSubscription = this.api.addResource(['persons', this.personId, 'schedules'], data).subscribe(schedule => {
+      this.schedules.push(schedule);
+    });
+  }
+
+  update(original: Schedule): void {
+    if ((this.apiSubscription && !this.apiSubscription.closed) || !this.personId) {
+      return;
+    }
+
+    this.apiSubscription = this.api.editResource(['persons', this.personId, 'schedules'], original).subscribe(schedule => {
+      this.schedules.splice(this.schedules.indexOf(original), 1, schedule);
+    });
   }
 }

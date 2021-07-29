@@ -5,6 +5,7 @@ import {DataPoint, Message} from "../model/model";
 // @ts-ignore
 import {DateTime, Duration} from 'luxon';
 import {AppGoogleChartComponent} from "../google-chart/app-google-chart.component";
+import {Utils} from "../utils";
 
 @Component({
   selector: 'app-overlay-chart',
@@ -131,8 +132,12 @@ export class OverlayChartComponent implements OnInit, OnChanges {
         }
       });
       missing.forEach(value => {
-        this.comboChartData.dataTable[1][this.comboChartData.dataTable[0].indexOf(value)] = -1
+        this.comboChartData.dataTable[1][this.comboChartData.dataTable[0].indexOf(value)] = -1;
       });
+      // missing.forEach(value => {
+      //   this.comboChartData.dataTable =
+      //     Utils.removeColumn(this.comboChartData.dataTable[0].indexOf(value), this.comboChartData.dataTable);
+      // });
       if (this.comboChart && this.comboChart.chartComponent) {
         this.comboChart.reDrawChart();
       }
