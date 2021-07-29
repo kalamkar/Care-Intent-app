@@ -52,7 +52,7 @@ export class PersonComponent {
     this.times = [];
     const cacheMillis = 10 * 60 * 1000;
     const now = DateTime.fromMillis(Math.floor(DateTime.now().toMillis() / cacheMillis) * cacheMillis);
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 1; i++) {
       this.times.push([
         now.minus(Duration.fromMillis((i + 1) * 24 * 60 * 60 * 1000)),
         now.minus(Duration.fromMillis(i * 24 * 60 * 60 * 1000))]);
