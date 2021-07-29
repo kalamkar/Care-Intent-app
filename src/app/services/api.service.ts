@@ -65,6 +65,11 @@ export class ApiService {
     return this.get<any>(url, this.getOptions(noCache), null);
   }
 
+  public getAllResources(collection: string[], noCache = true): Observable<any> {
+    const url = environment.apiUrl + '/' + collection.join('/');
+    return this.get<any>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results);
+  }
+
   public addResource(collection: string | string[], resource: any): Observable<any> {
     const url = environment.apiUrl + '/' + (collection instanceof Array ? collection.join('/') : collection);
     return this.post<any>(url, JSON.stringify(resource),

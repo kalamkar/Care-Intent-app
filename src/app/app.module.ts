@@ -33,6 +33,7 @@ import {MatCardModule} from "@angular/material/card";
 import { BiomarkersComponent } from './biomarkers/biomarkers.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
+import { MessageQueueComponent } from './person/message-queue/message-queue.component';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import {MatNativeDateModule} from "@angular/material/core";
     GroupComponent,
     AddPersonComponent,
     AddGroupComponent,
-    BiomarkersComponent
+    BiomarkersComponent,
+    MessageQueueComponent
   ],
   imports: [
     BrowserModule,

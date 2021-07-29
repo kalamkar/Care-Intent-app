@@ -19,6 +19,9 @@
     <app-biomarkers [personId]="personId"></app-biomarkers>
   </mat-tab>
   <mat-tab label="Chat">
-    <app-person-chat [person]="person"></app-person-chat>
+    <div fxLayout="row" fxLayoutGap="10px">
+      <app-person-chat [person]="person" fxFlex="50" #chat></app-person-chat>
+      <app-message-queue [personId]="personId" fxFlex="50"></app-message-queue>
+    </div>
   </mat-tab>
 </mat-tab-group>
