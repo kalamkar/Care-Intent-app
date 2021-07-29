@@ -1,10 +1,10 @@
 <div class="toolbar">
-  <button mat-icon-button (click)="add()"><mat-icon>group_add</mat-icon></button>
+  <button mat-icon-button (click)="add()"><mat-icon>add_business</mat-icon></button>
 </div>
 <mat-nav-list>
   <ng-container *ngFor="let group of groups">
     <a mat-list-item *ngIf="group.id" [routerLink]="['/group', group.id.value]">
-      <mat-icon>group</mat-icon>&nbsp;
+      <mat-icon>store</mat-icon>&nbsp;
       <span>{{group.title}}</span>
     </a>
     <app-group *ngIf="group.id" [groupId]="group.id.value"></app-group>
