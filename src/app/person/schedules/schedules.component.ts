@@ -33,7 +33,7 @@ export class SchedulesComponent implements OnInit {
       this.apiSubscription.unsubscribe();
     }
 
-    this.apiSubscription = this.api.getAllResources(['persons', this.personId, 'schedules']).subscribe(schedules => {
+    this.apiSubscription = this.api.getAllResources(['person', this.personId, 'schedule']).subscribe(schedules => {
       this.schedules = schedules;
     });
   }
@@ -48,7 +48,7 @@ export class SchedulesComponent implements OnInit {
       return;
     }
 
-    this.apiSubscription = this.api.addResource(['persons', this.personId, 'schedules'], data).subscribe(schedule => {
+    this.apiSubscription = this.api.addResource(['person', this.personId, 'schedule'], data).subscribe(schedule => {
       this.schedules.push(schedule);
     });
   }
@@ -58,7 +58,7 @@ export class SchedulesComponent implements OnInit {
       return;
     }
 
-    this.apiSubscription = this.api.editResource(['persons', this.personId, 'schedules'], original).subscribe(schedule => {
+    this.apiSubscription = this.api.editResource(['person', this.personId, 'schedule'], original).subscribe(schedule => {
       this.schedules.splice(this.schedules.indexOf(original), 1, schedule);
     });
   }

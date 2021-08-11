@@ -30,11 +30,11 @@ export class AddGroupComponent implements OnInit {
   add(): void {
     this.isInProcess = true;
     if (this.data.group) {
-      this.api.editResource('groups', this.group).subscribe(result => {
+      this.api.editResource('group', this.group).subscribe(result => {
         this.dialogRef.close();
       }, error => this.isInProcess = false);
     } else {
-      this.api.addResource('groups', this.group).subscribe(result => {
+      this.api.addResource('group', this.group).subscribe(result => {
         this.dialogRef.close();
       }, error => this.isInProcess = false);
     }

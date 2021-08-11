@@ -31,11 +31,11 @@ export class AddPersonComponent implements OnInit {
   add(): void {
     this.isInProcess = true;
     if (this.data.person) {
-      this.api.editResource('persons', this.person).subscribe((person: Person) => {
+      this.api.editResource('person', this.person).subscribe((person: Person) => {
         this.dialogRef.close(true);
       }, error => this.onError());
     } else {
-      this.api.addResource('persons', this.person).subscribe((person: Person) => {
+      this.api.addResource('person', this.person).subscribe((person: Person) => {
         if (!person || !person.id) {
           this.onError(true);
           return;

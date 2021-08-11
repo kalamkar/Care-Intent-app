@@ -31,8 +31,8 @@ export class MessageQueueComponent implements OnInit {
       this.messagesSubscription.unsubscribe();
     }
 
-    this.messagesSubscription = this.api.getAllResources(['persons', this.personId, 'messages']).subscribe(messages => {
-      this.messages = messages;
+    this.messagesSubscription = this.api.getAllResources(['person', this.personId, 'message']).subscribe(messages => {
+      this.messages = messages.filter((message: Message) => message.status === 'queued');
     });
   }
 }

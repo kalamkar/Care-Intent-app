@@ -46,9 +46,9 @@ export class ApiService {
   }
 
   public getData(source: string, names: string[], start: DateTime, end: DateTime): Observable<Array<any>> {
-    const url = environment.apiUrl + '/data/' + source + '?' + this.encodeQueryData(
+    const url = environment.apiUrl + '/person/' + source + '/data?' + this.encodeQueryData(
       {'name': names, 'start': start.toISO(), 'end': end.toISO()});
-    return this.get<Array<any>>(url, this.getOptions(false), (data: { rows: Array<any>; }) => data.rows)
+    return this.get<Array<any>>(url, this.getOptions(false), (data: { results: Array<any>; }) => data.results)
   }
 
   public getMessages(source: string, start: DateTime, end: DateTime, bothDirections = false): Observable<Array<any>> {
@@ -56,8 +56,8 @@ export class ApiService {
     if (bothDirections) {
       params['both'] = '1';
     }
-    const url = environment.apiUrl + '/messages/' + source+ '?' + this.encodeQueryData(params);
-    return this.get<Array<any>>(url, this.getOptions(false), (data: { rows: Array<any>; }) => data.rows)
+    const url = environment.apiUrl + '/person/' + source + '/message?' + this.encodeQueryData(params);
+    return this.get<Array<any>>(url, this.getOptions(false), (data: { results: Array<any>; }) => data.results)
   }
 
   public getResource(collection: string | string[], id: string, noCache = true): Observable<any> {
@@ -85,13 +85,13 @@ export class ApiService {
   }
 
   public query(relation: string, resourceType: string, resourceId: Identifier): Observable<Array<any>> {
-    const url = environment.apiUrl + '/query?' + this.encodeQueryData(
-      {'resource': resourceId.type + ':' + resourceId.value,  'resource_type': resourceType, 'relation_type': relation});
+    const url = environment.apiUrl + '/'  + resourceId.type + '/' + resourceId.value + '/relation?'
+      + this.encodeQueryData({'resource_type': resourceType, 'relation_type': relation});
     return this.get<Array<any>>(url, this.getOptions(true), (data: { results: Array<any>; }) => data.results)
   }
 
   public addRelation(relation: Relation) {
-    const url = environment.apiUrl + '/relate';
+    const url = environment.apiUrl + '/relation';
     return this.post<any>(url, JSON.stringify(relation),
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }

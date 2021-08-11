@@ -21,7 +21,7 @@ export class ContextService {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-    this.subscription = this.api.getResource('persons', 'me', true).subscribe(
+    this.subscription = this.api.getResource('person', 'me', true).subscribe(
       (user) => {
         this.user = user;
         this.personChange.emit(user);

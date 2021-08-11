@@ -52,7 +52,7 @@ export class GroupComponent implements OnChanges {
     if (this.groupSubscription) {
       this.groupSubscription.unsubscribe();
     }
-    this.groupSubscription = this.api.getResource('groups', this.groupId).subscribe(group => {
+    this.groupSubscription = this.api.getResource('group', this.groupId).subscribe(group => {
       this.group = group;
     });
 

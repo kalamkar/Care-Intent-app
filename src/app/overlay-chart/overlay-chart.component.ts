@@ -69,7 +69,7 @@ export class OverlayChartComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.init();
+    // this.init();
   }
 
   ngOnChanges(): void {

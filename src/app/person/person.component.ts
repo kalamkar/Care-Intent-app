@@ -45,7 +45,7 @@ export class PersonComponent {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-    this.subscription = this.api.getResource('persons', this.personId).subscribe((person) => {
+    this.subscription = this.api.getResource('person', this.personId).subscribe((person) => {
       this.person = person;
     });
 
