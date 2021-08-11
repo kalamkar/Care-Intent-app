@@ -37,7 +37,7 @@
     <div class="bottom" fxLayoutAlign="start center">
       <textarea matInput class="input" [(ngModel)]="newMessage" fxFlex placeholder="Type a message"></textarea>
       <button mat-mini-fab color="primary" class="send" [disabled]="!newMessage || isLoading || isSendingMsg"
-              aria-label="Send message">
+              aria-label="Send message" (click)="send()">
         <mat-icon>send</mat-icon>
       </button>
     </div>

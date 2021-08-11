@@ -148,6 +148,17 @@ export class PersonChatComponent implements OnInit, AfterViewInit, OnChanges, On
     this.init();
   }
 
+  send() {
+    if (!this.person || !this.person.id) {
+      return;
+    }
+    this.isSendingMsg = true;
+    this.api.sendMessage(this.newMessage, this.person.id.value, this.person.identifiers[0].value).subscribe(() => {
+      this.newMessage = '';
+      this.isSendingMsg = false;
+    }, error => this.isSendingMsg = false);
+  }
+
   keepOrder<T>(a: T, b: T): T {
     return a;
   }

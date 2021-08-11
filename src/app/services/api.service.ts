@@ -96,6 +96,13 @@ export class ApiService {
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
+  public sendMessage(content: string, personId: string, phone: string) {
+    const url = environment.apiUrl + '/person/' + personId + '/message';
+    return this.post<any>(url, JSON.stringify(
+      {'receiver': {'type': 'phone', 'value': phone}, 'content': content, 'content_type': 'text/plain'}),
+      this.getOptions(true, {'Content-Type': 'application/json'}));
+  }
+
   public login(id: string, pass: string) {
     const url = environment.authUrl + '/login';
     return this.post<any>(url, JSON.stringify({'identifier': id, 'password': pass}),
