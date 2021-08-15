@@ -1,14 +1,13 @@
 steps:
 
-  # Install node packages
-  - name: 'gcr.io/cloud-builders/npm'
-    args: [ 'install' ]
+  - name: node
+    entrypoint: yarn
+    args: ['install']
 
-  # Build productive files
-  - name: 'gcr.io/cloud-builders/npm'
-    args: [ 'run', 'buildprod']
+  - name: node
+    entrypoint: yarn
+    args: ['run', 'buildprod']
 
-  # Deploy to google cloud app egnine
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['app', 'deploy', '--version', 'live']
     timeout: '1600s'
