@@ -42,7 +42,7 @@ export class AddPersonComponent implements OnInit {
         }
         if (this.data.groupId && this.data.relationType) {
           const relation = {source: person.id, type: this.data.relationType, target: this.data.groupId};
-          this.api.addRelation(relation).subscribe(result => {
+          this.api.addRelation(this.data.groupId, person.id, this.data.relationType).subscribe(result => {
             this.dialogRef.close(true);
           }, error => this.onError());
         } else {

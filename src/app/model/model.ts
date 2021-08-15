@@ -53,6 +53,6 @@ export interface Timing {
 }
 
 export enum RelationType {
-  adminOf = 'admin_of',
-  memberOf = 'member_of'
+  admin = 'admin',
+  member = 'member'
 }

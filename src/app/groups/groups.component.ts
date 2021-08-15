@@ -33,8 +33,8 @@ export class GroupsComponent implements OnChanges {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-    this.subscription = this.api.query(RelationType.adminOf, 'source',
-      {'type': 'person', 'value': this.userId}).subscribe((groups) => {
+    this.subscription = this.api.getParents({'type': 'person', 'value': this.userId}, RelationType.admin)
+          .subscribe((groups) => {
         this.groups = groups;
     });
   }

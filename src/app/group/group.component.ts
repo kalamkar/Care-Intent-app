@@ -59,8 +59,8 @@ export class GroupComponent implements OnChanges {
     if (this.membersSubscription) {
       this.membersSubscription.unsubscribe();
     }
-    this.membersSubscription = this.api.query(RelationType.memberOf, 'target',
-      {'type': 'group', 'value': this.groupId}).subscribe((members) => {
+    this.membersSubscription = this.api.getChildren({'type': 'group', 'value': this.groupId}, RelationType.member)
+        .subscribe((members) => {
       this.members = members;
     });
   }

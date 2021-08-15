@@ -84,15 +84,19 @@ export class ApiService {
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
-  public query(relation: string, resourceType: string, resourceId: Identifier): Observable<Array<any>> {
-    const url = environment.apiUrl + '/'  + resourceId.type + '/' + resourceId.value + '/relation?'
-      + this.encodeQueryData({'resource_type': resourceType, 'relation_type': relation});
+  public getParents(childId: Identifier, relationType: string): Observable<Array<any>> {
+    const url = environment.apiUrl + '/group/all/' + relationType + '/' + childId.value;
     return this.get<Array<any>>(url, this.getOptions(true), (data: { results: Array<any>; }) => data.results)
   }
 
-  public addRelation(relation: Relation) {
-    const url = environment.apiUrl + '/relation';
-    return this.post<any>(url, JSON.stringify(relation),
+  public getChildren(parentId: Identifier, relationType: string): Observable<Array<any>> {
+    const url = environment.apiUrl + '/'  + parentId.type + '/' + parentId.value + '/' + relationType;
+    return this.get<Array<any>>(url, this.getOptions(true), (data: { results: Array<any>; }) => data.results)
+  }
+
+  public addRelation(parentId: Identifier, childId: Identifier, relationType: string) {
+    const url = environment.apiUrl + '/' + parentId.type + '/' + parentId.value + '/' + relationType;
+    return this.post<any>(url, JSON.stringify(childId),
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
