@@ -1,8 +1,8 @@
 <div fxLayout="row" fxLayoutGap="12px" *ngIf="group && isMainPage">
   <h1>{{group.title}}</h1>
   <button mat-icon-button (click)="edit()"><mat-icon>edit</mat-icon></button>
-  <button mat-icon-button (click)="add('member_of')"><mat-icon>person_add</mat-icon></button>
-  <button mat-icon-button (click)="add('admin_of')"><mat-icon>add_moderator</mat-icon></button>
+  <button mat-icon-button (click)="add('member')"><mat-icon>person_add</mat-icon></button>
+  <button mat-icon-button (click)="add('admin')"><mat-icon>add_moderator</mat-icon></button>
 </div>
 <mat-nav-list>
   <ng-container *ngFor="let member of members">
