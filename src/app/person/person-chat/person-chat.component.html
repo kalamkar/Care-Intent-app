@@ -19,8 +19,10 @@
             <div #messages *ngFor="let message of day.value"
                  class="message-wrapper {{message.status === 'received' ? 'them' : 'me'}}">
               <div class="circle-wrapper" fxLayoutAlign="center center" *ngIf="person && person.name"
-                   [matTooltip]="(message.status === 'received' ? person.name.first : message.sender.value)">
-                {{(message.status === 'received' ? person.name.first : message.sender.value).slice(0, 4)}}
+                   [matTooltip]="(message.status === 'received' ? person.name.first
+                   : (message.sender ? message.sender.value : 'System'))">
+                {{(message.status === 'received' ? person.name.first :
+                    (message.sender ? message.sender.value : 'System')).slice(0, 4)}}
               </div>
               <div class="text-wrapper">
                 <span class="message-text">{{message.content}}</span>
