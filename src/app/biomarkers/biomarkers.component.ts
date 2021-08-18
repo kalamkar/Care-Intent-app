@@ -90,7 +90,7 @@ export class BiomarkersComponent implements OnInit, OnChanges, AfterViewInit {
     this.comboChartData.options.hAxis.minValue = this.range.value.start;
     this.comboChartData.options.hAxis.maxValue = this.range.value.end;
 
-    this.dataSubscription = this.api.getData(this.personId, ['sys', 'dia', 'pulse'],
+    this.dataSubscription = this.api.getData(this.personId, ['systolic', 'diastolic', 'pulse'],
           DateTime.fromJSDate(this.range.value.start), DateTime.fromJSDate(this.range.value.end).plus({days: 1})).subscribe(
       (data: DataPoint[]) => {
         this.comboChartData.dataTable = [];
@@ -104,10 +104,10 @@ export class BiomarkersComponent implements OnInit, OnChanges, AfterViewInit {
         let missing = ['BP Sys', 'BP Dia', 'Pulse'];
         data.forEach(row => {
           const timestamp = DateTime.fromISO(row.time);
-          if (row.name === 'sys') {
+          if (row.name === 'systolic') {
             this.comboChartData.dataTable.push([timestamp.toJSDate(), row.number, null, null]);
             missing = missing.filter(value => value !== 'BP Sys');
-          } else if (row.name === 'dia') {
+          } else if (row.name === 'diastolic') {
             this.comboChartData.dataTable.push([timestamp.toJSDate(), null, row.number, null]);
             missing = missing.filter(value => value !== 'BP Dia');
           } else if (row.name === 'pulse') {
