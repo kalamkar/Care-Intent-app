@@ -53,6 +53,14 @@ export interface Timing {
   time: string
 }
 
+export interface Ticket {
+  id: number,
+  time: string,
+  category: string,
+  title: string,
+  status: string
+}
+
 export enum RelationType {
   admin = 'admin',
   member = 'member'

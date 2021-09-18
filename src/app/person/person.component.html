@@ -4,9 +4,9 @@
 </div>
 <mat-tab-group>
   <mat-tab label="Chat">
-    <div fxLayout="row" fxLayoutGap="10px">
-      <app-person-chat [person]="person" fxFlex="50" #chat></app-person-chat>
-      <app-message-queue [personId]="personId" fxFlex="50"></app-message-queue>
-    </div>
+    <app-person-chat [person]="person"></app-person-chat>
+  </mat-tab>
+  <mat-tab label="Tickets">
+    <app-tickets [personId]="personId"></app-tickets>
   </mat-tab>
 </mat-tab-group>

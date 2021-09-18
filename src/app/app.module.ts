@@ -39,6 +39,7 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatSelectModule} from "@angular/material/select";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatTableModule} from "@angular/material/table";
+import { TicketsComponent } from './person/tickets/tickets.component';
 
 
 @NgModule({
@@ -56,7 +57,8 @@ import {MatTableModule} from "@angular/material/table";
     AddGroupComponent,
     BiomarkersComponent,
     MessageQueueComponent,
-    SchedulesComponent
+    SchedulesComponent,
+    TicketsComponent
   ],
   imports: [
     BrowserModule,
