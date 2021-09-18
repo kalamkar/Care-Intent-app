@@ -3,30 +3,10 @@
   <button mat-icon-button (click)="edit()"><mat-icon>edit</mat-icon></button>
 </div>
 <mat-tab-group>
-  <mat-tab label="Overview">
-    <div class="chart-container">
-      <div class="inner">
-        <ng-container *ngFor="let pair of times; first as isFirst">
-          <app-overlay-chart *ngIf="isFirst" [personId]="personId" [start]="pair[0]" [end]="pair[1]" [legend]="true">
-          </app-overlay-chart>
-          <app-overlay-chart *ngIf="!isFirst" [personId]="personId" [start]="pair[0]" [end]="pair[1]" [height]="300">
-          </app-overlay-chart>
-        </ng-container>
-      </div>
-    </div>
-  </mat-tab>
-  <mat-tab label="Blood Pressure">
-    <app-biomarkers [personId]="personId"></app-biomarkers>
-  </mat-tab>
   <mat-tab label="Chat">
     <div fxLayout="row" fxLayoutGap="10px">
       <app-person-chat [person]="person" fxFlex="50" #chat></app-person-chat>
       <app-message-queue [personId]="personId" fxFlex="50"></app-message-queue>
-    </div>
-  </mat-tab>
-  <mat-tab label="Settings">
-    <div fxLayout="row">
-      <app-schedules [personId]="personId" fxFlex="50"></app-schedules>
     </div>
   </mat-tab>
 </mat-tab-group>
