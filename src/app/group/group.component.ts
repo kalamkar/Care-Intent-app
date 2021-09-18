@@ -6,6 +6,7 @@ import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {AddPersonComponent} from "../add-person/add-person.component";
 import {AddGroupComponent} from "../add-group/add-group.component";
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
   selector: 'app-group',
@@ -19,9 +20,13 @@ export class GroupComponent implements OnChanges {
   members: Array<Person> = [];
   isMainPage = false;
 
+  dataSource = new MatTableDataSource();
+
   private readonly routeSubscription: Subscription;
   private groupSubscription: Subscription | undefined;
   private membersSubscription: Subscription | undefined;
+
+  displayedColumns: string[] = ['name', 'summary', 'tags', 'details'];
 
   constructor(private api: ApiService,
               private router: Router,
@@ -61,7 +66,11 @@ export class GroupComponent implements OnChanges {
     }
     this.membersSubscription = this.api.getChildren({'type': 'group', 'value': this.groupId}, RelationType.member)
         .subscribe((members) => {
-      this.members = members;
+      let data: unknown[] = [];
+      members.forEach(member => {
+        data.push({'member': member, 'summary': ''})
+      });
+      this.dataSource.data = data;
     });
   }
 

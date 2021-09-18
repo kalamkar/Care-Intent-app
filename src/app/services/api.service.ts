@@ -51,6 +51,11 @@ export class ApiService {
     return this.get<Array<any>>(url, this.getOptions(false), (data: { results: Array<any>; }) => data.results)
   }
 
+  public getDataByTag(source: string, tag: string): Observable<Array<any>> {
+    const url = environment.apiUrl + '/person/' + source + '/data?' + this.encodeQueryData({'tag': tag});
+    return this.get<Array<any>>(url, this.getOptions(false), (data: { results: Array<any>; }) => data.results)
+  }
+
   public getMessages(source: string, start: DateTime, end: DateTime, bothDirections = false): Observable<Array<any>> {
     const params: { [index: string]: string; } = {'start': start.toISO(),  'end': end.toISO()};
     if (bothDirections) {

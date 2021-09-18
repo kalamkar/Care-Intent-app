@@ -26,7 +26,8 @@ export interface Identifier {
 export interface Person {
   id?: Identifier,
   name: {first: string, middle?: string, last: string},
-  identifiers: Identifier[]
+  identifiers: Identifier[],
+  tags?: string[]
 }
 
 export interface Group {

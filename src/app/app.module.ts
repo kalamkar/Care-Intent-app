@@ -37,6 +37,8 @@ import { MessageQueueComponent } from './person/message-queue/message-queue.comp
 import { SchedulesComponent } from './person/schedules/schedules.component';
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatSelectModule} from "@angular/material/select";
+import {MatChipsModule} from "@angular/material/chips";
+import {MatTableModule} from "@angular/material/table";
 
 
 @NgModule({
@@ -80,7 +82,9 @@ import {MatSelectModule} from "@angular/material/select";
     MatDatepickerModule,
     ReactiveFormsModule,
     MatExpansionModule,
-    MatSelectModule
+    MatSelectModule,
+    MatChipsModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]
