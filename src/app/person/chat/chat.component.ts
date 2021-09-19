@@ -95,7 +95,8 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     this.messages.forEach((message: Message) => {
       let include = false;
       this.filters.forEach(filter => {
-        if (filter.selected && ((filter.name === 'Member' && message.status === 'received') ||
+        if (filter.selected &&
+          ((filter.name === 'Member' && message.status === 'received' && !message.tags.includes('proxy')) ||
           (filter.name === 'Coach'  && message.status === 'sent' && message.tags.includes('proxy')) ||
           (filter.name === 'System' && message.status === 'sent' && !message.tags.includes('proxy')))) {
           include = true;
