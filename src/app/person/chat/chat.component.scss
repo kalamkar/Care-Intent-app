@@ -1,4 +1,8 @@
-.host {
+.controls {
+  padding: 20px;
+}
+
+.sessions {
   overflow-y: scroll;
   height: calc(100vh - 240px);
   padding: 10px 0 0 0;

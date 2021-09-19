@@ -40,6 +40,7 @@ import {MatChipsModule} from "@angular/material/chips";
 import {MatTableModule} from "@angular/material/table";
 import { TicketsComponent } from './person/tickets/tickets.component';
 import { ChatComponent } from './person/chat/chat.component';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 
 @NgModule({
@@ -86,7 +87,8 @@ import { ChatComponent } from './person/chat/chat.component';
     MatExpansionModule,
     MatSelectModule,
     MatChipsModule,
-    MatTableModule
+    MatTableModule,
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]

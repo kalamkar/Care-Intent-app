@@ -21,10 +21,13 @@ import { DateTime } from 'luxon';
 export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() person: Person | undefined;
   @ViewChildren('messages') messagesView: QueryList<any> | undefined;
-  @ViewChild('host', {static: true}) host: ElementRef | undefined;
+  @ViewChild('sessionsView', {static: true}) sessionsView: ElementRef | undefined;
 
   isLoading = true;
   sessions = new Array<Message[]>();
+  messages: Message[] = [];
+
+  filters = [{name: 'Member', selected: true}, {name: 'System', selected: true}, {name: 'Coach', selected: true}];
 
   private messagesSubscription: Subscription | undefined;
   private messagesViewSubscription: Subscription | undefined;
@@ -75,24 +78,8 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     const startTime = endTime.minus({days: 15});
     this.messagesSubscription = this.api.getMessages(this.person.id.value, startTime, endTime, true)
       .subscribe((messages: Message[]) => {
-          let sessionStartTime = startTime;
-          let sessionId: string = sessionStartTime.toFormat('DDD');
-          messages.forEach((message: Message) => {
-            const messageTime = DateTime.fromISO(message.time);
-            const sessionIds = message.tags.filter(tag => tag.startsWith('session:'));
-            let newSessionId = '';
-            if (sessionIds.length > 0) {
-              newSessionId = sessionIds[0];
-            } else if (messageTime > sessionStartTime.plus({minutes: 180})) {
-              sessionStartTime = messageTime;
-              newSessionId = sessionStartTime.toFormat('DDD');
-            }
-            if (this.sessions.length === 0 || sessionId !== newSessionId) {
-              this.sessions.push([]);
-              sessionId = newSessionId;
-            }
-            this.sessions[this.sessions.length - 1].push(message);
-          });
+          this.messages = messages;
+          this.createFilteredSessions();
           this.isLoading = false;
         },
         error => {
@@ -101,12 +88,44 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       );
   }
 
+  createFilteredSessions() {
+    this.sessions = [];
+    let sessionStartTime = DateTime.local().minus({days: 15});
+    let sessionId: string = sessionStartTime.toFormat('DDD');
+    this.messages.forEach((message: Message) => {
+      let include = false;
+      this.filters.forEach(filter => {
+        if (filter.selected && ((filter.name === 'Member' && message.status === 'received') ||
+          (filter.name === 'Coach'  && message.status === 'sent' && message.tags.includes('proxy')) ||
+          (filter.name === 'System' && message.status === 'sent' && !message.tags.includes('proxy')))) {
+          include = true;
+        }
+      });
+      if (!include) {
+        return;
+      }
+      const messageTime = DateTime.fromISO(message.time);
+      const sessionIds = message.tags.filter(tag => tag.startsWith('session:'));
+      let newSessionId = '';
+      if (sessionIds.length > 0) {
+        newSessionId = sessionIds[0];
+      } else if (messageTime > sessionStartTime.plus({minutes: 180})) {
+        sessionStartTime = messageTime;
+        newSessionId = sessionStartTime.toFormat('DDD');
+      }
+      if (this.sessions.length === 0 || sessionId !== newSessionId) {
+        this.sessions.push([]);
+        sessionId = newSessionId;
+      }
+      this.sessions[this.sessions.length - 1].push(message);
+    });
+  }
+
   scrollToBottom = () => {
     try {
       // @ts-ignore
-      this.host.nativeElement.scrollTop = this.host.nativeElement.scrollHeight;
+      this.sessionsView.nativeElement.scrollTop = this.sessionsView.nativeElement.scrollHeight;
     } catch (err) {
-      console.log(err);
     }
   };
 }
