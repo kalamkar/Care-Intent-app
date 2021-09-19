@@ -27,7 +27,6 @@ import { GroupComponent } from './group/group.component';
 import {MatListModule} from "@angular/material/list";
 import { AddPersonComponent } from './add-person/add-person.component';
 import { AddGroupComponent } from './add-group/add-group.component';
-import {PersonChatComponent} from "./person/person-chat/person-chat.component";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatCardModule} from "@angular/material/card";
 import { BiomarkersComponent } from './biomarkers/biomarkers.component';
@@ -40,6 +39,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatTableModule} from "@angular/material/table";
 import { TicketsComponent } from './person/tickets/tickets.component';
+import { ChatComponent } from './person/chat/chat.component';
 
 
 @NgModule({
@@ -47,7 +47,6 @@ import { TicketsComponent } from './person/tickets/tickets.component';
     AppComponent,
     AppGoogleChartComponent,
     PersonComponent,
-    PersonChatComponent,
     OverlayChartComponent,
     LoginComponent,
     NamePipe,
@@ -58,7 +57,8 @@ import { TicketsComponent } from './person/tickets/tickets.component';
     BiomarkersComponent,
     MessageQueueComponent,
     SchedulesComponent,
-    TicketsComponent
+    TicketsComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

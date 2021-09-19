@@ -1,0 +1,15 @@
+<div class="host" #host>
+  <div *ngFor="let session of sessions" class="session" #messages>
+    <div *ngFor="let message of session" [ngSwitch]="message.status" fxLayout="column" class="{{message.status}}">
+      <div fxLayout="row" *ngSwitchCase="'received'" fxLayoutAlign="start center">
+        <button mat-mini-fab disabled ><mat-icon>person</mat-icon></button>
+        <span class="content">{{message.content}}</span>
+      </div>
+      <div fxLayout="row" *ngSwitchCase="'sent'" fxLayoutAlign="end center">
+        <span class="content">{{message.content}}</span>
+        <button mat-mini-fab disabled ><mat-icon>manage_accounts</mat-icon></button>
+      </div>
+      <span class="time">{{message.time | date: 'MMM d, h:mm a'}}</span>
+    </div>
+  </div>
+</div>

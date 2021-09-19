@@ -1,16 +1,4 @@
 :host {
   height: calc(100vh - 120px);
-  overflow-y: hidden;
-}
-
-.chart-container {
-  overflow-y: scroll;
-  height: calc(100vh - 110px - 80px);
-}
-
-.chart-container .inner {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-y: scroll;
+  overflow: hidden;
 }

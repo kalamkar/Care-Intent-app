@@ -1,0 +1,29 @@
+.host {
+  overflow-y: scroll;
+  height: calc(100vh - 240px);
+  padding: 10px 0 0 0;
+}
+
+.session {
+  border-bottom: dashed thin #eaeaea;
+  margin-bottom: 20px;
+}
+
+.content {
+  border-radius: 25px;
+  padding: 15px;
+  background-color: #eaeaea;
+}
+
+.received {
+  text-align: left;
+}
+
+.sent {
+  text-align: right;
+}
+
+.time {
+  font-size: smaller;
+  margin-bottom: 20px;
+}

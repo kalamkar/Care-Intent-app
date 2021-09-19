@@ -2,9 +2,9 @@
   <h1 *ngIf="person">{{person | name}}</h1>
   <button mat-icon-button (click)="edit()"><mat-icon>edit</mat-icon></button>
 </div>
-<mat-tab-group>
+<mat-tab-group (selectedTabChange)="chat.scrollToBottom()">
   <mat-tab label="Chat">
-    <app-person-chat [person]="person"></app-person-chat>
+    <app-chat [person]="person" #chat></app-chat>
   </mat-tab>
   <mat-tab label="Tickets">
     <app-tickets [personId]="personId"></app-tickets>
