@@ -18,7 +18,7 @@ export class TicketsComponent implements OnInit {
 
   private ticketsSubscription: Subscription | undefined;
 
-  displayedColumns: string[] = ['id', 'open', 'close', 'category', 'title'];
+  displayedColumns: string[] = ['id', 'open', 'close', 'category', 'title', 'menu'];
 
   constructor(private api: ApiService) {
   }
@@ -61,5 +61,11 @@ export class TicketsComponent implements OnInit {
       });
       this.dataSource.data = Array.from(tableData.values());
     });
+  }
+
+  closeTicket(ticketId: number) {
+    if (this.personId) {
+      this.api.closeTicket(ticketId, this.personId).subscribe();
+    }
   }
 }

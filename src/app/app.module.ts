@@ -42,6 +42,7 @@ import { TicketsComponent } from './person/tickets/tickets.component';
 import { ChatComponent } from './person/chat/chat.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { SurveyComponent } from './person/survey/survey.component';
+import { OpenTicketComponent } from './open-ticket/open-ticket.component';
 
 
 @NgModule({
@@ -61,7 +62,8 @@ import { SurveyComponent } from './person/survey/survey.component';
     SchedulesComponent,
     TicketsComponent,
     ChatComponent,
-    SurveyComponent
+    SurveyComponent,
+    OpenTicketComponent
   ],
   imports: [
     BrowserModule,

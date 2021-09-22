@@ -6,6 +6,18 @@
       <td mat-cell *matCellDef="let element"> {{element.id}} </td>
     </ng-container>
 
+    <!-- Open time Column -->
+    <ng-container matColumnDef="open">
+      <th mat-header-cell *matHeaderCellDef> Open Time </th>
+      <td mat-cell *matCellDef="let element"> {{element.open | date: 'MMM d, h:mm a'}} </td>
+    </ng-container>
+
+    <!-- Close time Column -->
+    <ng-container matColumnDef="close">
+      <th mat-header-cell *matHeaderCellDef> Close Time </th>
+      <td mat-cell *matCellDef="let element"> {{element.close | date: 'MMM d, h:mm a'}} </td>
+    </ng-container>
+
     <!-- Category Column -->
     <ng-container matColumnDef="category">
       <th mat-header-cell *matHeaderCellDef> Category </th>
@@ -18,16 +30,12 @@
       <td mat-cell *matCellDef="let element"> {{element.title}} </td>
     </ng-container>
 
-    <!-- Open time Column -->
-    <ng-container matColumnDef="open">
-      <th mat-header-cell *matHeaderCellDef> Open Time </th>
-      <td mat-cell *matCellDef="let element"> {{element.open | date: 'MMM d, h:mm a'}} </td>
-    </ng-container>
-
-    <!-- Close time Column -->
-    <ng-container matColumnDef="close">
-      <th mat-header-cell *matHeaderCellDef> Close Time </th>
-      <td mat-cell *matCellDef="let element"> {{element.close | date: 'MMM d, h:mm a'}} </td>
+    <!-- Menu Column -->
+    <ng-container matColumnDef="menu">
+      <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-stroked-button (click)="closeTicket(element.id)">Close</button>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>

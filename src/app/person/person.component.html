@@ -1,6 +1,7 @@
 <div fxLayout="row" fxLayoutGap="12px">
   <h1 *ngIf="person">{{person | name}}</h1>
   <button mat-icon-button (click)="edit()"><mat-icon>edit</mat-icon></button>
+  <button mat-icon-button (click)="openTicket()"><mat-icon>add_task</mat-icon></button>
 </div>
 
 <mat-tab-group (selectedTabChange)="chat.scrollToBottom()">

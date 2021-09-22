@@ -1,0 +1,14 @@
+<div fxLayout="column" fxLayoutGap="12px" style="padding: 20px 0 20px 0">
+  <mat-form-field>
+    <input matInput placeholder="Category" #category>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Title" #title>
+  </mat-form-field>
+  <div fxLayout="row" fxLayoutAlign="end center">
+    <button mat-raised-button type="submit" (click)="open(category.value, title.value)" color="primary"
+            disabled="{{isInProcess || !category.value || !title.value}}">
+      <span>Open</span>
+    </button>
+  </div>
+</div>

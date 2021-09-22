@@ -112,6 +112,43 @@ export class ApiService {
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
+  public closeTicket(ticketId: number, personId: string) {
+    const url = environment.apiUrl + '/person/' + personId + '/message';
+    const action = {
+      'id': 'api.close.ticket',
+      'type': 'CloseTicket',
+      'condition': 'True',
+      'priority': 10,
+      'params': {
+        'person_id': '$receiver.id',
+        'ticket_id': ticketId
+      }
+    };
+    return this.post<any>(url, JSON.stringify(
+      {'receiver': {'type': 'person', 'value': personId}, 'status': 'internal', 'content': action,
+        'content_type': 'application/json'}),
+      this.getOptions(true, {'Content-Type': 'application/json'}));
+  }
+
+  public openTicket(category: string, title: string, personId: string) {
+    const url = environment.apiUrl + '/person/' + personId + '/message';
+    const action = {
+      'id': 'api.open.ticket',
+      'type': 'OpenTicket',
+      'condition': 'True',
+      'priority': 10,
+      'params': {
+        'person_id': '$receiver.id',
+        'category': category,
+        'content': title
+      }
+    };
+    return this.post<any>(url, JSON.stringify(
+      {'receiver': {'type': 'person', 'value': personId}, 'status': 'internal', 'content': action,
+        'content_type': 'application/json'}),
+      this.getOptions(true, {'Content-Type': 'application/json'}));
+  }
+
   public login(id: string, pass: string) {
     const url = environment.authUrl + '/login';
     return this.post<any>(url, JSON.stringify({'identifier': id, 'password': pass}),

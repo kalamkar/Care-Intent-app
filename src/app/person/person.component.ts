@@ -10,6 +10,7 @@ import {AddGroupComponent} from "../add-group/add-group.component";
 import {AddPersonComponent} from "../add-person/add-person.component";
 import {MatDialog} from "@angular/material/dialog";
 import {MatChipInputEvent} from "@angular/material/chips";
+import {OpenTicketComponent} from "../open-ticket/open-ticket.component";
 
 @Component({
   selector: 'app-person',
@@ -86,6 +87,12 @@ export class PersonComponent {
 
     if (index >= 0 && this.person && this.person.tags) {
       this.person.tags.splice(index, 1);
+    }
+  }
+
+  openTicket() {
+    if (this.person && this.person.id) {
+      this.dialog.open(OpenTicketComponent, {data: {personId: this.person.id.value}});
     }
   }
 }
