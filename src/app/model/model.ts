@@ -55,10 +55,10 @@ export interface Timing {
 
 export interface Ticket {
   id: number,
-  time: string,
+  open: string,
+  close?: string,
   category: string,
-  title: string,
-  status: string
+  title: string
 }
 
 export enum RelationType {

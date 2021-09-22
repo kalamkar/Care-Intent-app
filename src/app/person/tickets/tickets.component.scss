@@ -1,15 +1,24 @@
+.container {
+  overflow-y: scroll;
+  height: calc(100vh - 240px);
+}
+
 .mat-column-id {
   min-width: 50px;
 }
 
 .mat-column-category {
-  min-width: 200px;
+  min-width: 100px;
 }
 
 .mat-column-title {
   min-width: 400px;
 }
 
-.mat-column-time {
-  min-width: 200px;
+.mat-column-open {
+  min-width: 150px;
+}
+
+.mat-column-close {
+  min-width: 150px;
 }

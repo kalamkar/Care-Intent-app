@@ -18,7 +18,7 @@ export class TicketsComponent implements OnInit {
 
   private ticketsSubscription: Subscription | undefined;
 
-  displayedColumns: string[] = ['id', 'time', 'category', 'title', 'status'];
+  displayedColumns: string[] = ['id', 'open', 'close', 'category', 'title'];
 
   constructor(private api: ApiService) {
   }
@@ -37,24 +37,29 @@ export class TicketsComponent implements OnInit {
     }
 
     this.ticketsSubscription = this.api.getDataByTag(this.personId, 'ticket').subscribe(tickets => {
-      const tableData: any = [];
+      const tableData = new Map<Number, Ticket>();
       tickets.forEach(t => {
-        let ticket: Ticket = {id: 0, time: DateTime.fromISO(t.time), category: '', title: '', status: ''};
+        let ticket: Ticket | undefined;
         t['data'].forEach((data: any) => {
-          if (data['name'] === 'id') {
-            ticket.id = data['number'];
-            ticket.status = data['value'];
-          } else if (data['name'] === 'category') {
+          if (data['name'] === 'id' && data['value'] === 'opened') {
+            ticket = {id: data['number'], open: '', close: '', category: '', title: ''};
+            ticket.open = DateTime.fromISO(t.time);
+          } else if (data['name'] === 'id' && data['value'] === 'closed') {
+            ticket = tableData.get(data['number']);
+            if (ticket) {
+              ticket.close = DateTime.fromISO(t.time);
+            }
+          } else if (ticket && data['name'] === 'category') {
             ticket.category = data['value'];
-          } else if (data['name'] === 'title') {
+          } else if (ticket && data['name'] === 'title') {
             ticket.title = data['value'];
           }
         });
-        if (ticket.id > 0) {
-          tableData.push(ticket);
+        if (ticket) {
+          tableData.set(ticket.id, ticket);
         }
       });
-      this.dataSource.data = tableData;
+      this.dataSource.data = Array.from(tableData.values());
     });
   }
 }
