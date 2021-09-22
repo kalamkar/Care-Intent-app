@@ -41,6 +41,7 @@ import {MatTableModule} from "@angular/material/table";
 import { TicketsComponent } from './person/tickets/tickets.component';
 import { ChatComponent } from './person/chat/chat.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import { SurveyComponent } from './person/survey/survey.component';
 
 
 @NgModule({
@@ -59,7 +60,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     MessageQueueComponent,
     SchedulesComponent,
     TicketsComponent,
-    ChatComponent
+    ChatComponent,
+    SurveyComponent
   ],
   imports: [
     BrowserModule,

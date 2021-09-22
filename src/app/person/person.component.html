@@ -12,6 +12,10 @@
     <app-tickets [personId]="personId"></app-tickets>
   </mat-tab>
 
+  <mat-tab label="Survey">
+    <app-survey [personId]="personId"></app-survey>
+  </mat-tab>
+
   <mat-tab label="Settings">
     <mat-form-field class="tags-list" appearance="fill" *ngIf="person">
       <mat-label>Tags</mat-label>
