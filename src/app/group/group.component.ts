@@ -26,7 +26,7 @@ export class GroupComponent implements OnChanges {
   private groupSubscription: Subscription | undefined;
   private membersSubscription: Subscription | undefined;
 
-  displayedColumns: string[] = ['name', 'summary', 'tags', 'details'];
+  displayedColumns: string[] = ['name', 'summary', 'details'];
 
   constructor(private api: ApiService,
               private router: Router,

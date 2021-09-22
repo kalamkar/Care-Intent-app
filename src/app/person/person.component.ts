@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
 // @ts-ignore
 import {DateTime, Duration} from 'luxon';
 import {Subscription} from "rxjs";
@@ -8,6 +9,7 @@ import {Person} from "../model/model";
 import {AddGroupComponent} from "../add-group/add-group.component";
 import {AddPersonComponent} from "../add-person/add-person.component";
 import {MatDialog} from "@angular/material/dialog";
+import {MatChipInputEvent} from "@angular/material/chips";
 
 @Component({
   selector: 'app-person',
@@ -15,6 +17,7 @@ import {MatDialog} from "@angular/material/dialog";
   styleUrls: ['./person.component.scss']
 })
 export class PersonComponent {
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
   private readonly routeSubscription: Subscription;
   private subscription: Subscription | undefined;
 
@@ -63,5 +66,26 @@ export class PersonComponent {
     this.dialog.open(AddPersonComponent, {
       data: {person: this.person}
     });
+  }
+
+
+  addTag(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    // Add our fruit
+    if (value && this.person && this.person.tags) {
+      this.person.tags.push(value);
+    }
+
+    // Clear the input value
+    event.chipInput!.clear();
+  }
+
+  removeTag(tag: string): void {
+    const index = this.person && this.person.tags ? this.person.tags.indexOf(tag) : -1;
+
+    if (index >= 0 && this.person && this.person.tags) {
+      this.person.tags.splice(index, 1);
+    }
   }
 }
