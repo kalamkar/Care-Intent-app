@@ -6,11 +6,11 @@ import {DateTime, Duration} from 'luxon';
 import {Subscription} from "rxjs";
 import {ApiService} from "../services/api.service";
 import {Person} from "../model/model";
-import {AddGroupComponent} from "../add-group/add-group.component";
 import {AddPersonComponent} from "../add-person/add-person.component";
 import {MatDialog} from "@angular/material/dialog";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {OpenTicketComponent} from "../open-ticket/open-ticket.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-person',
@@ -29,7 +29,8 @@ export class PersonComponent {
   constructor(private api: ApiService,
               private router: Router,
               private route: ActivatedRoute,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private snackBar: MatSnackBar) {
     this.routeSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         const urlId = this.route.snapshot.paramMap.get('id');
@@ -72,14 +73,20 @@ export class PersonComponent {
 
   addTag(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
-
-    // Add our fruit
-    if (value && this.person && this.person.tags) {
-      this.person.tags.push(value);
+    if (value && this.person) {
+      if (this.person.tags) {
+        this.person.tags.push(value);
+      } else {
+        this.person.tags = [value];
+      }
+      this.api.editResource('person', {'id': this.person.id, 'tags': this.person.tags}).subscribe((person: Person) => {
+        this.snackBar.open('Tag added', 'Ok', {duration: 3000});
+      }, error => {
+        this.snackBar.open('Failed to add tag', 'Ok');
+      });
     }
-
-    // Clear the input value
     event.chipInput!.clear();
+
   }
 
   removeTag(tag: string): void {
@@ -87,6 +94,12 @@ export class PersonComponent {
 
     if (index >= 0 && this.person && this.person.tags) {
       this.person.tags.splice(index, 1);
+      this.api.editResource('person', {'id': this.person.id, 'tags': this.person.tags})
+        .subscribe((person: Person) => {
+          this.snackBar.open('Tag removed', 'Ok', {duration: 3000});
+      }, error => {
+          this.snackBar.open('Failed to remove tag', 'Ok');
+      });
     }
   }
 

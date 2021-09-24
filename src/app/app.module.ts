@@ -43,6 +43,7 @@ import { ChatComponent } from './person/chat/chat.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { SurveyComponent } from './person/survey/survey.component';
 import { OpenTicketComponent } from './open-ticket/open-ticket.component';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 @NgModule({
@@ -92,7 +93,8 @@ import { OpenTicketComponent } from './open-ticket/open-ticket.component';
     MatSelectModule,
     MatChipsModule,
     MatTableModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

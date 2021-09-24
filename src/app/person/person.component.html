@@ -5,12 +5,12 @@
 </div>
 
 <mat-tab-group (selectedTabChange)="chat.scrollToBottom()">
-  <mat-tab label="Chat">
-    <app-chat [person]="person" #chat></app-chat>
-  </mat-tab>
-
   <mat-tab label="Tickets">
     <app-tickets [personId]="personId"></app-tickets>
+  </mat-tab>
+
+  <mat-tab label="Conversation">
+    <app-chat [person]="person" #chat></app-chat>
   </mat-tab>
 
   <mat-tab label="Survey">

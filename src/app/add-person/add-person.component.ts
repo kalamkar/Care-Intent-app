@@ -21,7 +21,10 @@ export class AddPersonComponent implements OnInit {
     if (this.data.person) {
       this.person = this.data.person;
     } else {
-      this.person = {name: {first: '', last: ''}, identifiers: [{type: 'phone', value: '', active: true}]};
+      this.person = {name: {first: '', last: ''}, identifiers: [{type: 'phone', value: ''}]};
+    }
+    if (!this.person.name) {
+      this.person.name = {first: '', last: ''};
     }
   }
 

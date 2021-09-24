@@ -5,11 +5,12 @@
 .sessions {
   overflow-y: scroll;
   height: calc(100vh - 240px);
-  padding: 10px 0 0 0;
+  padding: 10px 0 0 20px;
+  border-left: solid 1px #eaeaea;
 }
 
 .session {
-  border-bottom: dashed thin #eaeaea;
+  border-bottom: dotted 2px #aba6a8;
   margin-bottom: 20px;
 }
 

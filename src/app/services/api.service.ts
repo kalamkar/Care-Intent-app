@@ -45,15 +45,15 @@ export class ApiService {
     console.log(error);
   }
 
-  public getData(source: string, names: string[], start: DateTime, end: DateTime): Observable<Array<any>> {
+  public getData(source: string, names: string[], start: DateTime, end: DateTime, noCache = false): Observable<Array<any>> {
     const url = environment.apiUrl + '/person/' + source + '/data?' + this.encodeQueryData(
       {'name': names, 'start': start.toISO(), 'end': end.toISO()});
-    return this.get<Array<any>>(url, this.getOptions(false), (data: { results: Array<any>; }) => data.results)
+    return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
-  public getDataByTag(source: string, tag: string): Observable<Array<any>> {
+  public getDataByTag(source: string, tag: string, noCache = false): Observable<Array<any>> {
     const url = environment.apiUrl + '/person/' + source + '/data?' + this.encodeQueryData({'tag': tag});
-    return this.get<Array<any>>(url, this.getOptions(false), (data: { results: Array<any>; }) => data.results)
+    return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
   public getMessages(source: string, start: DateTime, end: DateTime, bothDirections = false): Observable<Array<any>> {
