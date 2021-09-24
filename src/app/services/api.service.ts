@@ -160,13 +160,13 @@ export class ApiService {
     if (options) {
       return this.httpClient.get<T>(url, options).pipe(
         // @ts-ignore
-        map(res => mapFxn ? mapFxn(res) : this.extractData(res, url)),
+        map(res => this.extractData(res, url, mapFxn)),
         catchError(err => this.handleError(err))
       );
     }
     return this.httpClient.get(url).pipe(
       // @ts-ignore
-      map(res => mapFxn ? mapFxn(res) : this.extractData(res, url)),
+      map(res => this.extractData(res, url, mapFxn)),
       catchError(err => this.handleError(err))
     );
   }
@@ -203,9 +203,9 @@ export class ApiService {
     );
   }
 
-  protected extractData<T>(res: T, url: string): T {
+  protected extractData<T>(res: T, url: string, mapFxn: any=null): T {
     this.endedRequest(url);
-    return res;
+    return mapFxn ? mapFxn(res) : res;
   }
 
   /**
