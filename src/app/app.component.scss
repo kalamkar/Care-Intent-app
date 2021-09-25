@@ -12,8 +12,7 @@
 
 .sidenav-content {
   display: flex;
-  height: calc(100% - 110px);
-  padding: 72px 32px 32px;
+  padding: 72px 24px 0 16px;
   background-color: white;
 }
 
@@ -21,7 +20,7 @@
   min-width: 250px;
   max-width: 250px;
   position: fixed;
-  padding-top: 72px;
+  padding-top: 82px;
 }
 
 .user-name {
