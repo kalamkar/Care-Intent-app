@@ -34,7 +34,8 @@
     <ng-container matColumnDef="menu">
       <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
       <td mat-cell *matCellDef="let element">
-        <button mat-stroked-button (click)="closeTicket(element.id)" *ngIf="!element.close">Close</button>
+        <button mat-stroked-button (click)="closeTicket(element.id)"
+                *ngIf="!element.close && !closing.includes(element.id)">Close</button>
       </td>
     </ng-container>
 

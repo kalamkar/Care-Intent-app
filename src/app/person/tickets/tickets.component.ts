@@ -20,6 +20,8 @@ export class TicketsComponent implements OnInit {
 
   displayedColumns: string[] = ['id', 'open', 'close', 'category', 'title', 'menu'];
 
+  closing: Array<number> = [];
+
   constructor(private api: ApiService) {
   }
 
@@ -38,6 +40,7 @@ export class TicketsComponent implements OnInit {
 
     this.ticketsSubscription = this.api.getDataByTag(this.personId, 'ticket', true).subscribe(tickets => {
       const tableData = new Map<Number, Ticket>();
+      this.closing = [];
       tickets.forEach(t => {
         let ticket: Ticket | undefined;
         t['data'].forEach((data: any) => {
@@ -65,8 +68,11 @@ export class TicketsComponent implements OnInit {
 
   closeTicket(ticketId: number) {
     if (this.personId) {
+      this.closing.push(ticketId);
       this.api.closeTicket(ticketId, this.personId).subscribe(response => {
-        this.init();
+        setTimeout(() => {
+          this.init();
+        }, 5000);
       });
     }
   }
