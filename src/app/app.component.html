@@ -12,7 +12,7 @@
   </mat-toolbar>
   <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
 </div>
-<mat-sidenav-container autosize>
+<mat-sidenav-container>
   <mat-sidenav #drawer class="sidenav" mode="side" opened="true" role="navigation">
     <app-groups *ngIf="user && user.id" [userId]="user.id.value"></app-groups>
   </mat-sidenav>
