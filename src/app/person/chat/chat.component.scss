@@ -6,18 +6,18 @@
   overflow-y: scroll;
   height: calc(100vh - 240px);
   padding: 10px 0 0 20px;
-  border-left: solid 1px #eaeaea;
+  border-left: solid 1px var(--primary-lighter-color);
 }
 
 .session {
-  border-bottom: dotted 2px #aba6a8;
+  border-bottom: dotted 2px var(--primary-color);
   margin-bottom: 20px;
 }
 
 .content {
   border-radius: 25px;
   padding: 15px;
-  background-color: #eaeaea;
+  background-color: var(--primary-lighter-color);
   margin: 0 5px 0 5px;
 }
 
