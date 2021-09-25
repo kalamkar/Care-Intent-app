@@ -13,7 +13,8 @@
         </div>
         <div fxLayout="row" *ngSwitchCase="'sent'" fxLayoutAlign="end center">
           <span class="content">{{message.content}}</span>
-          <button mat-mini-fab disabled ><mat-icon>manage_accounts</mat-icon></button>
+          <button mat-mini-fab *ngIf="message.tags.includes('routing')" color="accent"><mat-icon>person</mat-icon></button>
+          <button mat-mini-fab *ngIf="!message.tags.includes('routing')" disabled><mat-icon>manage_accounts</mat-icon></button>
         </div>
         <span class="time">{{message.time | date: 'MMM d, h:mm a'}}</span>
       </div>
