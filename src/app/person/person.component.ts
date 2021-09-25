@@ -24,7 +24,10 @@ export class PersonComponent {
 
   personId: string | undefined;
   person: Person | undefined;
-  times: Array<Array<DateTime>> = new Array<Array<DateTime>>();
+  coach: Person | undefined;
+
+  chartStartEndTimePairs: Array<Array<DateTime>> = new Array<Array<DateTime>>();
+  readonly NUM_OF_DAYS = 1;
 
   constructor(private api: ApiService,
               private router: Router,
@@ -54,11 +57,15 @@ export class PersonComponent {
       this.person = person;
     });
 
-    this.times = [];
+    this.api.getParents({'type': 'person', 'value': this.personId}, 'member', 'person').subscribe((parents) => {
+      this.coach = parents.length > 0 ? parents[0] : undefined;
+    });
+
+    this.chartStartEndTimePairs = [];
     const cacheMillis = 10 * 60 * 1000;
     const now = DateTime.fromMillis(Math.floor(DateTime.now().toMillis() / cacheMillis) * cacheMillis);
-    for (let i = 0; i < 1; i++) {
-      this.times.push([
+    for (let i = 0; i < this.NUM_OF_DAYS; i++) {
+      this.chartStartEndTimePairs.push([
         now.minus(Duration.fromMillis((i + 1) * 24 * 60 * 60 * 1000)),
         now.minus(Duration.fromMillis(i * 24 * 60 * 60 * 1000))]);
     }
@@ -79,7 +86,8 @@ export class PersonComponent {
       } else {
         this.person.tags = [value];
       }
-      this.api.editResource('person', {'id': this.person.id, 'tags': this.person.tags}).subscribe((person: Person) => {
+      this.api.editResource('person', {'id': this.person.id, 'tags': this.person.tags})
+          .subscribe((person: Person) => {
         this.snackBar.open('Tag added', 'Ok', {duration: 3000});
       }, error => {
         this.snackBar.open('Failed to add tag', 'Ok');

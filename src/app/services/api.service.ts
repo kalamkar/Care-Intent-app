@@ -89,14 +89,14 @@ export class ApiService {
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
-  public getParents(childId: Identifier, relationType: string): Observable<Array<any>> {
-    const url = environment.apiUrl + '/group/all/' + relationType + '/' + childId.value;
-    return this.get<Array<any>>(url, this.getOptions(true), (data: { results: Array<any>; }) => data.results)
+  public getParents(childId: Identifier, relationType: string, parentType = 'group', noCache = true): Observable<Array<any>> {
+    const url = environment.apiUrl + '/' + parentType +'/all/' + relationType + '/' + childId.value;
+    return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
-  public getChildren(parentId: Identifier, relationType: string): Observable<Array<any>> {
+  public getChildren(parentId: Identifier, relationType: string, noCache = true): Observable<Array<any>> {
     const url = environment.apiUrl + '/'  + parentId.type + '/' + parentId.value + '/' + relationType;
-    return this.get<Array<any>>(url, this.getOptions(true), (data: { results: Array<any>; }) => data.results)
+    return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
   public addRelation(parentId: Identifier, childId: Identifier, relationType: string) {
