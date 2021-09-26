@@ -8,19 +8,18 @@
         <input matInput placeholder="Password" type="password" [(ngModel)]="password"
                [ngModelOptions]="{standalone: true}">
       </mat-form-field>
-      <h3 *ngIf="errorMessage">
-        {{errorMessage}}
-        <button mat-icon-button (click)="errorMessage = ''"><mat-icon>cancel</mat-icon></button>
-      </h3>
-      <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="12px">
-        <button mat-stroked-button (click)="recover()" disabled="{{isInProcess}}">
-          <span>Forgot password</span>
-          <mat-spinner *ngIf="isInProcess" class="login-spinner" [diameter]="20"></mat-spinner>
-        </button>
+      <div fxLayout="row" fxLayoutGap="12px">
         <button mat-raised-button type="submit" (click)="login()" color="primary" disabled="{{isInProcess}}">
           <span>Login</span>
-          <mat-spinner *ngIf="isInProcess" class="login-spinner" [diameter]="20"></mat-spinner>
         </button>
+        <button mat-stroked-button (click)="recover()" disabled="{{isInProcess}}">
+          <span>Forgot password</span>
+        </button>
+        <mat-spinner *ngIf="isInProcess" class="login-spinner" [diameter]="20"></mat-spinner>
+        <div class="error" *ngIf="errorMessage">
+          {{errorMessage}}
+          <button mat-icon-button (click)="errorMessage = ''"><mat-icon>cancel</mat-icon></button>
+        </div>
       </div>
     </div>
   </mat-tab>
@@ -37,15 +36,15 @@
         <input matInput placeholder="Confirm Password" type="password" [(ngModel)]="confirmPassword"
                [ngModelOptions]="{standalone: true}">
       </mat-form-field>
-      <h3 *ngIf="errorMessage">
-        {{errorMessage}}
-        <button mat-icon-button (click)="errorMessage = ''"><mat-icon>cancel</mat-icon></button>
-      </h3>
-      <div fxLayout="row" fxLayoutAlign="end center">
+      <div fxLayout="row" fxLayoutGap="12px">
         <button mat-raised-button type="submit" (click)="signup()" color="primary" disabled="{{isInProcess}}">
           <span>Signup</span>
-          <mat-spinner *ngIf="isInProcess" class="login-spinner" [diameter]="20"></mat-spinner>
         </button>
+        <mat-spinner *ngIf="isInProcess" class="login-spinner" [diameter]="20"></mat-spinner>
+        <div class="error" *ngIf="errorMessage">
+          {{errorMessage}}
+          <button mat-icon-button (click)="errorMessage = ''"><mat-icon>cancel</mat-icon></button>
+        </div>
       </div>
     </div>
   </mat-tab>
@@ -62,15 +61,15 @@
       <input matInput placeholder="Confirm Password" type="password" [(ngModel)]="confirmPassword"
              [ngModelOptions]="{standalone: true}">
     </mat-form-field>
-    <h3 *ngIf="errorMessage">
-      {{errorMessage}}
-      <button mat-icon-button (click)="errorMessage = ''"><mat-icon>cancel</mat-icon></button>
-    </h3>
-    <div fxLayout="row" fxLayoutAlign="end center">
+    <div fxLayout="row" fxLayoutGap="12px">
       <button mat-raised-button type="submit" (click)="verify()" color="primary" disabled="{{isInProcess}}">
         <span>Login</span>
-        <mat-spinner *ngIf="isInProcess" class="login-spinner" [diameter]="20"></mat-spinner>
       </button>
+      <mat-spinner *ngIf="isInProcess" class="login-spinner" [diameter]="20"></mat-spinner>
+      <div class="error" *ngIf="errorMessage">
+        {{errorMessage}}
+        <button mat-icon-button (click)="errorMessage = ''"><mat-icon>cancel</mat-icon></button>
+      </div>
     </div>
   </div>
   </mat-tab>

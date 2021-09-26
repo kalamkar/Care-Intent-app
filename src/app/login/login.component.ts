@@ -29,6 +29,12 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
+    this.identifier = this.identifier.includes('@')
+      ? this.identifier.trim() : this.getInternationalizedNumber(this.identifier);
+    if (!this.identifier) {
+      this.errorMessage = 'Invalid phone number or email';
+      return;
+    }
     this.isInProcess = true;
     this.api.login(this.identifier, this.password).subscribe(result => {
       this.dialogRef.close(result);
@@ -41,6 +47,12 @@ export class LoginComponent implements OnInit {
   signup() {
     if (this.password != this.confirmPassword) {
       this.errorMessage = 'Passwords dont match';
+      return;
+    }
+    this.identifier = this.identifier.includes('@')
+      ? this.identifier.trim() : this.getInternationalizedNumber(this.identifier);
+    if (!this.identifier) {
+      this.errorMessage = 'Invalid phone number or email';
       return;
     }
     this.isInProcess = true;
@@ -57,6 +69,12 @@ export class LoginComponent implements OnInit {
   }
 
   recover() {
+    this.identifier = this.identifier.includes('@')
+      ? this.identifier.trim() : this.getInternationalizedNumber(this.identifier);
+    if (!this.identifier) {
+      this.errorMessage = 'Invalid phone number or email';
+      return;
+    }
     this.isInProcess = true;
     this.api.recover(this.identifier).subscribe(result => {
       this.isInProcess = false;
@@ -72,6 +90,10 @@ export class LoginComponent implements OnInit {
   }
 
   verify() {
+    if (this.isRecovery && this.password != this.confirmPassword) {
+      this.errorMessage = 'Passwords dont match';
+      return;
+    }
     this.isInProcess = true;
     this.api.verify(this.code.toString(), this.isRecovery ? this.password : '').subscribe(result => {
       this.isInProcess = false;
@@ -82,5 +104,13 @@ export class LoginComponent implements OnInit {
       this.errorMessage = 'Failed to verify';
       this.isInProcess = false;
     });
+  }
+
+  getInternationalizedNumber(phone: string) {
+    phone = phone.replace(/[^+0-9]/g, '');
+    if (phone.length == 10) {
+      return '+1' + phone;
+    }
+    return phone;
   }
 }
