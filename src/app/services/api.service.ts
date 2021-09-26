@@ -155,6 +155,24 @@ export class ApiService {
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
+  public signup(id: string, pass: string) {
+    const url = environment.authUrl + '/signup';
+    return this.post<any>(url, JSON.stringify({'identifier': id, 'password': pass}),
+      this.getOptions(true, {'Content-Type': 'application/json'}));
+  }
+
+  public verify(code: string, pass: string) {
+    const url = environment.authUrl + '/verify';
+    return this.post<any>(url, JSON.stringify(pass ? {'code': code, 'password': pass} : {'code': code}),
+      this.getOptions(true, {'Content-Type': 'application/json'}));
+  }
+
+  public recover(id: string) {
+    const url = environment.authUrl + '/recover';
+    return this.post<any>(url, JSON.stringify({'identifier': id}),
+      this.getOptions(true, {'Content-Type': 'application/json'}));
+  }
+
   protected get<T>(url: string, options: RequestOptions, mapFxn: any): Observable<T> {
     this.startingRequest(url);
     if (options) {
