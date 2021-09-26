@@ -2,7 +2,7 @@
   <mat-tab label="Login">
     <div fxLayout="column" fxLayoutGap="12px" style="padding: 20px 0 20px 0">
       <mat-form-field>
-        <input matInput placeholder="Email or Phone" [(ngModel)]="identifier" [ngModelOptions]="{standalone: true}">
+        <input matInput placeholder="Phone number" type="tel" [(ngModel)]="identifier" [ngModelOptions]="{standalone: true}">
       </mat-form-field>
       <mat-form-field>
         <input matInput placeholder="Password" type="password" [(ngModel)]="password"
@@ -26,7 +26,7 @@
   <mat-tab label="Signup">
     <div fxLayout="column" fxLayoutGap="16px" style="padding: 20px 0 20px 0">
       <mat-form-field>
-        <input matInput placeholder="Email or Phone" [(ngModel)]="identifier" [ngModelOptions]="{standalone: true}">
+        <input matInput placeholder="Phone number" type="tel" [(ngModel)]="identifier" [ngModelOptions]="{standalone: true}">
       </mat-form-field>
       <mat-form-field>
         <input matInput placeholder="Password" type="password" [(ngModel)]="password"

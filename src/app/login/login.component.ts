@@ -29,10 +29,10 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
-    this.identifier = this.identifier.includes('@')
-      ? this.identifier.trim() : this.getInternationalizedNumber(this.identifier);
-    if (!this.identifier) {
-      this.errorMessage = 'Invalid phone number or email';
+    this.errorMessage = '';
+    this.identifier = this.getInternationalizedNumber(this.identifier);
+    if (!this.identifier || !this.identifier.startsWith('+')) {
+      this.errorMessage = 'Invalid phone number';
       return;
     }
     this.isInProcess = true;
@@ -45,14 +45,14 @@ export class LoginComponent implements OnInit {
   }
 
   signup() {
+    this.errorMessage = '';
     if (this.password != this.confirmPassword) {
       this.errorMessage = 'Passwords dont match';
       return;
     }
-    this.identifier = this.identifier.includes('@')
-      ? this.identifier.trim() : this.getInternationalizedNumber(this.identifier);
-    if (!this.identifier) {
-      this.errorMessage = 'Invalid phone number or email';
+    this.identifier = this.getInternationalizedNumber(this.identifier);
+    if (!this.identifier || !this.identifier.startsWith('+')) {
+      this.errorMessage = 'Invalid phone number';
       return;
     }
     this.isInProcess = true;
@@ -69,10 +69,10 @@ export class LoginComponent implements OnInit {
   }
 
   recover() {
-    this.identifier = this.identifier.includes('@')
-      ? this.identifier.trim() : this.getInternationalizedNumber(this.identifier);
-    if (!this.identifier) {
-      this.errorMessage = 'Invalid phone number or email';
+    this.errorMessage = '';
+    this.identifier = this.getInternationalizedNumber(this.identifier);
+    if (!this.identifier || !this.identifier.startsWith('+')) {
+      this.errorMessage = 'Invalid phone number';
       return;
     }
     this.isInProcess = true;
@@ -90,6 +90,7 @@ export class LoginComponent implements OnInit {
   }
 
   verify() {
+    this.errorMessage = '';
     if (this.isRecovery && this.password != this.confirmPassword) {
       this.errorMessage = 'Passwords dont match';
       return;
