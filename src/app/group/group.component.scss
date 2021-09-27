@@ -1,9 +1,14 @@
 .mat-column-name {
-  min-width: 200px;
+  max-width: 200px;
+  padding: 8px;
+}
+
+.mat-column-summary {
+  padding: 8px;
 }
 
 .mat-column-details {
-  padding-left: 20px;
+  padding: 8px;
 }
 
 .mat-chip {
