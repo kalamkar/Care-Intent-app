@@ -1,0 +1,32 @@
+.container {
+  overflow-y: scroll;
+  height: calc(100vh - 240px);
+}
+
+.mat-column-person {
+  width: 150px;
+}
+
+.mat-column-id {
+  width: 50px;
+}
+
+.mat-column-category {
+  width: 100px;
+}
+
+.mat-column-title {
+  width: 400px;
+}
+
+.mat-column-open {
+  width: 150px;
+}
+
+.mat-column-close {
+  width: 150px;
+}
+
+.mat-column-menu {
+  width: 80px;
+}

@@ -1,0 +1,51 @@
+<div class="container">
+  <table mat-table [dataSource]="dataSource">
+    <!-- Person Column -->
+    <ng-container matColumnDef="person">
+      <th mat-header-cell *matHeaderCellDef> Person </th>
+      <td mat-cell *matCellDef="let element"> {{element.person | name}} </td>
+    </ng-container>
+
+    <!-- Id Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> Id </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <!-- Open time Column -->
+    <ng-container matColumnDef="open">
+      <th mat-header-cell *matHeaderCellDef> Open Time </th>
+      <td mat-cell *matCellDef="let element"> {{element.open | date: 'MMM d, h:mm a'}} </td>
+    </ng-container>
+
+    <!-- Close time Column -->
+    <ng-container matColumnDef="close">
+      <th mat-header-cell *matHeaderCellDef> Close Time </th>
+      <td mat-cell *matCellDef="let element"> {{element.close | date: 'MMM d, h:mm a'}} </td>
+    </ng-container>
+
+    <!-- Category Column -->
+    <ng-container matColumnDef="category">
+      <th mat-header-cell *matHeaderCellDef> Category </th>
+      <td mat-cell *matCellDef="let element"> {{element.category}} </td>
+    </ng-container>
+
+    <!-- Title Column -->
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef> Title </th>
+      <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+    </ng-container>
+
+    <!-- Menu Column -->
+    <ng-container matColumnDef="menu">
+      <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-stroked-button (click)="closeTicket(element.person.id, element.id)"
+                *ngIf="!element.close && !closing.includes(element.person.id + element.id)">Close</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

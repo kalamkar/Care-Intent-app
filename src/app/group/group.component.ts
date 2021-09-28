@@ -68,8 +68,9 @@ export class GroupComponent implements OnChanges {
         .subscribe((members) => {
       let data: unknown[] = [];
       members.forEach(member => {
-        data.push({'member': member, 'summary': ''})
+        data.push({'member': member, 'summary': ''});
       });
+      this.members = members;
       this.dataSource.data = data;
     });
   }
