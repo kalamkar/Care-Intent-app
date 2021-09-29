@@ -4,25 +4,29 @@
 }
 
 .mat-column-id {
-  min-width: 50px;
+  width: 50px;
+}
+
+.mat-column-priority {
+  width: 50px;
 }
 
 .mat-column-category {
-  min-width: 100px;
+  width: 100px;
 }
 
 .mat-column-title {
-  min-width: 400px;
+  width: 400px;
 }
 
 .mat-column-open {
-  min-width: 150px;
+  width: 150px;
 }
 
 .mat-column-close {
-  min-width: 150px;
+  width: 150px;
 }
 
 .mat-column-menu {
-  min-width: 80px;
+  width: 80px;
 }

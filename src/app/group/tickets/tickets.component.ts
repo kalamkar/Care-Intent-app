@@ -19,7 +19,7 @@ export class GroupTicketsComponent implements OnInit, OnChanges {
 
   private subscriptions: Array<Subscription> = [];
 
-  displayedColumns: string[] = ['person', 'id', 'open', 'close', 'category', 'title', 'menu'];
+  displayedColumns: string[] = ['person', 'id', 'priority', 'open', 'close', 'category', 'title', 'menu'];
 
   closing: Array<string> = [];
 
@@ -63,7 +63,7 @@ export class GroupTicketsComponent implements OnInit, OnChanges {
       let ticket: PersonTicket | undefined;
       row.data.forEach((data: any) => {
         if (data['name'] === 'id' && data['value'] === 'opened') {
-          ticket = {person, id: data['number'], open: '', close: '', category: '', title: ''};
+          ticket = {person, id: data['number'], open: '', close: '', category: '', title: '', priority: 0};
           ticket.open = DateTime.fromISO(row.time);
         } else if (data['name'] === 'id' && data['value'] === 'closed') {
           ticket = tickets.get(data['number']);
@@ -74,6 +74,8 @@ export class GroupTicketsComponent implements OnInit, OnChanges {
           ticket.category = data['value'];
         } else if (ticket && data['name'] === 'title') {
           ticket.title = data['value'];
+        } else if (ticket && data['name'] === 'priority') {
+          ticket.priority = data['number'];
         }
       });
       if (ticket) {

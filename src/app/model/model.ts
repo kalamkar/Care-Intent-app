@@ -58,7 +58,8 @@ export interface Ticket {
   open: string,
   close?: string,
   category: string,
-  title: string
+  title: string,
+  priority: number
 }
 
 export enum RelationType {

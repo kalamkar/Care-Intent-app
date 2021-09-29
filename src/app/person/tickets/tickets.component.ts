@@ -18,7 +18,7 @@ export class TicketsComponent implements OnInit {
 
   private ticketsSubscription: Subscription | undefined;
 
-  displayedColumns: string[] = ['id', 'open', 'close', 'category', 'title', 'menu'];
+  displayedColumns: string[] = ['id', 'priority', 'open', 'close', 'category', 'title', 'menu'];
 
   closing: Array<number> = [];
 
@@ -45,7 +45,7 @@ export class TicketsComponent implements OnInit {
         let ticket: Ticket | undefined;
         t['data'].forEach((data: any) => {
           if (data['name'] === 'id' && data['value'] === 'opened') {
-            ticket = {id: data['number'], open: '', close: '', category: '', title: ''};
+            ticket = {id: data['number'], open: '', close: '', category: '', title: '', priority: 0};
             ticket.open = DateTime.fromISO(t.time);
           } else if (data['name'] === 'id' && data['value'] === 'closed') {
             ticket = tableData.get(data['number']);
@@ -56,6 +56,8 @@ export class TicketsComponent implements OnInit {
             ticket.category = data['value'];
           } else if (ticket && data['name'] === 'title') {
             ticket.title = data['value'];
+          } else if (ticket && data['name'] === 'priority') {
+            ticket.priority = data['number'];
           }
         });
         if (ticket) {
