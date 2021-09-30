@@ -22,10 +22,10 @@ export class OpenTicketComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  open(category: string, title: string): void {
+  open(category: string, priority: any, title: string): void {
     this.isInProcess = true;
     if (this.personId) {
-      this.api.openTicket(category, title, this.personId).subscribe(response => {
+      this.api.openTicket(category, priority, title, this.personId).subscribe(response => {
         this.dialogRef.close(true);
       }, error => {
         this.onError();

@@ -130,7 +130,7 @@ export class ApiService {
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
-  public openTicket(category: string, title: string, personId: string) {
+  public openTicket(category: string, priority: number, title: string, personId: string) {
     const url = environment.apiUrl + '/person/' + personId + '/message';
     const action = {
       'id': 'api.open.ticket',
@@ -139,6 +139,7 @@ export class ApiService {
       'priority': 10,
       'params': {
         'person_id': '$receiver.id',
+        'priority': priority,
         'category': category,
         'content': title
       }
