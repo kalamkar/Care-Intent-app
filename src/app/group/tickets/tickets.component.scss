@@ -23,6 +23,13 @@
   width: 400px;
 }
 
+.title {
+  width: 400px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .mat-column-open {
   width: 150px;
 }
