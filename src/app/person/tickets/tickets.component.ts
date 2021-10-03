@@ -1,20 +1,22 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Ticket} from "../../model/model";
 import {Subscription} from "rxjs";
 import {ApiService} from "../../services/api.service";
 import {MatTableDataSource} from "@angular/material/table";
 // @ts-ignore
 import { DateTime } from 'luxon';
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-tickets',
   templateUrl: './tickets.component.html',
   styleUrls: ['./tickets.component.scss']
 })
-export class TicketsComponent implements OnInit {
+export class TicketsComponent implements OnInit, AfterViewInit {
   @Input() personId: string | undefined;
 
   dataSource = new MatTableDataSource();
+  @ViewChild(MatSort) sort: MatSort | undefined;
 
   private ticketsSubscription: Subscription | undefined;
 
@@ -27,6 +29,12 @@ export class TicketsComponent implements OnInit {
 
   ngOnInit(): void {
     this.init();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.sort) {
+      this.dataSource.sort = this.sort;
+    }
   }
 
   init(): void {

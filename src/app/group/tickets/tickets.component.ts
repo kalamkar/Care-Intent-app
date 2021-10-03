@@ -1,25 +1,28 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {Ticket, Person} from "../../model/model";
 import {Subscription} from "rxjs";
 import {ApiService} from "../../services/api.service";
 import {MatTableDataSource} from "@angular/material/table";
 // @ts-ignore
 import { DateTime } from 'luxon';
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-group-tickets',
   templateUrl: './tickets.component.html',
   styleUrls: ['./tickets.component.scss']
 })
-export class GroupTicketsComponent implements OnInit, OnChanges {
+export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() persons: Array<Person> = [];
 
   dataSource = new MatTableDataSource();
   tableData: PersonTicket[] = [];
 
+  @ViewChild(MatSort) sort: MatSort | undefined;
+
   private subscriptions: Array<Subscription> = [];
 
-  displayedColumns: string[] = ['person', 'id', 'priority', 'open', 'close', 'category', 'title', 'menu'];
+  displayedColumns: string[] = ['person', 'id', 'priority', 'open', 'close', 'category', 'title'];
 
   closing: Array<string> = [];
 
@@ -28,6 +31,12 @@ export class GroupTicketsComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.init();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.sort) {
+      this.dataSource.sort = this.sort;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -83,15 +92,6 @@ export class GroupTicketsComponent implements OnInit, OnChanges {
       }
     });
     return Array.from(tickets.values());
-  }
-
-  closeTicket(personId: string, ticketId: number) {
-    this.closing.push(personId + ticketId);
-    this.api.closeTicket(ticketId, personId).subscribe(response => {
-      setTimeout(() => {
-        this.init();
-      }, 5000);
-    });
   }
 }
 
