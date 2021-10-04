@@ -20,13 +20,16 @@ export class GroupComponent implements OnChanges {
   members: Array<Person> = [];
   isMainPage = false;
 
-  dataSource = new MatTableDataSource();
+  memberDataSource = new MatTableDataSource();
+  adminDataSource = new MatTableDataSource();
 
   private readonly routeSubscription: Subscription;
   private groupSubscription: Subscription | undefined;
   private membersSubscription: Subscription | undefined;
+  private adminsSubscription: Subscription | undefined;
 
-  displayedColumns: string[] = ['name', 'summary', 'details'];
+  memberColumns: string[] = ['name', 'summary', 'details'];
+  adminColumns: string[] = ['name', 'summary', 'details'];
 
   constructor(private api: ApiService,
               private router: Router,
@@ -71,8 +74,20 @@ export class GroupComponent implements OnChanges {
         data.push({'member': member, 'summary': ''});
       });
       this.members = members;
-      this.dataSource.data = data;
+      this.memberDataSource.data = data;
     });
+
+    if (this.adminsSubscription) {
+      this.adminsSubscription.unsubscribe();
+    }
+    this.adminsSubscription = this.api.getChildren({'type': 'group', 'value': this.groupId}, RelationType.admin)
+      .subscribe((members) => {
+        let data: unknown[] = [];
+        members.forEach(member => {
+          data.push({'member': member, 'summary': ''});
+        });
+        this.adminDataSource.data = data;
+      });
   }
 
   add(relationType: string): void {
