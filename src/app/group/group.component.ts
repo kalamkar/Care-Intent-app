@@ -28,8 +28,8 @@ export class GroupComponent implements OnChanges {
   private membersSubscription: Subscription | undefined;
   private adminsSubscription: Subscription | undefined;
 
-  memberColumns: string[] = ['name', 'summary', 'details'];
-  adminColumns: string[] = ['name', 'summary', 'details'];
+  memberColumns: string[] = ['name', 'summary'];
+  adminColumns: string[] = ['name', 'summary'];
 
   constructor(private api: ApiService,
               private router: Router,
