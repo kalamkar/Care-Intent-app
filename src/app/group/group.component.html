@@ -46,7 +46,7 @@
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Name </th>
         <td mat-cell *matCellDef="let element">
-          <a mat-flat-button [routerLink]="['/person', element.member.id.value]">
+          <a mat-flat-button [routerLink]="['/admin', element.member.id.value]">
             <mat-icon>support_agent</mat-icon><span style="padding: 0 0 0 10px">{{element.member | name}}</span>
           </a>
         </td>

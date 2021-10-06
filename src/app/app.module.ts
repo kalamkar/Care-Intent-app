@@ -46,6 +46,7 @@ import { SurveyComponent } from './person/survey/survey.component';
 import { OpenTicketComponent } from './open-ticket/open-ticket.component';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatSortModule} from "@angular/material/sort";
+import { AdminComponent } from './admin/admin.component';
 
 
 @NgModule({
@@ -67,7 +68,8 @@ import {MatSortModule} from "@angular/material/sort";
     GroupTicketsComponent,
     ChatComponent,
     SurveyComponent,
-    OpenTicketComponent
+    OpenTicketComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
