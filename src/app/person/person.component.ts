@@ -24,7 +24,7 @@ export class PersonComponent {
 
   personId: string | undefined;
   person: Person | undefined;
-  coach: Person | undefined;
+  coaches = new Array<any>();
 
   chartStartEndTimePairs: Array<Array<DateTime>> = new Array<Array<DateTime>>();
   readonly NUM_OF_DAYS = 1;
@@ -58,7 +58,7 @@ export class PersonComponent {
     });
 
     this.api.getParents({'type': 'person', 'value': this.personId}, 'member', 'person').subscribe((parents) => {
-      this.coach = parents.length > 0 ? parents[0] : undefined;
+      this.coaches = parents;
     });
 
     this.chartStartEndTimePairs = [];

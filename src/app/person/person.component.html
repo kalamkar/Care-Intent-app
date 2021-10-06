@@ -1,11 +1,14 @@
 <div fxLayout="row" fxLayoutGap="12px">
   <h1 *ngIf="person">{{person | name}}</h1>
-  <button mat-icon-button (click)="edit()"><mat-icon>edit</mat-icon></button>
-  <button mat-icon-button (click)="openTicket()"><mat-icon>add_task</mat-icon></button>
+  <button mat-icon-button (click)="edit()" color="primary"><mat-icon>edit</mat-icon></button>
+  <button mat-icon-button (click)="openTicket()" color="accent"><mat-icon>add_task</mat-icon></button>
   <span class="fill-remaining-space"></span>
-  <mat-form-field>
-    <input matInput placeholder="Coach" value="{{coach | name}}" readonly>
-  </mat-form-field>
+  <span>
+    <a mat-flat-button *ngFor="let coach of coaches" [routerLink]="['/admin', coach.id.value]">
+      <mat-icon>support_agent</mat-icon>
+      <span class="coach">{{coach | name}}</span>
+    </a>
+  </span>
 </div>
 
 <mat-tab-group (selectedTabChange)="chat.scrollToBottom()">
