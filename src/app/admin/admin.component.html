@@ -37,6 +37,10 @@
     <app-group-tickets [persons]="members"></app-group-tickets>
   </mat-tab>
 
+  <mat-tab label="Conversation">
+    <app-chat [person]="person" [isMember]="false" #chat></app-chat>
+  </mat-tab>
+
   <mat-tab label="Settings">
     <mat-form-field class="tags-list" appearance="fill" *ngIf="person">
       <mat-label>Tags</mat-label>

@@ -20,14 +20,14 @@ import { DateTime } from 'luxon';
 })
 export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() person: Person | undefined;
+  @Input() isMember = true;
   @ViewChildren('messages') messagesView: QueryList<any> | undefined;
   @ViewChild('sessionsView', {static: true}) sessionsView: ElementRef | undefined;
 
   isLoading = true;
-  sessions = new Array<Message[]>();
-  messages: Message[] = [];
+  sessions = new Array<DisplayMessage[]>();
 
-  filters = [{name: 'Member', selected: true}, {name: 'System', selected: true}, {name: 'Coach', selected: true}];
+  senderTypes = ['Member', 'Coach', 'System'];
 
   private messagesSubscription: Subscription | undefined;
   private messagesViewSubscription: Subscription | undefined;
@@ -78,8 +78,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     const startTime = endTime.minus({days: 15});
     this.messagesSubscription = this.api.getMessages(this.person.id.value, startTime, endTime, true)
       .subscribe((messages: Message[]) => {
-          this.messages = messages;
-          this.createFilteredSessions();
+          this.createFilteredSessions(messages);
           this.isLoading = false;
         },
         error => {
@@ -88,22 +87,31 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       );
   }
 
-  createFilteredSessions() {
+  createFilteredSessions(messages: Message[]) {
     this.sessions = [];
     let sessionStartTime = DateTime.local().minus({days: 15});
     let sessionId: string = sessionStartTime.toFormat('DDD');
-    this.messages.forEach((message: Message) => {
-      let include = false;
-      this.filters.forEach(filter => {
-        if (filter.selected &&
-          ((filter.name === 'Member' && message.status === 'received' && !message.tags.includes('proxy')) ||
-          (filter.name === 'Coach'  && message.status === 'sent' && message.tags.includes('proxy')) ||
-          (filter.name === 'System' && message.status === 'sent' && !message.tags.includes('proxy')))) {
-          include = true;
-        }
-      });
-      if (!include) {
-        return;
+    messages.forEach((message: Message) => {
+      const msg: DisplayMessage = message;
+      let hasSessionTag = false;
+      message.tags.forEach(tag => hasSessionTag = hasSessionTag || tag.startsWith('session:'));
+      if (this.isMember && message.status === 'received' && !message.tags.includes('proxy')) {
+        msg.senderType = 'Member';
+      } else if (this.isMember && message.status === 'sent' && message.tags.includes('proxy')) {
+        msg.senderType = 'Coach';
+      } else if (this.isMember && message.status === 'sent' && !message.tags.includes('proxy')) {
+        msg.senderType = 'System';
+      } else if (!this.isMember && message.status === 'received') {
+        msg.senderType = 'Coach';
+      } else if (!this.isMember && message.status === 'sent' && hasSessionTag) {
+        msg.senderType = 'System';
+      } else if (!this.isMember && message.status === 'sent' && !hasSessionTag) {
+        msg.senderType = 'Member';
+      }
+      if (message.status === 'received') {
+        msg.side = this.isMember ? 'left' : 'right';
+      } else if (message.status === 'sent') {
+        msg.side = this.isMember ? 'right' : 'left';
       }
       const messageTime = DateTime.fromISO(message.time);
       const sessionIds = message.tags.filter(tag => tag.startsWith('session:'));
@@ -118,7 +126,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
         this.sessions.push([]);
         sessionId = newSessionId;
       }
-      this.sessions[this.sessions.length - 1].push(message);
+      this.sessions[this.sessions.length - 1].push(msg);
     });
   }
 
@@ -129,4 +137,9 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     } catch (err) {
     }
   };
+}
+
+interface DisplayMessage extends Message {
+  side?: string;
+  senderType?: string;
 }
