@@ -11,7 +11,8 @@
   <div fxLayout="row" fxLayoutAlign="end center">
     <button mat-raised-button type="submit" (click)="add()" color="primary"
             disabled="{{isInProcess || !person.name.first || !person.name.last || !person.identifiers[0].value}}">
-      <span>Add</span>
+      <span *ngIf="!data.person">Add</span>
+      <span *ngIf="data.person">Update</span>
     </button>
   </div>
 </div>

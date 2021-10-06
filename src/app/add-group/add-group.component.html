@@ -5,7 +5,8 @@
   <div fxLayout="row" fxLayoutAlign="end center">
     <button mat-raised-button type="submit" (click)="add()" color="primary"
             disabled="{{isInProcess || !group.title}}">
-      <span>Add</span>
+      <span *ngIf="!data.group">Add</span>
+      <span *ngIf="data.group">Update</span>
     </button>
   </div>
 </div>

@@ -39,7 +39,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatTableModule} from "@angular/material/table";
 import { TicketsComponent } from './person/tickets/tickets.component';
-import { GroupTicketsComponent } from './group/tickets/tickets.component';
+import { GroupTicketsComponent } from './tickets/tickets.component';
 import { ChatComponent } from './person/chat/chat.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { SurveyComponent } from './person/survey/survey.component';

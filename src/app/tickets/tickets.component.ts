@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {Ticket, Person} from "../../model/model";
+import {Ticket, Person} from "../model/model";
 import {Subscription} from "rxjs";
-import {ApiService} from "../../services/api.service";
+import {ApiService} from "../services/api.service";
 import {MatTableDataSource} from "@angular/material/table";
 // @ts-ignore
 import { DateTime } from 'luxon';
