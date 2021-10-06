@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {Person, RelationType} from "../model/model";
+import {Identifier, Person, RelationType} from "../model/model";
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatTableDataSource} from "@angular/material/table";
 import {Subscription} from "rxjs";
@@ -29,7 +29,7 @@ export class AdminComponent implements OnChanges {
   private personSubscription: Subscription | undefined;
   private membersSubscription: Subscription | undefined;
 
-  memberColumns: string[] = ['name', 'summary'];
+  memberColumns: string[] = ['name', 'summary', 'menu'];
 
   constructor(private api: ApiService,
               private router: Router,
@@ -86,6 +86,22 @@ export class AdminComponent implements OnChanges {
     });
   }
 
+  add(relationType: string): void {
+    this.dialog.open(AddPersonComponent, {
+      minWidth: '400px',
+      minHeight: '300px',
+      data: {parentId: {'type': 'person', 'value': this.personId}, relationType}
+    });
+  }
+
+  remove(memberId: Identifier) {
+    if (this.personId) {
+      this.api.removeRelation({'type': 'person', 'value': this.personId}, memberId, 'member').subscribe(
+        _ => {this.snackBar.open('Member removed', 'Ok', {duration: 3000});},
+        error => {this.snackBar.open('Failed to remove member', 'Ok');}
+      );
+    }
+  }
 
   addTag(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();

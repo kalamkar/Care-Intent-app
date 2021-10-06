@@ -17,9 +17,9 @@ export class AddPersonComponent implements OnInit {
   constructor(private api: ApiService,
               public dialogRef: MatDialogRef<AddPersonComponent>,
               @Inject(MAT_DIALOG_DATA) public data: {person: Person | undefined,
-                groupId: Identifier, relationType: string}) {
+                parentId: Identifier, relationType: string}) {
     if (this.data.person) {
-      this.person = this.data.person;
+      this.person = {id: this.data.person.id, name: this.data.person.name, identifiers: this.data.person.identifiers};
     } else {
       this.person = {name: {first: '', last: ''}, identifiers: [{type: 'phone', value: ''}]};
     }
@@ -43,9 +43,9 @@ export class AddPersonComponent implements OnInit {
           this.onError(true);
           return;
         }
-        if (this.data.groupId && this.data.relationType) {
-          const relation = {source: person.id, type: this.data.relationType, target: this.data.groupId};
-          this.api.addRelation(this.data.groupId, person.id, this.data.relationType).subscribe(result => {
+        if (this.data.parentId && this.data.relationType) {
+          const relation = {source: person.id, type: this.data.relationType, target: this.data.parentId};
+          this.api.addRelation(this.data.parentId, person.id, this.data.relationType).subscribe(result => {
             this.dialogRef.close(true);
           }, error => this.onError());
         } else {

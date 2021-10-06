@@ -105,6 +105,12 @@ export class ApiService {
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
+  public removeRelation(parentId: Identifier, childId: Identifier, relationType: string) {
+    const url = environment.apiUrl + '/' + parentId.type + '/' + parentId.value + '/' + relationType + '/'
+      + childId.type + ':' + childId.value;
+    return this.del<any>(url, this.getOptions(true, {'Content-Type': 'application/json'}));
+  }
+
   public sendMessage(content: string, personId: string, phone: string) {
     const url = environment.apiUrl + '/person/' + personId + '/message';
     return this.post<any>(url, JSON.stringify(

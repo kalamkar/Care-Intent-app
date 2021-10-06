@@ -1,12 +1,13 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ApiService} from "../services/api.service";
-import {Group, Person, RelationType} from "../model/model";
+import {Group, Identifier, Person, RelationType} from "../model/model";
 import {Subscription} from "rxjs";
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {AddPersonComponent} from "../add-person/add-person.component";
 import {AddGroupComponent} from "../add-group/add-group.component";
 import {MatTableDataSource} from "@angular/material/table";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-group',
@@ -28,13 +29,14 @@ export class GroupComponent implements OnChanges {
   private membersSubscription: Subscription | undefined;
   private adminsSubscription: Subscription | undefined;
 
-  memberColumns: string[] = ['name', 'summary'];
-  adminColumns: string[] = ['name', 'summary'];
+  memberColumns: string[] = ['name', 'summary', 'menu'];
+  adminColumns: string[] = ['name', 'summary', 'menu'];
 
   constructor(private api: ApiService,
               private router: Router,
               private route: ActivatedRoute,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private snackBar: MatSnackBar) {
     this.routeSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         const urlId = this.route.snapshot.paramMap.get('id');
@@ -94,9 +96,19 @@ export class GroupComponent implements OnChanges {
     this.dialog.open(AddPersonComponent, {
       minWidth: '400px',
       minHeight: '300px',
-      data: {groupId: {'type': 'group', 'value': this.groupId}, relationType}
+      data: {parentId: {'type': 'group', 'value': this.groupId}, relationType}
     });
   }
+
+  remove(personId: Identifier, relationType: string) {
+    if (this.groupId) {
+      this.api.removeRelation({'type': 'group', 'value': this.groupId}, personId, relationType).subscribe(
+        _ => {this.snackBar.open('Removed ' + relationType, 'Ok', {duration: 3000});},
+        error => {this.snackBar.open('Failed to remove ' + relationType, 'Ok');}
+      );
+    }
+  }
+
 
   edit(): void {
     this.dialog.open(AddGroupComponent, {

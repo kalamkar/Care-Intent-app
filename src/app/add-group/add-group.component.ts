@@ -20,7 +20,7 @@ export class AddGroupComponent implements OnInit {
     if (!this.data.group) {
       this.group = {title: ''};
     } else {
-      this.group = this.data.group;
+      this.group = {id: this.data.group.id, title: this.data.group.title};
     }
   }
 
