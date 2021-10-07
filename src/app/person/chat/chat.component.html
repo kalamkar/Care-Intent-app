@@ -9,16 +9,26 @@
   </div>
   <div class="sessions" #sessionsView fxFlex>
     <div *ngFor="let session of sessions" class="session" #messages>
-      <div *ngFor="let message of session" [ngSwitch]="message.side" fxLayout="column" class="{{message.status}}">
-        <ng-container *ngIf="senderTypes.includes(message.senderType ? message.senderType : '')">
+      <div *ngFor="let message of session" fxLayout="column" class="{{message.side}}">
+        <ng-container *ngIf="senderTypes.includes(message.senderType ? message.senderType : '')"
+                      [ngSwitch]="message.side">
           <div fxLayout="row" *ngSwitchCase="'left'" fxLayoutAlign="start center">
-            <button mat-mini-fab disabled ><mat-icon>person</mat-icon></button>
+            <button mat-mini-fab disabled *ngIf="isMember"><mat-icon>person</mat-icon></button>
+            <button mat-mini-fab disabled *ngIf="!isMember"><mat-icon>smart_toy</mat-icon></button>
+            <button mat-mini-fab *ngIf="!isMember && message.tags.includes('routing')" color="accent">
+              <mat-icon>person</mat-icon>
+            </button>
             <span class="content">{{message.content}}</span>
           </div>
           <div fxLayout="row" *ngSwitchCase="'right'" fxLayoutAlign="end center">
             <span class="content">{{message.content}}</span>
-            <button mat-mini-fab *ngIf="message.tags.includes('routing')" color="accent"><mat-icon>person</mat-icon></button>
-            <button mat-mini-fab *ngIf="!message.tags.includes('routing')" disabled><mat-icon>manage_accounts</mat-icon></button>
+            <button mat-mini-fab *ngIf="isMember && message.tags.includes('routing')">
+              <mat-icon>support_agent</mat-icon>
+            </button>
+            <button mat-mini-fab *ngIf="isMember && !message.tags.includes('routing')" disabled>
+              <mat-icon>smart_toy</mat-icon>
+            </button>
+            <button mat-mini-fab *ngIf="!isMember"><mat-icon>support_agent</mat-icon></button>
           </div>
           <span class="time">{{message.time | date: 'MMM d, h:mm a'}}</span>
         </ng-container>
