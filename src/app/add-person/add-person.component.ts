@@ -33,6 +33,16 @@ export class AddPersonComponent implements OnInit {
 
   add(): void {
     this.isInProcess = true;
+    let isValid = this.person.identifiers.length > 0;
+    this.person.identifiers.forEach(id => {
+      if (id.type === 'phone') {
+        id.value = this.getInternationalizedNumber(id.value);
+        isValid = isValid && id.value.startsWith('+');
+      }
+    });
+    if (!isValid) {
+      return;
+    }
     if (this.data.person) {
       this.api.editResource('person', this.person).subscribe((person: Person) => {
         this.dialogRef.close(true);
@@ -60,5 +70,24 @@ export class AddPersonComponent implements OnInit {
     if (close) {
       this.dialogRef.close(false);
     }
+  }
+
+  hasValidIdentifier() : boolean {
+    let isValid = this.person.identifiers.length > 0;
+    this.person.identifiers.forEach(id => {
+      if (id.type === 'phone') {
+        const sanitized = this.getInternationalizedNumber(id.value);
+        isValid = isValid && sanitized.startsWith('+');
+      }
+    });
+    return isValid
+  }
+
+  getInternationalizedNumber(phone: string) {
+    phone = phone.replace(/[^+0-9]/g, '');
+    if (phone.length === 10) {
+      return '+1' + phone;
+    }
+    return phone;
   }
 }
