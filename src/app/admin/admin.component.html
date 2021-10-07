@@ -3,7 +3,7 @@
   <button mat-icon-button (click)="edit()" color="primary"><mat-icon>edit</mat-icon></button>
 </div>
 
-<mat-tab-group>
+<mat-tab-group (selectedTabChange)="chat.scrollToBottom()">
   <mat-tab label="Members">
 
     <table mat-table [dataSource]="memberDataSource">
