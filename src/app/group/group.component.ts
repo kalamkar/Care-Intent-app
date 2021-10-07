@@ -97,14 +97,21 @@ export class GroupComponent implements OnChanges {
       minWidth: '400px',
       minHeight: '300px',
       data: {parentId: {'type': 'group', 'value': this.groupId}, relationType}
+    }).afterClosed().subscribe(result => {
+      this.init();
     });
   }
 
   remove(personId: Identifier, relationType: string) {
     if (this.groupId) {
       this.api.removeRelation({'type': 'group', 'value': this.groupId}, personId, relationType).subscribe(
-        _ => {this.snackBar.open('Removed ' + relationType, 'Ok', {duration: 3000});},
-        error => {this.snackBar.open('Failed to remove ' + relationType, 'Ok');}
+        _ => {
+          this.snackBar.open('Removed ' + relationType, 'Ok', {duration: 3000});
+          this.init();
+        },
+        error => {
+          this.snackBar.open('Failed to remove ' + relationType, 'Ok');
+        }
       );
     }
   }
@@ -113,6 +120,8 @@ export class GroupComponent implements OnChanges {
   edit(): void {
     this.dialog.open(AddGroupComponent, {
       data: {group: this.group}
-    });
+    }).afterClosed().subscribe(result => {
+      this.init();
+    }) ;
   }
 }

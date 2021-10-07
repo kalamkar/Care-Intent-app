@@ -83,6 +83,8 @@ export class AdminComponent implements OnChanges {
   edit(): void {
     this.dialog.open(AddPersonComponent, {
       data: {person: this.person}
+    }).afterClosed().subscribe(result => {
+      this.init();
     });
   }
 
@@ -91,13 +93,18 @@ export class AdminComponent implements OnChanges {
       minWidth: '400px',
       minHeight: '300px',
       data: {parentId: {'type': 'person', 'value': this.personId}, relationType}
+    }).afterClosed().subscribe(result => {
+      this.init();
     });
   }
 
   remove(memberId: Identifier) {
     if (this.personId) {
       this.api.removeRelation({'type': 'person', 'value': this.personId}, memberId, 'member').subscribe(
-        _ => {this.snackBar.open('Member removed', 'Ok', {duration: 3000});},
+        _ => {
+          this.snackBar.open('Member removed', 'Ok', {duration: 3000});
+          this.init();
+          },
         error => {this.snackBar.open('Failed to remove member', 'Ok');}
       );
     }
