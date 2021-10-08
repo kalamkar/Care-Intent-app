@@ -6,18 +6,18 @@ import {ApiService} from "../../services/api.service";
 import { DateTime } from 'luxon';
 
 @Component({
-  selector: 'app-survey',
-  templateUrl: './survey.component.html',
-  styleUrls: ['./survey.component.scss']
+  selector: 'app-notes',
+  templateUrl: './notes.component.html',
+  styleUrls: ['./notes.component.scss']
 })
-export class SurveyComponent implements OnInit {
+export class NotesComponent implements OnInit {
   @Input() personId: string | undefined;
 
   dataSource = new MatTableDataSource();
 
   private dataSubscription: Subscription | undefined;
 
-  displayedColumns: string[] = ['time', 'question', 'answer'];
+  displayedColumns: string[] = ['time', 'note'];
 
   constructor(private api: ApiService) {
   }
@@ -35,10 +35,10 @@ export class SurveyComponent implements OnInit {
       this.dataSubscription.unsubscribe();
     }
 
-    this.dataSubscription = this.api.getDataByTag(this.personId, 'survey').subscribe(answers => {
+    this.dataSubscription = this.api.getMessagesByTag(this.personId, 'session:notes').subscribe(notes => {
       const tableData: any[] = [];
-      answers.forEach(t => {
-        tableData.push({time: DateTime.fromISO(t.time), question: t.data[0]['name'], answer: t.data[0]['value']});
+      notes.forEach(t => {
+        tableData.push({time: DateTime.fromISO(t.time), note: t.content});
       });
       this.dataSource.data = tableData;
     });

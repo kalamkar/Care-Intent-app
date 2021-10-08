@@ -1,0 +1,12 @@
+.container {
+  overflow-y: scroll;
+  height: calc(100vh - 240px);
+}
+
+.mat-column-time {
+  width: 150px;
+}
+
+.mat-column-note {
+  padding: 0 10px 0 10px;
+}

@@ -65,6 +65,12 @@ export class ApiService {
     return this.get<Array<any>>(url, this.getOptions(false), (data: { results: Array<any>; }) => data.results)
   }
 
+  public getMessagesByTag(source: string, tag: string): Observable<Array<any>> {
+    const params: { [index: string]: string; } = {tag, 'start': DateTime.fromSeconds(0).toISO(), 'both': '1'};
+    const url = environment.apiUrl + '/person/' + source + '/message?' + this.encodeQueryData(params);
+    return this.get<Array<any>>(url, this.getOptions(false), (data: { results: Array<any>; }) => data.results)
+  }
+
   public getResource(collection: string | string[], id: string, noCache = true): Observable<any> {
     const url = environment.apiUrl + '/' + (collection instanceof Array ? collection.join('/') : collection) + '/' + id;
     return this.get<any>(url, this.getOptions(noCache), null);
