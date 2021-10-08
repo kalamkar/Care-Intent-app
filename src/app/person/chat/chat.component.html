@@ -1,5 +1,5 @@
-<div fxLayout="row" fxLayoutGap="10px">
-  <div fxLayout="column" fxLayoutGap="10px" fxFlex="33" class="controls">
+<div fxLayout="row wrap" fxLayoutGap="10px">
+  <div fxLayout="column" fxLayoutGap="10px" class="controls">
     <mat-form-field appearance="fill">
       <mat-label>Sender type</mat-label>
       <mat-select [(value)]="senderTypes" multiple>
@@ -7,7 +7,7 @@
       </mat-select>
     </mat-form-field>
   </div>
-  <div class="sessions" #sessionsView fxFlex>
+  <div class="sessions" #sessionsView>
     <div *ngFor="let session of sessions" class="session" #messages>
       <div *ngFor="let message of session" fxLayout="column" class="{{message.side}}">
         <ng-container *ngIf="senderTypes.includes(message.senderType ? message.senderType : '')"
