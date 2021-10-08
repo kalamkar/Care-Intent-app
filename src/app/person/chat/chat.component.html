@@ -14,7 +14,9 @@
                       [ngSwitch]="message.side">
           <div fxLayout="row" *ngSwitchCase="'left'" fxLayoutAlign="start center">
             <button mat-mini-fab disabled *ngIf="isMember"><mat-icon>person</mat-icon></button>
-            <button mat-mini-fab disabled *ngIf="!isMember"><mat-icon>smart_toy</mat-icon></button>
+            <button mat-mini-fab disabled *ngIf="!isMember && !message.tags.includes('routing')">
+              <mat-icon>smart_toy</mat-icon>
+            </button>
             <button mat-mini-fab *ngIf="!isMember && message.tags.includes('routing')" color="accent">
               <mat-icon>person</mat-icon>
             </button>
