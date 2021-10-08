@@ -5,7 +5,7 @@ import {DateTime} from 'luxon';
 import {environment} from '../../environments/environment';
 import {Observable, of, throwError as observableThrowError} from "rxjs";
 import {catchError, map} from "rxjs/operators";
-import {Identifier, Relation} from "../model/model";
+import {Identifier} from "../model/model";
 
 export interface RequestOptions {
   headers?: HttpHeaders | {
@@ -71,26 +71,21 @@ export class ApiService {
     return this.get<Array<any>>(url, this.getOptions(false), (data: { results: Array<any>; }) => data.results)
   }
 
-  public getResource(collection: string | string[], id: string, noCache = true): Observable<any> {
-    const url = environment.apiUrl + '/' + (collection instanceof Array ? collection.join('/') : collection) + '/' + id;
+  public getResource(collection: string, id: string, noCache = true): Observable<any> {
+    const url = environment.apiUrl + '/' + collection + '/' + id;
     return this.get<any>(url, this.getOptions(noCache), null);
   }
 
-  public getAllResources(collection: string[], noCache = true): Observable<any> {
-    const url = environment.apiUrl + '/' + collection.join('/');
-    return this.get<any>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results);
-  }
-
-  public addResource(collection: string | string[], resource: any): Observable<any> {
-    const url = environment.apiUrl + '/' + (collection instanceof Array ? collection.join('/') : collection);
+  public addResource(collection: string, resource: any): Observable<any> {
+    const url = environment.apiUrl + '/' + collection;
     return this.post<any>(url, JSON.stringify(resource),
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
-  public editResource(collection: string | string[], resource: any): Observable<any> {
+  public editResource(collection: string, resource: any): Observable<any> {
     const id = resource.id.value;
     delete resource.id;
-    const url = environment.apiUrl + '/' + (collection instanceof Array ? collection.join('/') : collection) + '/' + id;
+    const url = environment.apiUrl + '/' + collection + '/' + id;
     return this.patch<any>(url, JSON.stringify(resource),
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }

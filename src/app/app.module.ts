@@ -32,8 +32,6 @@ import {MatCardModule} from "@angular/material/card";
 import { BiomarkersComponent } from './biomarkers/biomarkers.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
-import { MessageQueueComponent } from './person/message-queue/message-queue.component';
-import { SchedulesComponent } from './person/schedules/schedules.component';
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatSelectModule} from "@angular/material/select";
 import {MatChipsModule} from "@angular/material/chips";
@@ -63,8 +61,6 @@ import { NotesComponent } from './person/notes/notes.component';
     AddPersonComponent,
     AddGroupComponent,
     BiomarkersComponent,
-    MessageQueueComponent,
-    SchedulesComponent,
     TicketsComponent,
     GroupTicketsComponent,
     ChatComponent,
