@@ -56,19 +56,20 @@ export class ApiService {
     return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
-  public getMessages(source: string, start: DateTime, end: DateTime, bothDirections = false): Observable<Array<any>> {
+  public getMessages(source: string, start: DateTime, end: DateTime, bothDirections = false,
+                     noCache = false): Observable<Array<any>> {
     const params: { [index: string]: string; } = {'start': start.toISO(),  'end': end.toISO()};
     if (bothDirections) {
       params['both'] = '1';
     }
     const url = environment.apiUrl + '/person/' + source + '/message?' + this.encodeQueryData(params);
-    return this.get<Array<any>>(url, this.getOptions(false), (data: { results: Array<any>; }) => data.results)
+    return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
-  public getMessagesByTag(source: string, tag: string): Observable<Array<any>> {
+  public getMessagesByTag(source: string, tag: string, noCache = false): Observable<Array<any>> {
     const params: { [index: string]: string; } = {tag, 'start': DateTime.fromSeconds(0).toISO(), 'both': '1'};
     const url = environment.apiUrl + '/person/' + source + '/message?' + this.encodeQueryData(params);
-    return this.get<Array<any>>(url, this.getOptions(false), (data: { results: Array<any>; }) => data.results)
+    return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
   public getResource(collection: string, id: string, noCache = true): Observable<any> {

@@ -6,6 +6,7 @@
         <mat-option *ngFor="let senderType of ['Member', 'Coach', 'System']" [value]="senderType">{{senderType}}</mat-option>
       </mat-select>
     </mat-form-field>
+    <button mat-mini-fab (click)="init(true)"><mat-icon>refresh</mat-icon></button>
   </div>
   <div class="sessions" #sessionsView>
     <div *ngFor="let session of sessions" class="session" #messages>
