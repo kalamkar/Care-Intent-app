@@ -7,11 +7,11 @@
     <div fxLayout="column">
       <span class="logo">Care Intent</span>
       <app-groups *ngIf="user && user.id" [userId]="user.id.value"></app-groups>
-      <div fxLayout="row" fxLayoutGap="8px" class="footer-nav">
+      <div fxLayout="row" fxLayoutGap="8px" *ngIf="user && user.id && user.id.value" class="footer-nav">
         <button mat-icon-button (click)="signOut()">
           <mat-icon aria-label="sign out">power_settings_new</mat-icon>
         </button>
-        <a mat-flat-button *ngIf="user && user.id && user.id.value" [routerLink]="['/admin', user.id.value]">
+        <a mat-flat-button [routerLink]="['/admin', user.id.value]">
           <span>{{user | name}}</span>
         </a>
       </div>

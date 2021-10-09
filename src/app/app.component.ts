@@ -4,6 +4,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {LoginComponent} from "./login/login.component";
 import {ContextService} from "./services/context.service";
 import {ApiService} from "./services/api.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ export class AppComponent implements OnInit{
 
   constructor(private context: ContextService,
               private api: ApiService,
+              private router: Router,
               private dialog: MatDialog) {
     context.personChange.subscribe((user: Person) => {
       this.user = user;
@@ -50,6 +52,7 @@ export class AppComponent implements OnInit{
   signOut(): void {
     localStorage.removeItem('auth');
     this.user = undefined;
+    this.router.navigateByUrl('/');
     this.showLogin();
   }
 }
