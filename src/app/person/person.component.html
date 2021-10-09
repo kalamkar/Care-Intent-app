@@ -28,6 +28,10 @@
     <app-notes [personId]="personId"></app-notes>
   </mat-tab>
 
+  <mat-tab label="Biometrics">
+    <app-biometrics [personId]="personId"></app-biometrics>
+  </mat-tab>
+
   <mat-tab label="Settings">
     <mat-form-field class="tags-list" appearance="fill" *ngIf="person">
       <mat-label>Tags</mat-label>

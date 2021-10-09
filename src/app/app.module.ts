@@ -46,6 +46,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatSortModule} from "@angular/material/sort";
 import { AdminComponent } from './admin/admin.component';
 import { NotesComponent } from './person/notes/notes.component';
+import { BiometricsComponent } from './person/biometrics/biometrics.component';
 
 
 @NgModule({
@@ -67,7 +68,8 @@ import { NotesComponent } from './person/notes/notes.component';
     SurveyComponent,
     OpenTicketComponent,
     AdminComponent,
-    NotesComponent
+    NotesComponent,
+    BiometricsComponent
   ],
   imports: [
     BrowserModule,
