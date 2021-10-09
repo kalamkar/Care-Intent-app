@@ -1,13 +1,11 @@
 <div fxLayout="row wrap" fxLayoutGap="10px">
-  <div fxLayout="column" fxLayoutGap="10px" class="controls">
-    <mat-form-field appearance="fill">
-      <mat-label>Sender type</mat-label>
-      <mat-select [(value)]="senderTypes" multiple>
-        <mat-option *ngFor="let senderType of ['Member', 'Coach', 'System']" [value]="senderType">{{senderType}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <button mat-mini-fab (click)="init(true)"><mat-icon>refresh</mat-icon></button>
-  </div>
+  <mat-form-field appearance="fill" class="controls">
+    <mat-label>Sender type</mat-label>
+    <mat-select [(value)]="senderTypes" multiple>
+      <mat-option *ngFor="let senderType of ['Member', 'Coach', 'System']" [value]="senderType">{{senderType}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-mini-fab (click)="init(true)" class="controls"><mat-icon>refresh</mat-icon></button>
   <div class="sessions" #sessionsView>
     <div *ngFor="let session of sessions" class="session" #messages>
       <div *ngFor="let message of session" fxLayout="column" class="{{message.side}}">
