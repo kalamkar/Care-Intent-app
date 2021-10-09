@@ -1,11 +1,14 @@
-<div class="toolbar">
-  <button mat-mini-fab color="primary" (click)="add()"><mat-icon>add_business</mat-icon></button>
-</div>
-<mat-nav-list>
-  <ng-container *ngFor="let group of groups">
-    <a mat-list-item *ngIf="group.id" [routerLink]="['/group', group.id.value]">
-      <mat-icon>store</mat-icon>&nbsp;
-      <span>{{group.title}}</span>
+<div class="container">
+  <mat-nav-list>
+    <ng-container *ngFor="let group of groups">
+      <a mat-list-item *ngIf="group.id" [routerLink]="['/group', group.id.value]">
+        <mat-icon>store</mat-icon>&nbsp;
+        <span>{{group.title}}</span>
+      </a>
+    </ng-container>
+    <a mat-list-item (click)="add()">
+      <mat-icon>add_business</mat-icon>&nbsp;
+      <span>New Group</span>
     </a>
-  </ng-container>
-</mat-nav-list>
+  </mat-nav-list>
+</div>

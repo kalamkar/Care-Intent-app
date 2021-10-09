@@ -1,4 +1,4 @@
-<div fxLayout="row" fxLayoutGap="12px" *ngIf="person && isMainPage">
+<div fxLayout="row" fxLayoutGap="12px" *ngIf="person && isMainPage" class="header">
   <h1>{{person | name}}</h1>
   <button mat-icon-button (click)="edit()" color="primary"><mat-icon>edit</mat-icon></button>
 </div>

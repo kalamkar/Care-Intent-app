@@ -2,27 +2,39 @@
   width: 100%;
 }
 
-.header {
-  height: 60px;
+.mat-progress-bar {
   position: fixed;
   top: 0;
   z-index: 2;
-  width: 100% !important;
+}
+
+.menu {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
 }
 
 .sidenav-content {
   display: flex;
-  padding: 82px 24px 0 16px;
+  padding: 12px 24px 0 16px;
   background-color: white;
+  height: calc(100vh - 12px);
 }
 
 .sidenav {
   min-width: 250px;
   max-width: 250px;
   position: fixed;
-  padding-top: 82px;
 }
 
-.user-name {
-  font-size: smaller;
+.logo {
+  margin: 20px 0 0 60px;
+  font-size: x-large;
+  font-weight: bold;
+  color: var(--accent-darker-color);
+}
+
+.footer-nav {
+ padding: 0 8px 0 8px
 }
