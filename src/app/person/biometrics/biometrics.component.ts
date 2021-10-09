@@ -1,19 +1,21 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {Subscription} from "rxjs";
 import {ApiService} from "../../services/api.service";
 // @ts-ignore
 import { DateTime } from 'luxon';
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-biometrics',
   templateUrl: './biometrics.component.html',
   styleUrls: ['./biometrics.component.scss']
 })
-export class BiometricsComponent implements OnInit {
+export class BiometricsComponent implements OnInit, AfterViewInit {
   @Input() personId: string | undefined;
 
   dataSource = new MatTableDataSource();
+  @ViewChild(MatSort) sort: MatSort | undefined;
 
   private dataSubscription: Subscription | undefined;
 
@@ -24,6 +26,12 @@ export class BiometricsComponent implements OnInit {
 
   ngOnInit(): void {
     this.init();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.sort) {
+      this.dataSource.sort = this.sort;
+    }
   }
 
   init(): void {
