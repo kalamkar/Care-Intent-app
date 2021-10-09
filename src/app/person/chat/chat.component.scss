@@ -1,5 +1,3 @@
-@import '../../../../src/theme.scss';
-
 .controls {
   margin: 12px;
 }
@@ -21,7 +19,7 @@
 .content {
   border-radius: 25px;
   padding: 15px;
-  background-color: $light-bg-lighter-5;
+  background-color: lighten(#EDE7DE, 5%);
   margin: 0 5px 0 5px;
 }
 
