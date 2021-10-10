@@ -7,7 +7,7 @@
   overflow-y: scroll;
   height: calc(100vh - 130px);
   padding: 10px 12px 0 12px;
-  background-color: lighten(#EDE7DE, 5%);
+  background-color: var(--bg-lighter-5);
 }
 
 .session {
@@ -18,7 +18,7 @@
 .content {
   border-radius: 25px;
   padding: 15px;
-  background-color: #EDE7DE;
+  background-color: var(--background);
   margin: 0 5px 0 5px;
 }
 
