@@ -7,19 +7,18 @@
   overflow-y: scroll;
   height: calc(100vh - 130px);
   padding: 10px 12px 0 12px;
-  border-left: solid 1px var(--primary-color);
-  border-right: solid 1px var(--primary-color);
+  background-color: lighten(#EDE7DE, 5%);
 }
 
 .session {
-  border-bottom: dotted 2px var(--primary-color);
+  border-bottom: dotted 1px var(--primary-color);
   margin-bottom: 20px;
 }
 
 .content {
   border-radius: 25px;
   padding: 15px;
-  background-color: lighten(#EDE7DE, 5%);
+  background-color: #EDE7DE;
   margin: 0 5px 0 5px;
 }
 
