@@ -18,7 +18,7 @@ export class GroupComponent implements OnChanges {
 
   @Input() groupId: string | undefined;
   group: Group | undefined;
-  members: Array<Person> = [];
+  memberCoaches = new Map<string, Person>();
   isMainPage = false;
 
   memberDataSource = new MatTableDataSource();
@@ -29,7 +29,7 @@ export class GroupComponent implements OnChanges {
   private membersSubscription: Subscription | undefined;
   private adminsSubscription: Subscription | undefined;
 
-  memberColumns: string[] = ['name', 'summary', 'menu'];
+  memberColumns: string[] = ['name', 'coach', 'summary', 'menu'];
   adminColumns: string[] = ['name', 'summary', 'menu'];
 
   constructor(private api: ApiService,
@@ -55,7 +55,7 @@ export class GroupComponent implements OnChanges {
 
   init(): void {
     if (!this.groupId) {
-      this.members = [];
+      this.memberCoaches.clear();
       return;
     }
 
@@ -75,7 +75,6 @@ export class GroupComponent implements OnChanges {
       members.forEach(member => {
         data.push({'member': member, 'summary': ''});
       });
-      this.members = members;
       this.memberDataSource.data = data;
     });
 
@@ -83,10 +82,15 @@ export class GroupComponent implements OnChanges {
       this.adminsSubscription.unsubscribe();
     }
     this.adminsSubscription = this.api.getChildren({'type': 'group', 'value': this.groupId}, RelationType.admin)
-      .subscribe((members) => {
+      .subscribe((admins) => {
         let data: unknown[] = [];
-        members.forEach(member => {
-          data.push({'member': member, 'summary': ''});
+        admins.forEach(admin => {
+          data.push({'admin': admin, 'summary': ''});
+          this.api.getChildren(admin.id, RelationType.member).subscribe(members => {
+            members.forEach(member => {
+              this.memberCoaches.set(member.id.value, admin);
+            });
+          });
         });
         this.adminDataSource.data = data;
       });

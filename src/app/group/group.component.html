@@ -27,6 +27,14 @@
         </td>
       </ng-container>
 
+      <!-- Coach Column -->
+      <ng-container matColumnDef="coach">
+        <th mat-header-cell *matHeaderCellDef> Coach </th>
+        <td mat-cell *matCellDef="let element">
+          {{memberCoaches.get(element.member.id.value) | name}}
+        </td>
+      </ng-container>
+
       <!-- Menu Column -->
       <ng-container matColumnDef="menu">
         <th mat-header-cell *matHeaderCellDef>
@@ -50,8 +58,8 @@
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Name </th>
         <td mat-cell *matCellDef="let element">
-          <a mat-flat-button [routerLink]="['/admin', element.member.id.value]">
-            <mat-icon>support_agent</mat-icon><span style="padding: 0 0 0 10px">{{element.member | name}}</span>
+          <a mat-flat-button [routerLink]="['/admin', element.admin.id.value]">
+            <mat-icon>support_agent</mat-icon><span style="padding: 0 0 0 10px">{{element.admin | name}}</span>
           </a>
         </td>
       </ng-container>
@@ -61,7 +69,7 @@
         <th mat-header-cell *matHeaderCellDef> Summary </th>
         <td mat-cell *matCellDef="let element">
           <mat-chip-list>
-            <mat-chip *ngFor="let tag of element.member.tags">{{tag}}</mat-chip>
+            <mat-chip *ngFor="let tag of element.admin.tags">{{tag}}</mat-chip>
           </mat-chip-list>
         </td>
       </ng-container>
@@ -72,7 +80,7 @@
           <button mat-icon-button (click)="add('admin')" color="accent"><mat-icon>add_moderator</mat-icon></button>
         </th>
         <td mat-cell *matCellDef="let element">
-          <button mat-icon-button (click)="remove(element.member.id, 'admin')"><mat-icon>delete</mat-icon></button>
+          <button mat-icon-button (click)="remove(element.admin.id, 'admin')"><mat-icon>delete</mat-icon></button>
         </td>
       </ng-container>
 
