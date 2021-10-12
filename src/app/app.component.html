@@ -1,15 +1,23 @@
 <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
-<button mat-mini-fab (click)="drawer.toggle()" class="menu">
+<button mat-mini-fab (click)="drawer.toggle()" class="drawer-button">
   <mat-icon aria-label="menu">menu</mat-icon>
 </button>
 <mat-sidenav-container>
   <mat-sidenav #drawer class="sidenav" mode="side" opened="true" role="navigation">
     <div fxLayout="column">
-      <span class="logo">Care Intent</span>
+      <div fxLayout="row" fxLayoutGap="8px">
+        <span class="logo">Care Intent</span>
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="menu"><mat-icon>more_vert</mat-icon></button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="add()">
+            <mat-icon>add_business</mat-icon><span>New Group</span>
+          </button>
+        </mat-menu>
+      </div>
       <app-groups *ngIf="user && user.id" [userId]="user.id.value"></app-groups>
       <div fxLayout="row" fxLayoutGap="8px" *ngIf="user && user.id && user.id.value" class="footer-nav">
         <button mat-icon-button (click)="signOut()">
-          <mat-icon aria-label="sign out">power_settings_new</mat-icon>
+          <mat-icon aria-label="sign out">logout</mat-icon>
         </button>
         <a mat-flat-button [routerLink]="['/admin', user.id.value]">
           <span>{{user | name}}</span>

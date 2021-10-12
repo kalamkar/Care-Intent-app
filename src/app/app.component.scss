@@ -8,7 +8,7 @@
   z-index: 2;
 }
 
-.menu {
+.drawer-button {
   position: fixed;
   top: 8px;
   left: 8px;
@@ -31,6 +31,11 @@
   margin: 20px 0 0 60px;
   font-size: x-large;
   font-weight: bold;
+  color: var(--accent-darker-color);
+}
+
+.menu {
+  margin: 10px 0 0 0;
   color: var(--accent-darker-color);
 }
 

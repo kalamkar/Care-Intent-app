@@ -3,7 +3,6 @@ import {ApiService} from "../services/api.service";
 import {Group, RelationType} from "../model/model"
 import {Subscription} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
-import {AddGroupComponent} from "../add-group/add-group.component";
 
 @Component({
   selector: 'app-groups',
@@ -36,15 +35,6 @@ export class GroupsComponent implements OnChanges {
     this.subscription = this.api.getParents({'type': 'person', 'value': this.userId}, RelationType.admin)
           .subscribe((groups) => {
         this.groups = groups;
-    });
-  }
-
-
-  add(): void {
-    this.dialog.open(AddGroupComponent, {
-      minWidth: '400px',
-      minHeight: '300px',
-      data: {}
     });
   }
 }

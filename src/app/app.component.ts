@@ -5,6 +5,7 @@ import {LoginComponent} from "./login/login.component";
 import {ContextService} from "./services/context.service";
 import {ApiService} from "./services/api.service";
 import {Router} from "@angular/router";
+import {AddGroupComponent} from "./add-group/add-group.component";
 
 @Component({
   selector: 'app-root',
@@ -54,5 +55,13 @@ export class AppComponent implements OnInit{
     this.user = undefined;
     this.router.navigateByUrl('/');
     this.showLogin();
+  }
+
+  add(): void {
+    this.dialog.open(AddGroupComponent, {
+      minWidth: '400px',
+      minHeight: '300px',
+      data: {}
+    });
   }
 }
