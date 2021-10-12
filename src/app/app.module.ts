@@ -47,6 +47,7 @@ import {MatSortModule} from "@angular/material/sort";
 import { AdminComponent } from './admin/admin.component';
 import { NotesComponent } from './person/notes/notes.component';
 import { BiometricsComponent } from './person/biometrics/biometrics.component';
+import {MatMenuModule} from "@angular/material/menu";
 
 
 @NgModule({
@@ -100,7 +101,8 @@ import { BiometricsComponent } from './person/biometrics/biometrics.component';
     MatTableModule,
     MatCheckboxModule,
     MatSnackBarModule,
-    MatSortModule
+    MatSortModule,
+    MatMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]
