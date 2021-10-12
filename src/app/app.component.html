@@ -16,7 +16,7 @@
       </div>
       <app-groups *ngIf="user && user.id" [userId]="user.id.value"></app-groups>
       <div fxLayout="row" fxLayoutGap="8px" *ngIf="user && user.id && user.id.value" class="footer-nav">
-        <button mat-icon-button (click)="signOut()">
+        <button mat-icon-button (click)="signOut()" matTooltip="Logout">
           <mat-icon aria-label="sign out">logout</mat-icon>
         </button>
         <a mat-flat-button [routerLink]="['/admin', user.id.value]">
