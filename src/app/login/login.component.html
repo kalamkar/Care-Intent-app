@@ -8,8 +8,12 @@
         <input matInput placeholder="Password" type="password" [(ngModel)]="password"
                [ngModelOptions]="{standalone: true}">
       </mat-form-field>
+      <mat-checkbox #terms>
+        I agree to the <a href="https://www.careintent.com/tos">Terms of Service</a> and the
+        <a href="https://www.careintent.com/privacypolicy">Privacy Policy</a>
+      </mat-checkbox>
       <div fxLayout="row" fxLayoutGap="12px">
-        <button mat-raised-button type="submit" (click)="login()" color="primary" disabled="{{isInProcess}}">
+        <button mat-raised-button type="submit" (click)="login()" color="primary" disabled="{{isInProcess || !terms.checked}}">
           <span>Login</span>
         </button>
         <button mat-stroked-button (click)="recover()" disabled="{{isInProcess}}">
