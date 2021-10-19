@@ -113,7 +113,7 @@ export class PersonComponent {
 
   openTicket() {
     if (this.person && this.person.id) {
-      this.dialog.open(OpenTicketComponent, {data: {personId: this.person.id.value}});
+      this.dialog.open(OpenTicketComponent, {data: {personId: this.person.id.value}, width: '512px'});
     }
   }
 }
