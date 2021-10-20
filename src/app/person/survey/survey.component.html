@@ -1,12 +1,16 @@
 <div fxLayout="row" fxLayoutGap="12px">
-  <div class="controls">
+  <div class="controls" fxLayout="column">
     <mat-form-field appearance="fill">
       <mat-label>Choose survey</mat-label>
-      <mat-select (valueChange)="dataSource.filter = $event" [value]="''">
-        <mat-option *ngFor="let survey of surveys" [value]="survey.value">
-          {{survey.viewValue}}
+      <mat-select (valueChange)="dataSource.filter = $event; updateScore();" [value]="''" #survey>
+        <mat-option *ngFor="let survey of surveys | keyvalue" [value]="survey.key">
+          {{survey.value.title}}
         </mat-option>
       </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill" *ngIf="surveys.get(survey.value).score">
+      <mat-label>Score</mat-label>
+      <input matInput value="{{sumOfAnswers}}" readonly>
     </mat-form-field>
   </div>
   <div class="container">

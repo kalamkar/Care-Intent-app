@@ -14,16 +14,17 @@ export class SurveyComponent implements OnInit {
   @Input() personId: string | undefined;
 
   dataSource = new MatTableDataSource();
+  sumOfAnswers = 0;
 
   private dataSubscription: Subscription | undefined;
 
   displayedColumns: string[] = ['time', 'question', 'answer'];
 
-  surveys = [
-    {value: '', viewValue: 'All'},
-    {value: 'survey.covid', viewValue: 'Covid'},
-    {value: 'survey.phq9', viewValue: 'PHQ-9'}
-  ];
+  surveys = new Map<string, any>([
+    ['', {title: 'All', score: false}],
+    ['survey.covid', {title: 'Covid', score: false}],
+    ['survey.phq9', {title: 'PHQ-9', score: true}]
+  ]);
 
   constructor(private api: ApiService) {
   }
@@ -47,6 +48,16 @@ export class SurveyComponent implements OnInit {
         tableData.push({time: DateTime.fromISO(t.time), question: t.data[0]['name'], answer: t.data[0]['value']});
       });
       this.dataSource.data = tableData;
+    });
+  }
+
+  updateScore() {
+    this.sumOfAnswers = 0;
+    this.dataSource.data.forEach((row: any) => {
+      if (row.question && row.question.indexOf(this.dataSource.filter) < 0) {
+        return;
+      }
+      this.sumOfAnswers += !isNaN(parseInt(row.answer)) ? parseInt(row.answer) : 0;
     });
   }
 }
