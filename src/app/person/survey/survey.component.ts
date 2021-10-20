@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {Subscription} from "rxjs";
 import {ApiService} from "../../services/api.service";
@@ -18,6 +18,12 @@ export class SurveyComponent implements OnInit {
   private dataSubscription: Subscription | undefined;
 
   displayedColumns: string[] = ['time', 'question', 'answer'];
+
+  surveys = [
+    {value: '', viewValue: 'All'},
+    {value: 'survey.covid', viewValue: 'Covid'},
+    {value: 'survey.phq9', viewValue: 'PHQ-9'}
+  ];
 
   constructor(private api: ApiService) {
   }
