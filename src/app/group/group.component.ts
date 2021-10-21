@@ -20,7 +20,7 @@ export class GroupComponent implements OnChanges {
 
   @Input() groupId: string | undefined;
   group: Group | undefined;
-  memberCoaches = new Map<string, Person>();
+  memberCoaches = new Map<string, Array<Person>>();
   isMainPage = false;
 
   memberDataSource = new MatTableDataSource();
@@ -58,7 +58,6 @@ export class GroupComponent implements OnChanges {
 
   init(): void {
     if (!this.groupId) {
-      this.memberCoaches.clear();
       return;
     }
 
@@ -84,6 +83,7 @@ export class GroupComponent implements OnChanges {
     if (this.adminsSubscription) {
       this.adminsSubscription.unsubscribe();
     }
+    this.memberCoaches.clear();
     this.adminsSubscription = this.api.getChildren({'type': 'group', 'value': this.groupId}, RelationType.admin)
       .subscribe((admins) => {
         let data: unknown[] = [];
@@ -91,7 +91,14 @@ export class GroupComponent implements OnChanges {
           data.push({'admin': admin, 'summary': ''});
           this.api.getChildren(admin.id, RelationType.member).subscribe(members => {
             members.forEach(member => {
-              this.memberCoaches.set(member.id.value, admin);
+              let coaches = this.memberCoaches.get(member.id.value);
+              if (!coaches) {
+                coaches = [];
+                this.memberCoaches.set(member.id.value, coaches);
+              }
+              if (!coaches.includes(admin)) {
+                coaches.push(admin);
+              }
             });
           });
         });

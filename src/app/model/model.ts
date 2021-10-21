@@ -19,8 +19,7 @@ export interface Message {
 
 export interface Identifier {
   type: string,
-  value: string,
-  active?: boolean
+  value: string
 }
 
 export interface Person {

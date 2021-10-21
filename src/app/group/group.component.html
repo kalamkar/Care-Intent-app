@@ -31,7 +31,10 @@
       <ng-container matColumnDef="coach">
         <th mat-header-cell *matHeaderCellDef> Coach </th>
         <td mat-cell *matCellDef="let element">
-          {{memberCoaches.get(element.member.id.value) | name}}
+          <mat-chip-list>
+            <a mat-chip *ngFor="let coach of memberCoaches.get(element.member.id.value)"
+               [routerLink]="['/admin', coach.id ? coach.id.value :  '']">{{coach | name}}</a>
+          </mat-chip-list>
         </td>
       </ng-container>
 
