@@ -1,0 +1,14 @@
+<div fxLayout="column" fxLayoutGap="12px" style="padding: 20px 0 20px 0">
+  <mat-selection-list #parents [multiple]="false">
+    <mat-list-option *ngFor="let parent of data.availableParents" [value]="parent">
+      {{parent | name}}
+    </mat-list-option>
+  </mat-selection-list>
+
+  <div fxLayout="row" fxLayoutAlign="end center">
+    <button mat-raised-button type="submit" (click)="add(parents.selectedOptions.selected[0].value)" color="primary"
+            disabled="{{isInProcess || !parents.selectedOptions.selected}}">
+      <span>Add</span>
+    </button>
+  </div>
+</div>

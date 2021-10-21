@@ -8,6 +8,7 @@ import {AddPersonComponent} from "../add-person/add-person.component";
 import {AddGroupComponent} from "../add-group/add-group.component";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {AddParentComponent} from "../add-parent/add-parent.component";
 
 @Component({
   selector: 'app-group',
@@ -126,6 +127,16 @@ export class GroupComponent implements OnChanges {
       data: {group: this.group}
     }).afterClosed().subscribe(result => {
       this.init();
-    }) ;
+    });
+  }
+
+  addParent(personId: Identifier) {
+    const admins = new Array<Person>();
+    this.adminDataSource.data.forEach((row: any) => admins.push(row.admin));
+    this.dialog.open(AddParentComponent, {
+      data: {personId: personId, availableParents: admins, relationType: 'member'}
+    }).afterClosed().subscribe(result => {
+      this.init();
+    });
   }
 }

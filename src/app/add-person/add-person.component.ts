@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {ApiService} from "../services/api.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Identifier, Person, RelationType} from "../model/model";
+import {Identifier, Person} from "../model/model";
 
 @Component({
   selector: 'app-add-person',
@@ -54,7 +54,6 @@ export class AddPersonComponent implements OnInit {
           return;
         }
         if (this.data.parentId && this.data.relationType) {
-          const relation = {source: person.id, type: this.data.relationType, target: this.data.parentId};
           this.api.addRelation(this.data.parentId, person.id, this.data.relationType).subscribe(result => {
             this.dialogRef.close(true);
           }, error => this.onError());

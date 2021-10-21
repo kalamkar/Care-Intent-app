@@ -48,6 +48,7 @@ import { AdminComponent } from './admin/admin.component';
 import { NotesComponent } from './person/notes/notes.component';
 import { BiometricsComponent } from './person/biometrics/biometrics.component';
 import {MatMenuModule} from "@angular/material/menu";
+import { AddParentComponent } from './add-parent/add-parent.component';
 
 
 @NgModule({
@@ -70,7 +71,8 @@ import {MatMenuModule} from "@angular/material/menu";
     OpenTicketComponent,
     AdminComponent,
     NotesComponent,
-    BiometricsComponent
+    BiometricsComponent,
+    AddParentComponent
   ],
   imports: [
     BrowserModule,
