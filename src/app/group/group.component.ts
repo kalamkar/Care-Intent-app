@@ -9,6 +9,7 @@ import {AddGroupComponent} from "../add-group/add-group.component";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AddParentComponent} from "../add-parent/add-parent.component";
+import {ContextService} from "../services/context.service";
 
 @Component({
   selector: 'app-group',
@@ -34,6 +35,7 @@ export class GroupComponent implements OnChanges {
   adminColumns: string[] = ['name', 'summary', 'menu'];
 
   constructor(private api: ApiService,
+              private context: ContextService,
               private router: Router,
               private route: ActivatedRoute,
               private dialog: MatDialog,
@@ -130,11 +132,15 @@ export class GroupComponent implements OnChanges {
     });
   }
 
-  addParent(personId: Identifier) {
-    const admins = new Array<Person>();
-    this.adminDataSource.data.forEach((row: any) => admins.push(row.admin));
+  addParent(personId: Identifier, parentType: string, relationType: string) {
+    const availableParents = new Array<Person|Group>();
+    if (parentType === 'coach') {
+      this.adminDataSource.data.forEach((row: any) => availableParents.push(row.admin));
+    } else {
+      this.context.groups.forEach((group: Group) => availableParents.push(group));
+    }
     this.dialog.open(AddParentComponent, {
-      data: {personId: personId, availableParents: admins, relationType: 'member'}
+      data: {personId: personId, availableParents: availableParents, relationType: relationType}
     }).afterClosed().subscribe(result => {
       this.init();
     });

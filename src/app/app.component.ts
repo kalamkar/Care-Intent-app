@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Person} from "./model/model";
+import {Group, Person} from "./model/model";
 import {MatDialog} from "@angular/material/dialog";
 import {LoginComponent} from "./login/login.component";
 import {ContextService} from "./services/context.service";
@@ -16,6 +16,7 @@ export class AppComponent implements OnInit{
   title = 'app';
   isLoading = false;
   user: Person|undefined;
+  groups: Array<Group> = [];
 
   constructor(private context: ContextService,
               private api: ApiService,
@@ -26,6 +27,9 @@ export class AppComponent implements OnInit{
       if (!user) {
         this.showLogin();
       }
+    });
+    context.groupsChange.subscribe((groups: Array<Group>) => {
+      this.groups = groups;
     });
     api.activityChange.subscribe((isActive: boolean) => {
       this.isLoading = isActive;

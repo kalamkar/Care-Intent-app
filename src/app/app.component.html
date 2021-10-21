@@ -14,7 +14,7 @@
           </button>
         </mat-menu>
       </div>
-      <app-groups *ngIf="user && user.id" [userId]="user.id.value"></app-groups>
+      <app-groups *ngIf="groups" [groups]="groups"></app-groups>
       <div fxLayout="row" fxLayoutGap="8px" *ngIf="user && user.id && user.id.value" class="footer-nav">
         <button mat-icon-button (click)="signOut()" matTooltip="Logout">
           <mat-icon aria-label="sign out">logout</mat-icon>
