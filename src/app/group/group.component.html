@@ -47,10 +47,10 @@
               <mat-icon>support_agent</mat-icon><span>Add coach</span>
             </button>
             <button mat-menu-item (click)="addParent(element.member.id, 'group', 'member')">
-              <mat-icon>store</mat-icon><span>Add to group</span>
+              <mat-icon>store</mat-icon><span>Add to another group</span>
             </button>
             <button mat-menu-item (click)="remove(element.member.id, 'member')">
-              <mat-icon>delete</mat-icon><span>Remove member from group</span>
+              <mat-icon>delete</mat-icon><span>Remove from this group</span>
             </button>
           </mat-menu>
         </td>
@@ -94,10 +94,10 @@
           <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
           <mat-menu #menu="matMenu">
             <button mat-menu-item (click)="addParent(element.admin.id, 'group', 'admin')">
-              <mat-icon>store</mat-icon><span>Add admin to group</span>
+              <mat-icon>store</mat-icon><span>Add admin to another group</span>
             </button>
             <button mat-menu-item (click)="remove(element.admin.id, 'admin')">
-              <mat-icon>delete</mat-icon><span>Remove admin from group</span>
+              <mat-icon>delete</mat-icon><span>Remove from this group</span>
             </button>
           </mat-menu>
         </td>
