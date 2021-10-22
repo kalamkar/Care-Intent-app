@@ -1,0 +1,16 @@
+<div fxLayout="column" fxLayoutGap="12px" style="padding: 20px 0 20px 0">
+  <mat-form-field appearance="fill">
+    <mat-label>Message</mat-label>
+    <textarea matInput rows="5" cols="100" #title></textarea>
+  </mat-form-field>
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="12px">
+    <button mat-raised-button type="submit" (click)="send(title.value, personId)" color="primary"
+            disabled="{{isInProcess || !title.value}}" *ngIf="personId">
+      <span>Send to Member</span>
+    </button>
+    <button mat-raised-button type="submit" (click)="send(title.value, coachId)" color="accent"
+            disabled="{{isInProcess || !title.value}}" *ngIf="coachId">
+      <span>Send to Coach</span>
+    </button>
+  </div>
+</div>

@@ -2,6 +2,7 @@
   <button mat-mini-fab disabled><mat-icon>person</mat-icon></button>
   <h1 *ngIf="person">{{person | name}}</h1>
   <button mat-icon-button (click)="edit()" color="primary" matTooltip="Edit"><mat-icon>edit</mat-icon></button>
+  <button mat-icon-button (click)="sendMessage()" color="accent" matTooltip="Send Message"><mat-icon>message</mat-icon></button>
   <button mat-icon-button (click)="openTicket()" color="accent" matTooltip="New ticket"><mat-icon>add_task</mat-icon></button>
   <span class="fill-remaining-space"></span>
   <span>

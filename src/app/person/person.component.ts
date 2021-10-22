@@ -11,6 +11,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {OpenTicketComponent} from "../open-ticket/open-ticket.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {SendMessageComponent} from "../send-message/send-message.component";
 
 @Component({
   selector: 'app-person',
@@ -114,6 +115,13 @@ export class PersonComponent {
   openTicket() {
     if (this.person && this.person.id) {
       this.dialog.open(OpenTicketComponent, {data: {personId: this.person.id.value}, width: '512px'});
+    }
+  }
+
+  sendMessage() {
+    if (this.person && this.person.id) {
+      this.dialog.open(SendMessageComponent, {data: {personId: this.person.id.value,
+          coachId: this.coaches.length > 0 ? this.coaches[0].id.value : undefined}, width: '512px'});
     }
   }
 }

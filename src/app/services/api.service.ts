@@ -113,10 +113,13 @@ export class ApiService {
     return this.del<any>(url, this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
-  public sendMessage(content: string, personId: string, phone: string) {
+  public sendMessage(content: string, personId: string, phone?: string) {
     const url = environment.apiUrl + '/person/' + personId + '/message';
-    return this.post<any>(url, JSON.stringify(
-      {'receiver': {'type': 'phone', 'value': phone}, 'content': content, 'content_type': 'text/plain'}),
+    const message: any = {'content': content, 'content_type': 'text/plain'};
+    if (phone) {
+      message['receiver'] = {'type': 'phone', 'value': phone};
+    }
+    return this.post<any>(url, JSON.stringify(message),
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 

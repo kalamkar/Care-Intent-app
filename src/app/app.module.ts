@@ -49,6 +49,7 @@ import { NotesComponent } from './person/notes/notes.component';
 import { BiometricsComponent } from './person/biometrics/biometrics.component';
 import {MatMenuModule} from "@angular/material/menu";
 import { AddParentComponent } from './add-parent/add-parent.component';
+import { SendMessageComponent } from './send-message/send-message.component';
 
 
 @NgModule({
@@ -72,7 +73,8 @@ import { AddParentComponent } from './add-parent/add-parent.component';
     AdminComponent,
     NotesComponent,
     BiometricsComponent,
-    AddParentComponent
+    AddParentComponent,
+    SendMessageComponent
   ],
   imports: [
     BrowserModule,
