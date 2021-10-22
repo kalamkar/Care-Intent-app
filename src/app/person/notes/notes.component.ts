@@ -37,8 +37,10 @@ export class NotesComponent implements OnInit {
 
     this.dataSubscription = this.api.getMessagesByTag(this.personId, 'session:notes').subscribe(notes => {
       const tableData: any[] = [];
-      notes.forEach(t => {
-        tableData.push({time: DateTime.fromISO(t.time), note: t.content});
+      notes.forEach(row => {
+        if (row.content && row.content.toLowerCase().trim() != 'done') {
+          tableData.push({time: DateTime.fromISO(row.time), note: row.content});
+        }
       });
       this.dataSource.data = tableData;
     });
