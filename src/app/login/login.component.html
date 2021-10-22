@@ -67,7 +67,7 @@
     </mat-form-field>
     <div fxLayout="row" fxLayoutGap="12px">
       <button mat-raised-button type="submit" (click)="verify()" color="primary" disabled="{{isInProcess}}">
-        <span>Login</span>
+        <span>Update</span>
       </button>
       <mat-spinner *ngIf="isInProcess" class="login-spinner" [diameter]="20"></mat-spinner>
       <div class="error" *ngIf="errorMessage">
