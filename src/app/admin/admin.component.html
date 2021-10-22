@@ -4,8 +4,9 @@
 </div>
 
 <mat-tab-group (selectedTabChange)="chat.scrollToBottom()">
-  <mat-tab label="Members">
+  <mat-tab label="Members ({{memberDataSource.data.length}})">
 
+    <div class="scroll-container">
     <table mat-table [dataSource]="memberDataSource">
       <!-- Name Column -->
       <ng-container matColumnDef="name">
@@ -42,9 +43,10 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="memberColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="memberColumns; sticky: true"></tr>
       <tr mat-row *matRowDef="let row; columns: memberColumns;"></tr>
     </table>
+    </div>
 
   </mat-tab>
 
@@ -53,7 +55,9 @@
   </mat-tab>
 
   <mat-tab label="Conversation">
+    <div class="scroll-container">
     <app-chat [person]="person" [isMember]="false" #chat></app-chat>
+    </div>
   </mat-tab>
 
   <mat-tab label="Settings">

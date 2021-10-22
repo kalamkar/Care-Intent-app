@@ -2,6 +2,11 @@
   margin-left: 60px;
 }
 
+.scroll-container {
+  overflow-y: scroll;
+  height: calc(100vh - 120px);
+}
+
 .mat-chip {
   font-size: smaller;
   font-weight: normal;

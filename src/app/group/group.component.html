@@ -4,8 +4,9 @@
 </div>
 
 <mat-tab-group>
-  <mat-tab label="Members">
-    
+  <mat-tab label="Members ({{memberDataSource.data.length}})">
+
+    <div class="scroll-container">
     <table mat-table [dataSource]="memberDataSource">
       <!-- Name Column -->
       <ng-container matColumnDef="name">
@@ -59,14 +60,16 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="memberColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="memberColumns; sticky: true"></tr>
       <tr mat-row *matRowDef="let row; columns: memberColumns;"></tr>
     </table>
+    </div>
 
   </mat-tab>
 
-  <mat-tab label="Admins">
+  <mat-tab label="Admins ({{adminDataSource.data.length}})">
 
+    <div class="scroll-container">
     <table mat-table [dataSource]="adminDataSource">
       <!-- Name Column -->
       <ng-container matColumnDef="name">
@@ -106,9 +109,10 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="adminColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="adminColumns; sticky: true"></tr>
       <tr mat-row *matRowDef="let row; columns: adminColumns;"></tr>
     </table>
+    </div>
 
   </mat-tab>
 </mat-tab-group>
