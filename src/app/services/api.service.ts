@@ -113,6 +113,25 @@ export class ApiService {
     return this.del<any>(url, this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
+  public sendProxyMessage(content: string, personId: string, senderId: string) {
+    const url = environment.apiUrl + '/person/' + personId + '/message';
+    const action = {
+      'id': 'api.coach.proxy.message',
+      'type': 'Message',
+      'condition': 'True',
+      'priority': 10,
+      'params': {
+        'sender': {'type': 'person', 'value': senderId},
+        'receiver': {'type': 'person', 'value': personId},
+        'content': content
+      }
+    };
+    return this.post<any>(url, JSON.stringify(
+      {'receiver': {'type': 'person', 'value': personId}, 'status': 'internal', 'content': action,
+        'content_type': 'application/json'}),
+      this.getOptions(true, {'Content-Type': 'application/json'}));
+  }
+
   public sendMessage(content: string, personId: string, phone?: string) {
     const url = environment.apiUrl + '/person/' + personId + '/message';
     const message: any = {'content': content, 'content_type': 'text/plain'};

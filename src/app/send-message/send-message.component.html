@@ -4,11 +4,11 @@
     <textarea matInput rows="5" cols="100" #title></textarea>
   </mat-form-field>
   <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="12px">
-    <button mat-raised-button type="submit" (click)="send(title.value, personId)" color="primary"
+    <button mat-raised-button type="submit" (click)="sendToMember(title.value)" color="primary"
             disabled="{{isInProcess || !title.value}}" *ngIf="personId">
       <span>Send to Member</span>
     </button>
-    <button mat-raised-button type="submit" (click)="send(title.value, coachId)" color="accent"
+    <button mat-raised-button type="submit" (click)="sendToCoach(title.value)" color="accent"
             disabled="{{isInProcess || !title.value}}" *ngIf="coachId">
       <span>Send to Coach</span>
     </button>

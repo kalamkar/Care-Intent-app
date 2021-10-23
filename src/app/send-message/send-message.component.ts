@@ -24,15 +24,22 @@ export class SendMessageComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  send(content: string, userId: string): void {
+  sendToMember(content: string): void {
     this.isInProcess = true;
-    if (this.personId) {
-      this.api.sendMessage(content, userId).subscribe(response => {
-        this.dialogRef.close(true);
-      }, error => {
-        this.onError();
-      });
-    }
+    this.api.sendMessage(content, this.personId).subscribe(response => {
+      this.dialogRef.close(true);
+    }, error => {
+      this.onError();
+    });
+  }
+
+  sendToCoach(content: string): void {
+    this.isInProcess = true;
+    this.api.sendProxyMessage(content, this.coachId, this.personId).subscribe(response => {
+      this.dialogRef.close(true);
+    }, error => {
+      this.onError();
+    });
   }
 
   onError(close: boolean = false) {
