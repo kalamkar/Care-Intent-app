@@ -141,7 +141,7 @@ export class GroupComponent implements OnChanges {
     });
   }
 
-  addParent(personId: Identifier, parentType: string, relationType: string) {
+  addParent(person: Person, parentType: string, relationType: string) {
     const availableParents = new Array<Person|Group>();
     if (parentType === 'coach') {
       this.adminDataSource.data.forEach((row: any) => availableParents.push(row.admin));
@@ -149,7 +149,7 @@ export class GroupComponent implements OnChanges {
       this.context.groups.forEach((group: Group) => availableParents.push(group));
     }
     this.dialog.open(AddParentComponent, {
-      data: {personId: personId, availableParents: availableParents, relationType: relationType}
+      data: {person: person, availableParents: availableParents, relationType: relationType}
     }).afterClosed().subscribe(result => {
       this.init();
     });
