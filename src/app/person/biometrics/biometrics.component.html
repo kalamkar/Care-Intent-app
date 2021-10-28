@@ -1,5 +1,5 @@
 <div class="container">
-  <table mat-table [dataSource]="dataSource" matSort>
+  <table mat-table [dataSource]="dataSource" matSort matSortActive="time" matSortDirection="desc">
     <!-- Time Column -->
     <ng-container matColumnDef="time">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Time </th>
