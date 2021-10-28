@@ -117,8 +117,8 @@
 
   </mat-tab>
 
-  <mat-tab label="Tickets">
-    <app-group-tickets [persons]="members"></app-group-tickets>
+  <mat-tab label="Tickets ({{tickets.count}})">
+    <app-group-tickets [persons]="members" #tickets></app-group-tickets>
   </mat-tab>
 
 </mat-tab-group>

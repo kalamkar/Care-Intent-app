@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Ticket, Person} from "../model/model";
 import {Subscription} from "rxjs";
 import {ApiService} from "../services/api.service";
@@ -14,9 +14,9 @@ import {MatSort} from "@angular/material/sort";
 })
 export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() persons: Array<Person> = [];
+  @Output() count = 0;
 
   dataSource = new MatTableDataSource();
-  tableData: PersonTicket[] = [];
 
   @ViewChild(MatSort) sort: MatSort | undefined;
 
@@ -60,6 +60,7 @@ export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
         this.subscriptions.push(this.api.getDataByTag(person.id.value, 'ticket').subscribe(rows => {
           const tickets = this.getPersonTickets(person, rows);
           this.dataSource.data = this.dataSource.data.concat(tickets);
+          this.count = this.dataSource.data.length;
         }));
       }
     });
