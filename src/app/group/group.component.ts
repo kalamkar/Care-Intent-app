@@ -21,6 +21,7 @@ export class GroupComponent implements OnChanges {
   @Input() groupId: string | undefined;
   group: Group | undefined;
   memberCoaches = new Map<string, Array<Person>>();
+  members: Array<Person> = [];
   isMainPage = false;
 
   memberDataSource = new MatTableDataSource();
@@ -74,6 +75,7 @@ export class GroupComponent implements OnChanges {
     this.membersSubscription = this.api.getChildren({'type': 'group', 'value': this.groupId}, RelationType.member)
         .subscribe((members) => {
       let data: unknown[] = [];
+      this.members = members;
       members.forEach(member => {
         data.push({'member': member, 'summary': ''});
       });
