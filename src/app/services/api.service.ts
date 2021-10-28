@@ -25,9 +25,11 @@ export interface RequestOptions {
 })
 export class ApiService {
 
+  public noCacheDefault = false;
   @Output() activityChange: EventEmitter<boolean> = new EventEmitter();
 
   private reuestCount = 0;
+  private dirtyResources = new Array<string>();
 
   constructor(protected httpClient: HttpClient) { }
 
@@ -45,34 +47,54 @@ export class ApiService {
     console.log(error);
   }
 
-  public getData(source: string, names: string[], start: DateTime, end: DateTime, noCache = false): Observable<Array<any>> {
+  public getData(source: string, names: string[], start: DateTime, end: DateTime, noCache = this.noCacheDefault): Observable<Array<any>> {
     const url = environment.apiUrl + '/person/' + source + '/data?' + this.encodeQueryData(
       {'name': names, 'start': start.toISO(), 'end': end.toISO()});
+    if (this.dirtyResources.includes(source)) {
+      this.dirtyResources.splice(this.dirtyResources.indexOf(source));
+      noCache = true;
+    }
     return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
-  public getDataByTag(source: string, tag: string, noCache = false): Observable<Array<any>> {
+  public getDataByTag(source: string, tag: string, noCache = this.noCacheDefault): Observable<Array<any>> {
     const url = environment.apiUrl + '/person/' + source + '/data?' + this.encodeQueryData({'tag': tag});
+    if (this.dirtyResources.includes(source)) {
+      this.dirtyResources.splice(this.dirtyResources.indexOf(source));
+      noCache = true;
+    }
     return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
   public getMessages(source: string, start: DateTime, end: DateTime, bothDirections = false,
-                     noCache = false): Observable<Array<any>> {
+                     noCache = this.noCacheDefault): Observable<Array<any>> {
     const params: { [index: string]: string; } = {'start': start.toISO(),  'end': end.toISO()};
     if (bothDirections) {
       params['both'] = '1';
+    }
+    if (this.dirtyResources.includes(source)) {
+      this.dirtyResources.splice(this.dirtyResources.indexOf(source));
+      noCache = true;
     }
     const url = environment.apiUrl + '/person/' + source + '/message?' + this.encodeQueryData(params);
     return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
-  public getMessagesByTag(source: string, tag: string, noCache = false): Observable<Array<any>> {
+  public getMessagesByTag(source: string, tag: string, noCache = this.noCacheDefault): Observable<Array<any>> {
+    if (this.dirtyResources.includes(source)) {
+      this.dirtyResources.splice(this.dirtyResources.indexOf(source));
+      noCache = true;
+    }
     const params: { [index: string]: string; } = {tag, 'start': DateTime.fromSeconds(0).toISO(), 'both': '1'};
     const url = environment.apiUrl + '/person/' + source + '/message?' + this.encodeQueryData(params);
     return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
-  public getResource(collection: string, id: string, noCache = true): Observable<any> {
+  public getResource(collection: string, id: string, noCache = this.noCacheDefault): Observable<any> {
+    if (this.dirtyResources.includes(id)) {
+      this.dirtyResources.splice(this.dirtyResources.indexOf(id));
+      noCache = true;
+    }
     const url = environment.apiUrl + '/' + collection + '/' + id;
     return this.get<any>(url, this.getOptions(noCache), null);
   }
@@ -86,34 +108,50 @@ export class ApiService {
   public editResource(collection: string, resource: any): Observable<any> {
     const id = resource.id.value;
     delete resource.id;
+    this.dirtyResources.push(id);
     const url = environment.apiUrl + '/' + collection + '/' + id;
     return this.patch<any>(url, JSON.stringify(resource),
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
-  public getParents(childId: Identifier, relationType: string, parentType = 'group', noCache = true): Observable<Array<any>> {
+  public getParents(childId: Identifier, relationType: string, parentType = 'group', noCache = this.noCacheDefault)
+        : Observable<Array<any>> {
+    if (this.dirtyResources.includes(childId.value)) {
+      this.dirtyResources.splice(this.dirtyResources.indexOf(childId.value));
+      noCache = true;
+    }
     const url = environment.apiUrl + '/' + parentType +'/all/' + relationType + '/' + childId.value;
     return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
-  public getChildren(parentId: Identifier, relationType: string, noCache = true): Observable<Array<any>> {
+  public getChildren(parentId: Identifier, relationType: string, noCache = this.noCacheDefault): Observable<Array<any>> {
+    if (this.dirtyResources.includes(parentId.value)) {
+      this.dirtyResources.splice(this.dirtyResources.indexOf(parentId.value));
+      noCache = true;
+    }
     const url = environment.apiUrl + '/'  + parentId.type + '/' + parentId.value + '/' + relationType;
     return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
   public addRelation(parentId: Identifier, childId: Identifier, relationType: string) {
+    this.dirtyResources.push(parentId.value);
+    this.dirtyResources.push(childId.value);
     const url = environment.apiUrl + '/' + parentId.type + '/' + parentId.value + '/' + relationType;
     return this.post<any>(url, JSON.stringify(childId),
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
   public removeRelation(parentId: Identifier, childId: Identifier, relationType: string) {
+    this.dirtyResources.push(parentId.value);
+    this.dirtyResources.push(childId.value);
     const url = environment.apiUrl + '/' + parentId.type + '/' + parentId.value + '/' + relationType + '/'
       + childId.type + ':' + childId.value;
     return this.del<any>(url, this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
   public sendProxyMessage(content: string, personId: string, senderId: string) {
+    this.dirtyResources.push(personId);
+    this.dirtyResources.push(senderId);
     const url = environment.apiUrl + '/person/' + personId + '/message';
     const action = {
       'id': 'api.coach.proxy.message',
@@ -133,6 +171,7 @@ export class ApiService {
   }
 
   public sendMessage(content: string, personId: string, phone?: string) {
+    this.dirtyResources.push(personId);
     const url = environment.apiUrl + '/person/' + personId + '/message';
     const message: any = {'content': content, 'content_type': 'text/plain'};
     if (phone) {
@@ -143,6 +182,7 @@ export class ApiService {
   }
 
   public closeTicket(ticketId: number, personId: string) {
+    this.dirtyResources.push(personId);
     const url = environment.apiUrl + '/person/' + personId + '/message';
     const action = {
       'id': 'api.close.ticket',
@@ -161,6 +201,7 @@ export class ApiService {
   }
 
   public openTicket(category: string, priority: number, title: string, personId: string) {
+    this.dirtyResources.push(personId);
     const url = environment.apiUrl + '/person/' + personId + '/message';
     const action = {
       'id': 'api.open.ticket',
