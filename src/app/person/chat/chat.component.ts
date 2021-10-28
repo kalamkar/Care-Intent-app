@@ -70,7 +70,8 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     this.isLoading = true;
     const endTime = DateTime.local().plus({days: 1}).endOf('day');
     const startTime = endTime.minus({days: 15});
-    this.messagesSubscription = this.api.getMessages(this.person.id.value, startTime, endTime, true, noCache)
+    this.messagesSubscription = this.api.getMessages(this.person.id.value, startTime, endTime, true,
+      noCache || undefined)
       .subscribe((messages: Message[]) => {
           this.createFilteredSessions(messages);
           this.isLoading = false;

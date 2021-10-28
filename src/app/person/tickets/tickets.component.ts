@@ -37,7 +37,7 @@ export class TicketsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  init(): void {
+  init(noCache = false): void {
     if (!this.personId) {
       return;
     }
@@ -46,7 +46,8 @@ export class TicketsComponent implements OnInit, AfterViewInit {
       this.ticketsSubscription.unsubscribe();
     }
 
-    this.ticketsSubscription = this.api.getDataByTag(this.personId, 'ticket', true).subscribe(tickets => {
+    this.ticketsSubscription = this.api.getDataByTag(this.personId, 'ticket', noCache || undefined)
+          .subscribe(tickets => {
       const tableData = new Map<Number, Ticket>();
       this.closing = [];
       tickets.forEach(t => {
@@ -81,7 +82,7 @@ export class TicketsComponent implements OnInit, AfterViewInit {
       this.closing.push(ticketId);
       this.api.closeTicket(ticketId, this.personId).subscribe(response => {
         setTimeout(() => {
-          this.init();
+          this.init(true);
         }, 5000);
       });
     }

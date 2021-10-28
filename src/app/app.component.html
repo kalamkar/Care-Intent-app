@@ -12,6 +12,12 @@
           <button mat-menu-item (click)="add()">
             <mat-icon>add_business</mat-icon><span>New Group</span>
           </button>
+          <button mat-menu-item (click)="api.noCacheDefault = true;" *ngIf="!api.noCacheDefault">
+            <mat-icon>sync_disabled</mat-icon><span>Disable caching</span>
+          </button>
+          <button mat-menu-item (click)="api.noCacheDefault = false;" *ngIf="api.noCacheDefault">
+            <mat-icon>published_with_changes</mat-icon><span>Enable caching</span>
+          </button>
         </mat-menu>
       </div>
       <app-groups *ngIf="groups" [groups]="groups"></app-groups>

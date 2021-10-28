@@ -19,7 +19,7 @@ export class AppComponent implements OnInit{
   groups: Array<Group> = [];
 
   constructor(private context: ContextService,
-              private api: ApiService,
+              public api: ApiService,
               private router: Router,
               private dialog: MatDialog) {
     context.personChange.subscribe((user: Person) => {
