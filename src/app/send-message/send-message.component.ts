@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {ApiService} from "../services/api.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Person} from "../model/model";
 
 @Component({
   selector: 'app-send-message',
@@ -9,24 +10,27 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 })
 export class SendMessageComponent implements OnInit {
 
-  personId: string;
-  coachId: string;
+  person: Person;
+  coach: Person;
 
   isInProcess = false;
 
   constructor(private api: ApiService,
               public dialogRef: MatDialogRef<SendMessageComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: {personId: string, coachId: string}) {
-    this.personId = this.data.personId;
-    this.coachId = this.data.coachId;
+              @Inject(MAT_DIALOG_DATA) public data: {person: Person, coach: Person}) {
+    this.person = this.data.person;
+    this.coach = this.data.coach;
   }
 
   ngOnInit(): void {
   }
 
   sendToMember(content: string): void {
+    if (!this.person.id) {
+      return;
+    }
     this.isInProcess = true;
-    this.api.sendMessage(content, this.personId).subscribe(response => {
+    this.api.sendMessage(content, this.person.id.value).subscribe(response => {
       this.dialogRef.close(true);
     }, error => {
       this.onError();
@@ -34,8 +38,11 @@ export class SendMessageComponent implements OnInit {
   }
 
   sendToCoach(content: string): void {
+    if (!this.person.id || !this.coach.id) {
+      return;
+    }
     this.isInProcess = true;
-    this.api.sendProxyMessage(content, this.coachId, this.personId).subscribe(response => {
+    this.api.sendProxyMessage(content, this.coach.id.value, this.person.id.value).subscribe(response => {
       this.dialogRef.close(true);
     }, error => {
       this.onError();

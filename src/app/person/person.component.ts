@@ -120,8 +120,8 @@ export class PersonComponent {
 
   sendMessage() {
     if (this.person && this.person.id) {
-      this.dialog.open(SendMessageComponent, {data: {personId: this.person.id.value,
-          coachId: this.coaches.length > 0 ? this.coaches[0].id.value : undefined}, width: '512px'});
+      this.dialog.open(SendMessageComponent, {data: {person: this.person,
+          coach: this.coaches.length > 0 ? this.coaches[0] : undefined}, width: '512px'});
     }
   }
 }

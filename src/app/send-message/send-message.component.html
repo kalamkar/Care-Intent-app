@@ -5,12 +5,12 @@
   </mat-form-field>
   <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="12px">
     <button mat-raised-button type="submit" (click)="sendToMember(title.value)" color="primary"
-            disabled="{{isInProcess || !title.value}}" *ngIf="personId">
-      <span>Send to Member</span>
+            disabled="{{isInProcess || !title.value}}" *ngIf="person">
+      <span>Send to {{person | name}}</span>
     </button>
     <button mat-raised-button type="submit" (click)="sendToCoach(title.value)" color="accent"
-            disabled="{{isInProcess || !title.value}}" *ngIf="coachId">
-      <span>Send to Coach</span>
+            disabled="{{isInProcess || !title.value}}" *ngIf="coach">
+      <span>Send to {{coach | name}}</span>
     </button>
   </div>
 </div>
