@@ -46,7 +46,7 @@ export class PersonComponent {
     });
   }
 
-  init(): void {
+  init(noCache = false): void {
     if (!this.personId) {
       return;
     }
@@ -54,11 +54,13 @@ export class PersonComponent {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-    this.subscription = this.api.getResource('person', this.personId).subscribe((person) => {
+    this.subscription = this.api.getResource('person', this.personId, noCache || undefined)
+          .subscribe((person) => {
       this.person = person;
     });
 
-    this.api.getParents({'type': 'person', 'value': this.personId}, 'member', 'person').subscribe((parents) => {
+    this.api.getParents({'type': 'person', 'value': this.personId}, 'member', 'person',
+          noCache || undefined).subscribe((parents) => {
       this.coaches = parents;
     });
 
@@ -75,6 +77,8 @@ export class PersonComponent {
   edit(): void {
     this.dialog.open(AddPersonComponent, {
       data: {person: this.person}
+    }).afterClosed().subscribe(result => {
+      this.init(true);
     });
   }
 
@@ -113,15 +117,22 @@ export class PersonComponent {
   }
 
   openTicket() {
-    if (this.person && this.person.id) {
-      this.dialog.open(OpenTicketComponent, {data: {personId: this.person.id.value}, width: '512px'});
+    if (!this.person || !this.person.id) {
+      return
     }
+    this.dialog.open(OpenTicketComponent, {data: {personId: this.person.id.value}, width: '512px'}).afterClosed()
+      .subscribe(result => {
+        this.init(true);
+      });
   }
 
   sendMessage() {
-    if (this.person && this.person.id) {
-      this.dialog.open(SendMessageComponent, {data: {person: this.person,
-          coach: this.coaches.length > 0 ? this.coaches[0] : undefined}, width: '512px'});
+    if (!this.person || !this.person.id) {
     }
+    this.dialog.open(SendMessageComponent, {data: {person: this.person,
+        coach: this.coaches.length > 0 ? this.coaches[0] : undefined}, width: '512px'})
+        .afterClosed().subscribe(result => {
+      this.init(true);
+    });
   }
 }

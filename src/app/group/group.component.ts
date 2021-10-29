@@ -57,7 +57,7 @@ export class GroupComponent implements OnChanges {
     this.init();
   }
 
-  init(): void {
+  init(noCache = false): void {
     if (!this.groupId) {
       return;
     }
@@ -65,15 +65,16 @@ export class GroupComponent implements OnChanges {
     if (this.groupSubscription) {
       this.groupSubscription.unsubscribe();
     }
-    this.groupSubscription = this.api.getResource('group', this.groupId).subscribe(group => {
+    this.groupSubscription = this.api.getResource('group', this.groupId, noCache || undefined)
+          .subscribe(group => {
       this.group = group;
     });
 
     if (this.membersSubscription) {
       this.membersSubscription.unsubscribe();
     }
-    this.membersSubscription = this.api.getChildren({'type': 'group', 'value': this.groupId}, RelationType.member)
-        .subscribe((members) => {
+    this.membersSubscription = this.api.getChildren({'type': 'group', 'value': this.groupId}, RelationType.member,
+      noCache || undefined).subscribe((members) => {
       let data: unknown[] = [];
       this.members = members;
       members.forEach(member => {
@@ -86,12 +87,12 @@ export class GroupComponent implements OnChanges {
       this.adminsSubscription.unsubscribe();
     }
     this.memberCoaches.clear();
-    this.adminsSubscription = this.api.getChildren({'type': 'group', 'value': this.groupId}, RelationType.admin)
-      .subscribe((admins) => {
+    this.adminsSubscription = this.api.getChildren({'type': 'group', 'value': this.groupId}, RelationType.admin,
+      noCache || undefined).subscribe((admins) => {
         let data: unknown[] = [];
         admins.forEach(admin => {
           data.push({'admin': admin, 'summary': ''});
-          this.api.getChildren(admin.id, RelationType.member).subscribe(members => {
+          this.api.getChildren(admin.id, RelationType.member, noCache || undefined).subscribe(members => {
             members.forEach(member => {
               let coaches = this.memberCoaches.get(member.id.value);
               if (!coaches) {
@@ -114,7 +115,7 @@ export class GroupComponent implements OnChanges {
       minHeight: '300px',
       data: {parentId: {'type': 'group', 'value': this.groupId}, relationType}
     }).afterClosed().subscribe(result => {
-      this.init();
+      this.init(true);
     });
   }
 
@@ -123,7 +124,7 @@ export class GroupComponent implements OnChanges {
       this.api.removeRelation({'type': 'group', 'value': this.groupId}, personId, relationType).subscribe(
         _ => {
           this.snackBar.open('Removed ' + relationType, 'Ok', {duration: 3000});
-          this.init();
+          this.init(true);
         },
         error => {
           this.snackBar.open('Failed to remove ' + relationType, 'Ok');
@@ -137,7 +138,7 @@ export class GroupComponent implements OnChanges {
     this.dialog.open(AddGroupComponent, {
       data: {group: this.group}
     }).afterClosed().subscribe(result => {
-      this.init();
+      this.init(true);
     });
   }
 
@@ -151,7 +152,7 @@ export class GroupComponent implements OnChanges {
     this.dialog.open(AddParentComponent, {
       data: {person: person, availableParents: availableParents, relationType: relationType}
     }).afterClosed().subscribe(result => {
-      this.init();
+      this.init(true);
     });
   }
 }

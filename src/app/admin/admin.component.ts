@@ -52,7 +52,7 @@ export class AdminComponent implements OnChanges {
     this.init();
   }
 
-  init(): void {
+  init(noCache = false): void {
     if (!this.personId) {
       this.members = [];
       return;
@@ -61,15 +61,16 @@ export class AdminComponent implements OnChanges {
     if (this.personSubscription) {
       this.personSubscription.unsubscribe();
     }
-    this.personSubscription = this.api.getResource('person', this.personId).subscribe((person) => {
+    this.personSubscription = this.api.getResource('person', this.personId, noCache || undefined)
+          .subscribe((person) => {
       this.person = person;
     });
 
     if (this.membersSubscription) {
       this.membersSubscription.unsubscribe();
     }
-    this.membersSubscription = this.api.getChildren({'type': 'person', 'value': this.personId}, RelationType.member)
-      .subscribe((members) => {
+    this.membersSubscription = this.api.getChildren({'type': 'person', 'value': this.personId}, RelationType.member,
+          noCache || undefined).subscribe((members) => {
         let data: unknown[] = [];
         members.forEach(member => {
           data.push({'member': member, 'summary': ''});
@@ -84,7 +85,7 @@ export class AdminComponent implements OnChanges {
     this.dialog.open(AddPersonComponent, {
       data: {person: this.person}
     }).afterClosed().subscribe(result => {
-      this.init();
+      this.init(true);
     });
   }
 
@@ -94,7 +95,7 @@ export class AdminComponent implements OnChanges {
       minHeight: '300px',
       data: {parentId: {'type': 'person', 'value': this.personId}, relationType}
     }).afterClosed().subscribe(result => {
-      this.init();
+      this.init(true);
     });
   }
 
@@ -103,7 +104,7 @@ export class AdminComponent implements OnChanges {
       this.api.removeRelation({'type': 'person', 'value': this.personId}, memberId, 'member').subscribe(
         _ => {
           this.snackBar.open('Member removed', 'Ok', {duration: 3000});
-          this.init();
+          this.init(true);
           },
         error => {this.snackBar.open('Failed to remove member', 'Ok');}
       );
