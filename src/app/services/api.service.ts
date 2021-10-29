@@ -31,7 +31,9 @@ export class ApiService {
   private reuestCount = 0;
   private dirtyResources = new Array<string>();
 
-  constructor(protected httpClient: HttpClient) { }
+  constructor(protected httpClient: HttpClient) {
+    this.noCacheDefault = localStorage.getItem('noCacheDefault') === 'true';
+  }
 
   public static getPipedObservable(observable: any): Observable<{ response: any, success: boolean }> {
     return observable.pipe(
@@ -45,6 +47,11 @@ export class ApiService {
   onRequestError(error: HttpErrorResponse | any): void {
     this.endedRequest(error.url);
     console.log(error);
+  }
+
+  public setNoCacheDefault(noCacheDefault: boolean) {
+    this.noCacheDefault = noCacheDefault;
+    localStorage.setItem('noCacheDefault', noCacheDefault ? 'true' : 'false');
   }
 
   public getData(source: string, names: string[], start: DateTime, end: DateTime, noCache = this.noCacheDefault): Observable<Array<any>> {

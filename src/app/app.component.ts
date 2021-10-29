@@ -49,6 +49,7 @@ export class AppComponent implements OnInit{
     }).afterClosed().subscribe((response) => {
       if (response) {
         localStorage.setItem('auth', JSON.stringify(response));
+        localStorage.removeItem('noCacheDefault');
         this.context.init();
       }
     });
