@@ -6,6 +6,7 @@ import {MatTableDataSource} from "@angular/material/table";
 // @ts-ignore
 import { DateTime } from 'luxon';
 import {MatSort} from "@angular/material/sort";
+import {MatCheckbox} from "@angular/material/checkbox";
 
 @Component({
   selector: 'app-group-tickets',
@@ -17,8 +18,9 @@ export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
   @Output() count = 0;
 
   dataSource = new MatTableDataSource();
+  allTickets: Array<any> = [];
 
-  @ViewChild(MatSort) sort: MatSort | undefined;
+  @ViewChild(MatSort) sort!: MatSort;
 
   private subscriptions: Array<Subscription> = [];
 
@@ -59,11 +61,16 @@ export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
       if (person.id) {
         this.subscriptions.push(this.api.getDataByTag(person.id.value, 'ticket').subscribe(rows => {
           const tickets = this.getPersonTickets(person, rows);
-          this.dataSource.data = this.dataSource.data.concat(tickets);
-          this.count = this.dataSource.data.length;
+          this.allTickets = this.allTickets.concat(tickets);
+          this.updateTable(false);
         }));
       }
     });
+  }
+
+  updateTable(showClosed: boolean) {
+    this.dataSource.data = this.allTickets.filter(t => showClosed || t.close === '');
+    this.count = this.dataSource.data.length;
   }
 
   getPersonTickets(person: Person, rows: any[]): Array<any> {

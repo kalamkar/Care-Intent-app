@@ -15,6 +15,7 @@ import {MatSort} from "@angular/material/sort";
 export class TicketsComponent implements OnInit, AfterViewInit {
   @Input() personId: string | undefined;
 
+  allTickets: Array<any> = [];
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort) sort: MatSort | undefined;
 
@@ -73,9 +74,16 @@ export class TicketsComponent implements OnInit, AfterViewInit {
           tableData.set(ticket.id, ticket);
         }
       });
-      this.dataSource.data = Array.from(tableData.values());
+      this.allTickets = Array.from(tableData.values());
+      this.updateTable(false);
     });
   }
+
+
+  updateTable(showClosed: boolean) {
+    this.dataSource.data = this.allTickets.filter(t => showClosed || t.close === '');
+  }
+
 
   closeTicket(ticketId: number) {
     if (this.personId) {
