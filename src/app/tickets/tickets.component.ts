@@ -14,6 +14,8 @@ import {MatCheckbox} from "@angular/material/checkbox";
   styleUrls: ['./tickets.component.scss']
 })
 export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
+  readonly ALL_COLUMNS: string[] = ['person', 'id', 'priority', 'open', 'close', 'category', 'title'];
+
   @Input() persons: Array<Person> = [];
   @Output() count = 0;
 
@@ -24,7 +26,8 @@ export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
 
   private subscriptions: Array<Subscription> = [];
 
-  displayedColumns: string[] = ['person', 'id', 'priority', 'open', 'close', 'category', 'title'];
+  showClosed = false;
+  displayedColumns: string[] = this.ALL_COLUMNS.filter(name => name !== 'close');
 
   closing: Array<string> = [];
 
@@ -62,14 +65,15 @@ export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
         this.subscriptions.push(this.api.getDataByTag(person.id.value, 'ticket').subscribe(rows => {
           const tickets = this.getPersonTickets(person, rows);
           this.allTickets = this.allTickets.concat(tickets);
-          this.updateTable(false);
+          this.updateTable();
         }));
       }
     });
   }
 
-  updateTable(showClosed: boolean) {
-    this.dataSource.data = this.allTickets.filter(t => showClosed || t.close === '');
+  updateTable() {
+    this.displayedColumns = this.showClosed ? this.ALL_COLUMNS : this.ALL_COLUMNS.filter(name => name !== 'close');
+    this.dataSource.data = this.allTickets.filter(t => this.showClosed || t.close === '');
     this.count = this.dataSource.data.length;
   }
 

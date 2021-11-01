@@ -2,7 +2,7 @@ import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core'
 import {Ticket} from "../../model/model";
 import {Subscription} from "rxjs";
 import {ApiService} from "../../services/api.service";
-import {MatTableDataSource} from "@angular/material/table";
+import {MatTable, MatTableDataSource} from "@angular/material/table";
 // @ts-ignore
 import { DateTime } from 'luxon';
 import {MatSort} from "@angular/material/sort";
@@ -13,15 +13,18 @@ import {MatSort} from "@angular/material/sort";
   styleUrls: ['./tickets.component.scss']
 })
 export class TicketsComponent implements OnInit, AfterViewInit {
+  readonly ALL_COLUMNS: string[] = ['id', 'priority', 'open', 'close', 'category', 'title', 'menu'];
   @Input() personId: string | undefined;
 
   allTickets: Array<any> = [];
   dataSource = new MatTableDataSource();
-  @ViewChild(MatSort) sort: MatSort | undefined;
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('table') table!: MatTable<any>;
 
   private ticketsSubscription: Subscription | undefined;
 
-  displayedColumns: string[] = ['id', 'priority', 'open', 'close', 'category', 'title', 'menu'];
+  showClosed: boolean = false;
+  displayedColumns: string[] = this.ALL_COLUMNS.filter(name => name !== 'close');
 
   closing: Array<number> = [];
 
@@ -75,13 +78,14 @@ export class TicketsComponent implements OnInit, AfterViewInit {
         }
       });
       this.allTickets = Array.from(tableData.values());
-      this.updateTable(false);
+      this.updateTable();
     });
   }
 
 
-  updateTable(showClosed: boolean) {
-    this.dataSource.data = this.allTickets.filter(t => showClosed || t.close === '');
+  updateTable() {
+    this.displayedColumns = this.showClosed ? this.ALL_COLUMNS : this.ALL_COLUMNS.filter(name => name !== 'close');
+    this.dataSource.data = this.allTickets.filter(t => this.showClosed || t.close === '');
   }
 
 

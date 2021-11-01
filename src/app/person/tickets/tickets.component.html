@@ -1,5 +1,5 @@
 <div class="container">
-  <table mat-table [dataSource]="dataSource" matSort matSortActive="priority" matSortDirection="desc">
+  <table mat-table [dataSource]="dataSource" matSort matSortActive="priority" matSortDirection="desc" #table>
     <!-- Id Column -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> Id </th>
@@ -41,7 +41,7 @@
     <!-- Menu Column -->
     <ng-container matColumnDef="menu">
       <th mat-header-cell *matHeaderCellDef>
-        <mat-checkbox #showClosed (change)="updateTable(showClosed.checked)">Show closed</mat-checkbox>
+        <mat-checkbox (change)="updateTable();" [(ngModel)]="showClosed">Show closed</mat-checkbox>
       </th>
       <td mat-cell *matCellDef="let element">
         <button mat-stroked-button (click)="closeTicket(element.id)"

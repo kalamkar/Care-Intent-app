@@ -43,7 +43,7 @@
       <th mat-header-cell *matHeaderCellDef>
         <div fxLayout="row">
           <span fxFlex>Title</span>
-          <mat-checkbox #showClosed fxFlex="100px" (change)="updateTable(showClosed.checked)">Show closed</mat-checkbox>
+          <mat-checkbox fxFlex="100px" (change)="updateTable()" [(ngModel)]="showClosed">Show closed</mat-checkbox>
         </div>
       </th>
       <td mat-cell *matCellDef="let element" matTooltip="{{element.title}}"><div class="title">{{element.title}}</div></td>
