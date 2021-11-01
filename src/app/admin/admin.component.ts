@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {Identifier, Person, RelationType} from "../model/model";
+import {Group, Identifier, Person, RelationType} from "../model/model";
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatTableDataSource} from "@angular/material/table";
 import {Subscription} from "rxjs";
@@ -21,7 +21,7 @@ export class AdminComponent implements OnChanges {
   personId: string | undefined;
   person: Person | undefined;
   members: Array<Person> = [];
-  isMainPage = false;
+  memberGroups = new Map<string, Array<Group>>();
 
   memberDataSource = new MatTableDataSource();
 
@@ -29,7 +29,7 @@ export class AdminComponent implements OnChanges {
   private personSubscription: Subscription | undefined;
   private membersSubscription: Subscription | undefined;
 
-  memberColumns: string[] = ['name', 'summary', 'menu'];
+  memberColumns: string[] = ['name', 'groups', 'summary', 'menu'];
 
   constructor(private api: ApiService,
               private router: Router,
@@ -41,7 +41,6 @@ export class AdminComponent implements OnChanges {
         const urlId = this.route.snapshot.paramMap.get('id');
         if (this.personId !== urlId && urlId) {
           this.personId = urlId;
-          this.isMainPage = true;
           this.init();
         }
       }
@@ -69,6 +68,7 @@ export class AdminComponent implements OnChanges {
     if (this.membersSubscription) {
       this.membersSubscription.unsubscribe();
     }
+    this.memberGroups.clear();
     this.membersSubscription = this.api.getChildren({'type': 'person', 'value': this.personId}, RelationType.member,
           noCache || undefined).subscribe((members) => {
         let data: unknown[] = [];
@@ -77,6 +77,15 @@ export class AdminComponent implements OnChanges {
         });
         this.members = members;
         this.memberDataSource.data = data;
+        this.members.forEach(member => {
+          if (member.id) {
+            this.api.getParents(member.id, RelationType.member).subscribe((groups) => {
+              if (member.id) {
+                this.memberGroups.set(member.id.value, groups);
+              }
+            })
+          }
+        });
       });
   }
 
