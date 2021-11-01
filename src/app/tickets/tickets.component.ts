@@ -59,7 +59,7 @@ export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
       });
     }
 
-    this.dataSource.data = [];
+    this.allTickets = [];
     this.persons.forEach(person => {
       if (person.id) {
         this.subscriptions.push(this.api.getDataByTag(person.id.value, 'ticket').subscribe(rows => {
