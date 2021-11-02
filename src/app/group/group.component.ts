@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {ApiService} from "../services/api.service";
 import {Group, Identifier, Person, RelationType} from "../model/model";
 import {Subscription} from "rxjs";
@@ -10,6 +10,9 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AddParentComponent} from "../add-parent/add-parent.component";
 import {ContextService} from "../services/context.service";
+import {MatSort} from "@angular/material/sort";
+// @ts-ignore
+import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-group',
@@ -22,7 +25,7 @@ export class GroupComponent implements OnChanges {
   group: Group | undefined;
   memberCoaches = new Map<string, Array<Person>>();
   members: Array<Person> = [];
-  isMainPage = false;
+  @ViewChild(MatSort) sort!: MatSort;
 
   memberDataSource = new MatTableDataSource();
   adminDataSource = new MatTableDataSource();
@@ -32,8 +35,8 @@ export class GroupComponent implements OnChanges {
   private membersSubscription: Subscription | undefined;
   private adminsSubscription: Subscription | undefined;
 
-  memberColumns: string[] = ['name', 'coach', 'summary', 'menu'];
-  adminColumns: string[] = ['name', 'summary', 'menu'];
+  memberColumns: string[] = ['name', 'coach', 'time', 'summary', 'menu'];
+  adminColumns: string[] = ['name', 'time', 'summary', 'menu'];
 
   constructor(private api: ApiService,
               private context: ContextService,
@@ -46,11 +49,16 @@ export class GroupComponent implements OnChanges {
         const urlId = this.route.snapshot.paramMap.get('id');
         if (this.groupId !== urlId && urlId) {
           this.groupId = urlId;
-          this.isMainPage = true;
           this.init();
         }
       }
     });
+  }
+
+  ngAfterViewInit() {
+    if (this.sort) {
+      this.memberDataSource.sort = this.sort;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -78,7 +86,8 @@ export class GroupComponent implements OnChanges {
       let data: unknown[] = [];
       this.members = members;
       members.forEach(member => {
-        data.push({'member': member, 'summary': ''});
+        data.push({'member': member, 'summary': '',  time: member.session ?
+            DateTime.fromFormat(member.session.last_message_time, 'ccc, dd LLL yyyy HH:mm:ss z') : null });
       });
       this.memberDataSource.data = data;
     });
@@ -91,7 +100,8 @@ export class GroupComponent implements OnChanges {
       noCache || undefined).subscribe((admins) => {
         let data: unknown[] = [];
         admins.forEach(admin => {
-          data.push({'admin': admin, 'summary': ''});
+          data.push({'admin': admin, 'summary': '', time: admin.session ?
+              DateTime.fromFormat(admin.session.last_message_time, 'ccc, dd LLL yyyy HH:mm:ss z') : null});
           this.api.getChildren(admin.id, RelationType.member, noCache || undefined).subscribe(members => {
             members.forEach(member => {
               let coaches = this.memberCoaches.get(member.id.value);

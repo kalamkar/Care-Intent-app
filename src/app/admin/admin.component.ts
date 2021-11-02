@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {Group, Identifier, Person, RelationType} from "../model/model";
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatTableDataSource} from "@angular/material/table";
@@ -9,13 +9,16 @@ import {MatDialog} from "@angular/material/dialog";
 import {AddPersonComponent} from "../add-person/add-person.component";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatSort} from "@angular/material/sort";
+// @ts-ignore
+import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
-export class AdminComponent implements OnChanges {
+export class AdminComponent implements OnChanges, AfterViewInit {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   personId: string | undefined;
@@ -24,12 +27,13 @@ export class AdminComponent implements OnChanges {
   memberGroups = new Map<string, Array<Group>>();
 
   memberDataSource = new MatTableDataSource();
+  @ViewChild(MatSort) sort!: MatSort;
 
   private readonly routeSubscription: Subscription;
   private personSubscription: Subscription | undefined;
   private membersSubscription: Subscription | undefined;
 
-  memberColumns: string[] = ['name', 'groups', 'summary', 'menu'];
+  memberColumns: string[] = ['name', 'groups', 'time', 'summary', 'menu'];
 
   constructor(private api: ApiService,
               private router: Router,
@@ -45,6 +49,12 @@ export class AdminComponent implements OnChanges {
         }
       }
     });
+  }
+
+  ngAfterViewInit(): void {
+    if (this.sort) {
+      this.memberDataSource.sort = this.sort;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -73,7 +83,9 @@ export class AdminComponent implements OnChanges {
           noCache || undefined).subscribe((members) => {
         let data: unknown[] = [];
         members.forEach(member => {
-          data.push({'member': member, 'summary': ''});
+          console.log(member.session.last_message_time);
+          data.push({'member': member, 'summary': '', time: member.session ?  // Sun, 24 Oct 2021 16:23:06 GMT
+              DateTime.fromFormat(member.session.last_message_time, 'ccc, dd LLL yyyy HH:mm:ss z') : null});
         });
         this.members = members;
         this.memberDataSource.data = data;
