@@ -149,6 +149,7 @@ export class GroupComponent implements OnChanges {
       data: {group: this.group}
     }).afterClosed().subscribe(result => {
       this.init(true);
+      this.context.loadGroups();
     });
   }
 

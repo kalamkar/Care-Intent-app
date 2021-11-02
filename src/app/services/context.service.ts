@@ -29,20 +29,24 @@ export class ContextService {
       (user) => {
         this.user = user;
         this.personChange.emit(user);
-        if (!this.user || !this.user.id) {
-          return;
-        }
-        if (this.groupsSubscription) {
-          this.groupsSubscription.unsubscribe();
-        }
-        this.groupsSubscription = this.api.getParents(this.user.id, RelationType.admin)
-          .subscribe((groups) => {
-            this.groups = groups;
-            this.groupsChange.emit(this.groups);
-          });
+        this.loadGroups();
       },
       (error) => {
         this.personChange.emit(null);
+      });
+  }
+
+  loadGroups() {
+    if (!this.user || !this.user.id) {
+      return;
+    }
+    if (this.groupsSubscription) {
+      this.groupsSubscription.unsubscribe();
+    }
+    this.groupsSubscription = this.api.getParents(this.user.id, RelationType.admin, 'group', true)
+      .subscribe((groups) => {
+        this.groups = groups;
+        this.groupsChange.emit(this.groups);
       });
   }
 }

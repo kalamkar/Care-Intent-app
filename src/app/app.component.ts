@@ -67,6 +67,8 @@ export class AppComponent implements OnInit{
       minWidth: '400px',
       minHeight: '300px',
       data: {}
+    }).afterClosed().subscribe(result => {
+      this.context.loadGroups();
     });
   }
 }
