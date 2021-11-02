@@ -86,7 +86,7 @@ export class GroupComponent implements OnChanges {
       let data: unknown[] = [];
       this.members = members;
       members.forEach(member => {
-        data.push({'member': member, 'summary': '',  time: member.session ?
+        data.push({'member': member, 'summary': '',  time: member.session && member.session.last_message_time?
             DateTime.fromFormat(member.session.last_message_time, 'ccc, dd LLL yyyy HH:mm:ss z') : null });
       });
       this.memberDataSource.data = data;
@@ -100,7 +100,7 @@ export class GroupComponent implements OnChanges {
       noCache || undefined).subscribe((admins) => {
         let data: unknown[] = [];
         admins.forEach(admin => {
-          data.push({'admin': admin, 'summary': '', time: admin.session ?
+          data.push({'admin': admin, 'summary': '', time: admin.session && admin.session.last_message_time?
               DateTime.fromFormat(admin.session.last_message_time, 'ccc, dd LLL yyyy HH:mm:ss z') : null});
           this.api.getChildren(admin.id, RelationType.member, noCache || undefined).subscribe(members => {
             members.forEach(member => {

@@ -83,7 +83,7 @@ export class AdminComponent implements OnChanges, AfterViewInit {
           noCache || undefined).subscribe((members) => {
         let data: unknown[] = [];
         members.forEach(member => {
-          data.push({'member': member, 'summary': '', time: member.session ?  // Sun, 24 Oct 2021 16:23:06 GMT
+          data.push({'member': member, 'summary': '', time: member.session && member.session.last_message_time?
               DateTime.fromFormat(member.session.last_message_time, 'ccc, dd LLL yyyy HH:mm:ss z') : null});
         });
         this.members = members;
