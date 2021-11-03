@@ -30,6 +30,7 @@ export class AddParentComponent implements OnInit {
     this.isInProcess = true;
     this.api.addRelation(parent.id, this.data.person.id, this.data.relationType).subscribe(result => {
       if (!parent.id || !this.data.person.id || parent.id.type !== 'person') {
+        this.dialogRef.close(true);
         return;
       }
       const content = "This is " + new NamePipe().transform(this.data.person) + "'s number. "
