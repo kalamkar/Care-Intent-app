@@ -51,6 +51,7 @@ import {MatMenuModule} from "@angular/material/menu";
 import { AddParentComponent } from './add-parent/add-parent.component';
 import { SendMessageComponent } from './send-message/send-message.component';
 import { LinkifyPipe } from './pipes/linkify.pipe';
+import { AddNoteComponent } from './add-note/add-note.component';
 
 
 @NgModule({
@@ -76,7 +77,8 @@ import { LinkifyPipe } from './pipes/linkify.pipe';
     BiometricsComponent,
     AddParentComponent,
     SendMessageComponent,
-    LinkifyPipe
+    LinkifyPipe,
+    AddNoteComponent
   ],
   imports: [
     BrowserModule,

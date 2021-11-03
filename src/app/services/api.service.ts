@@ -29,7 +29,7 @@ export class ApiService {
   @Output() activityChange: EventEmitter<boolean> = new EventEmitter();
 
   private reuestCount = 0;
-  private dirtyResources = new Array<string>();
+  private dirtyResources = new Map<string, DateTime>();
 
   constructor(protected httpClient: HttpClient) {
     this.noCacheDefault = localStorage.getItem('noCacheDefault') === 'true';
@@ -57,19 +57,13 @@ export class ApiService {
   public getData(source: string, names: string[], start: DateTime, end: DateTime, noCache = this.noCacheDefault): Observable<Array<any>> {
     const url = environment.apiUrl + '/person/' + source + '/data?' + this.encodeQueryData(
       {'name': names, 'start': start.toISO(), 'end': end.toISO()});
-    if (this.dirtyResources.includes(source)) {
-      this.dirtyResources.splice(this.dirtyResources.indexOf(source));
-      noCache = true;
-    }
+    noCache = this.isDirty(source) || noCache;
     return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
   public getDataByTag(source: string, tag: string, noCache = this.noCacheDefault): Observable<Array<any>> {
     const url = environment.apiUrl + '/person/' + source + '/data?' + this.encodeQueryData({'tag': tag});
-    if (this.dirtyResources.includes(source)) {
-      this.dirtyResources.splice(this.dirtyResources.indexOf(source));
-      noCache = true;
-    }
+    noCache = this.isDirty(source) || noCache;
     return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
@@ -79,29 +73,20 @@ export class ApiService {
     if (bothDirections) {
       params['both'] = '1';
     }
-    if (this.dirtyResources.includes(source)) {
-      this.dirtyResources.splice(this.dirtyResources.indexOf(source));
-      noCache = true;
-    }
+    noCache = this.isDirty(source) || noCache;
     const url = environment.apiUrl + '/person/' + source + '/message?' + this.encodeQueryData(params);
     return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
   public getMessagesByTag(source: string, tag: string, noCache = this.noCacheDefault): Observable<Array<any>> {
-    if (this.dirtyResources.includes(source)) {
-      this.dirtyResources.splice(this.dirtyResources.indexOf(source));
-      noCache = true;
-    }
+    noCache = this.isDirty(source) || noCache;
     const params: { [index: string]: string; } = {tag, 'start': DateTime.fromSeconds(0).toISO(), 'both': '1'};
     const url = environment.apiUrl + '/person/' + source + '/message?' + this.encodeQueryData(params);
     return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
   public getResource(collection: string, id: string, noCache = this.noCacheDefault): Observable<any> {
-    if (this.dirtyResources.includes(id)) {
-      this.dirtyResources.splice(this.dirtyResources.indexOf(id));
-      noCache = true;
-    }
+    noCache = this.isDirty(id) || noCache;
     const url = environment.apiUrl + '/' + collection + '/' + id;
     return this.get<any>(url, this.getOptions(noCache), null);
   }
@@ -115,7 +100,7 @@ export class ApiService {
   public editResource(collection: string, resource: any): Observable<any> {
     const id = resource.id.value;
     delete resource.id;
-    this.dirtyResources.push(id);
+    this.setDirty(id);
     const url = environment.apiUrl + '/' + collection + '/' + id;
     return this.patch<any>(url, JSON.stringify(resource),
       this.getOptions(true, {'Content-Type': 'application/json'}));
@@ -123,42 +108,36 @@ export class ApiService {
 
   public getParents(childId: Identifier, relationType: string, parentType = 'group', noCache = this.noCacheDefault)
         : Observable<Array<any>> {
-    if (this.dirtyResources.includes(childId.value)) {
-      this.dirtyResources.splice(this.dirtyResources.indexOf(childId.value));
-      noCache = true;
-    }
+    noCache = this.isDirty(childId.value) || noCache;
     const url = environment.apiUrl + '/' + parentType +'/all/' + relationType + '/' + childId.value;
     return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
   public getChildren(parentId: Identifier, relationType: string, noCache = this.noCacheDefault): Observable<Array<any>> {
-    if (this.dirtyResources.includes(parentId.value)) {
-      this.dirtyResources.splice(this.dirtyResources.indexOf(parentId.value));
-      noCache = true;
-    }
+    noCache = this.isDirty(parentId.value) || noCache;
     const url = environment.apiUrl + '/'  + parentId.type + '/' + parentId.value + '/' + relationType;
     return this.get<Array<any>>(url, this.getOptions(noCache), (data: { results: Array<any>; }) => data.results)
   }
 
   public addRelation(parentId: Identifier, childId: Identifier, relationType: string) {
-    this.dirtyResources.push(parentId.value);
-    this.dirtyResources.push(childId.value);
+    this.setDirty(parentId.value);
+    this.setDirty(childId.value);
     const url = environment.apiUrl + '/' + parentId.type + '/' + parentId.value + '/' + relationType;
     return this.post<any>(url, JSON.stringify(childId),
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
   public removeRelation(parentId: Identifier, childId: Identifier, relationType: string) {
-    this.dirtyResources.push(parentId.value);
-    this.dirtyResources.push(childId.value);
+    this.setDirty(parentId.value);
+    this.setDirty(childId.value);
     const url = environment.apiUrl + '/' + parentId.type + '/' + parentId.value + '/' + relationType + '/'
       + childId.type + ':' + childId.value;
     return this.del<any>(url, this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
   public sendProxyMessage(content: string, personId: string, senderId: string) {
-    this.dirtyResources.push(personId);
-    this.dirtyResources.push(senderId);
+    this.setDirty(personId);
+    this.setDirty(senderId);
     const url = environment.apiUrl + '/person/' + personId + '/message';
     const action = {
       'id': 'api.coach.proxy.message',
@@ -178,7 +157,7 @@ export class ApiService {
   }
 
   public sendMessage(content: string, personId: string, phone?: string) {
-    this.dirtyResources.push(personId);
+    this.setDirty(personId);
     const url = environment.apiUrl + '/person/' + personId + '/message';
     const message: any = {'content': content, 'content_type': 'text/plain'};
     if (phone) {
@@ -188,8 +167,16 @@ export class ApiService {
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
+  public addNote(content: string, personId: string) {
+    this.setDirty(personId);
+    const url = environment.apiUrl + '/person/' + personId + '/message';
+    const message: any = {'content': content, 'content_type': 'text/plain', status: 'note', tags: ['session:notes']};
+    return this.post<any>(url, JSON.stringify(message),
+      this.getOptions(true, {'Content-Type': 'application/json'}));
+  }
+
   public closeTicket(ticketId: number, personId: string) {
-    this.dirtyResources.push(personId);
+    this.setDirty(personId);
     const url = environment.apiUrl + '/person/' + personId + '/message';
     const action = {
       'id': 'api.close.ticket',
@@ -208,7 +195,7 @@ export class ApiService {
   }
 
   public openTicket(category: string, priority: number, title: string, personId: string) {
-    this.dirtyResources.push(personId);
+    this.setDirty(personId);
     const url = environment.apiUrl + '/person/' + personId + '/message';
     const action = {
       'id': 'api.open.ticket',
@@ -250,6 +237,19 @@ export class ApiService {
     const url = environment.authUrl + '/recover';
     return this.post<any>(url, JSON.stringify({'identifier': id}),
       this.getOptions(true, {'Content-Type': 'application/json'}));
+  }
+
+  protected setDirty(resourceId: string) {
+    this.dirtyResources.set(resourceId, DateTime.now());
+  }
+
+  protected isDirty(resourceId: string): boolean {
+    const dirtyTime = this.dirtyResources.get(resourceId);
+    if (dirtyTime !== undefined && dirtyTime.diffNow('minutes') > 10) {
+      this.dirtyResources.delete(resourceId);
+      return false;
+    }
+    return dirtyTime !== undefined;
   }
 
   protected get<T>(url: string, options: RequestOptions, mapFxn: any): Observable<T> {

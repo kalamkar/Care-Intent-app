@@ -1,0 +1,12 @@
+<div fxLayout="column" fxLayoutGap="12px" style="padding: 20px 0 20px 0">
+  <mat-form-field appearance="fill">
+    <mat-label>Note</mat-label>
+    <textarea matInput rows="5" cols="100" #note></textarea>
+  </mat-form-field>
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="12px">
+    <button mat-raised-button type="submit" (click)="add(note.value)" color="accent"
+            disabled="{{isInProcess || !note.value}}" *ngIf="person">
+      <span>Add note for {{person | name}}</span>
+    </button>
+  </div>
+</div>

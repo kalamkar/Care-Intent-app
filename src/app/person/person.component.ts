@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 // @ts-ignore
@@ -12,6 +12,8 @@ import {MatChipInputEvent} from "@angular/material/chips";
 import {OpenTicketComponent} from "../open-ticket/open-ticket.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SendMessageComponent} from "../send-message/send-message.component";
+import {AddNoteComponent} from "../add-note/add-note.component";
+import {NotesComponent} from "./notes/notes.component";
 
 @Component({
   selector: 'app-person',
@@ -26,6 +28,8 @@ export class PersonComponent {
   personId: string | undefined;
   person: Person | undefined;
   coaches = new Array<any>();
+
+  @ViewChild(NotesComponent) notes!: NotesComponent;
 
   chartStartEndTimePairs: Array<Array<DateTime>> = new Array<Array<DateTime>>();
   readonly NUM_OF_DAYS = 1;
@@ -121,18 +125,17 @@ export class PersonComponent {
       return
     }
     this.dialog.open(OpenTicketComponent, {data: {personId: this.person.id.value}, width: '512px'}).afterClosed()
-      .subscribe(result => {
-        this.init(true);
-      });
+      .subscribe(result => setTimeout(() => this.init(true), 1000));
   }
 
   sendMessage() {
-    if (!this.person || !this.person.id) {
-    }
     this.dialog.open(SendMessageComponent, {data: {person: this.person,
         coach: this.coaches.length > 0 ? this.coaches[0] : undefined}, width: '512px'})
-        .afterClosed().subscribe(result => {
-      this.init(true);
-    });
+        .afterClosed().subscribe(result => this.init(true));
+  }
+
+  addNote() {
+    this.dialog.open(AddNoteComponent, {data: {person: this.person}, width: '512px'})
+      .afterClosed().subscribe(result => setTimeout(() => this.notes.init(), 1000));
   }
 }

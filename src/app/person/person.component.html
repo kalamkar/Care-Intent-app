@@ -1,9 +1,10 @@
-<div fxLayout="row" fxLayoutGap="12px" class="header">
+<div fxLayout="row" fxLayoutGap="12px" class="header" *ngIf="person">
   <button mat-mini-fab disabled><mat-icon>person</mat-icon></button>
-  <h1 *ngIf="person">{{person | name}}</h1>
+  <h1>{{person | name}}</h1>
   <button mat-icon-button (click)="edit()" color="primary" matTooltip="Edit"><mat-icon>edit</mat-icon></button>
   <button mat-icon-button (click)="sendMessage()" color="primary" matTooltip="Send Message"><mat-icon>message</mat-icon></button>
   <button mat-icon-button (click)="openTicket()" color="accent" matTooltip="New ticket"><mat-icon>add_task</mat-icon></button>
+  <button mat-icon-button (click)="addNote()" color="accent" matTooltip="Add note"><mat-icon>note</mat-icon></button>
   <span class="fill-remaining-space"></span>
   <span>
     <a mat-flat-button *ngFor="let coach of coaches" [routerLink]="['/admin', coach.id.value]">
