@@ -88,6 +88,9 @@ export class GroupComponent implements OnChanges {
       members.forEach(member => {
         data.push({'member': member, 'summary': '',  time: member.session && member.session.last_message_time?
             DateTime.fromFormat(member.session.last_message_time, 'ccc, dd LLL yyyy HH:mm:ss z') : null });
+        this.api.getParents(member.id, RelationType.member, 'person').subscribe(coaches => {
+          this.memberCoaches.set(member.id.value, coaches);
+        });
       });
       this.memberDataSource.data = data;
     });
@@ -102,18 +105,6 @@ export class GroupComponent implements OnChanges {
         admins.forEach(admin => {
           data.push({'admin': admin, 'summary': '', time: admin.session && admin.session.last_message_time?
               DateTime.fromFormat(admin.session.last_message_time, 'ccc, dd LLL yyyy HH:mm:ss z') : null});
-          this.api.getChildren(admin.id, RelationType.member, noCache || undefined).subscribe(members => {
-            members.forEach(member => {
-              let coaches = this.memberCoaches.get(member.id.value);
-              if (!coaches) {
-                coaches = [];
-                this.memberCoaches.set(member.id.value, coaches);
-              }
-              if (!coaches.includes(admin)) {
-                coaches.push(admin);
-              }
-            });
-          });
         });
         this.adminDataSource.data = data;
       });
