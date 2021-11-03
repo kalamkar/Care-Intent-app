@@ -21,7 +21,7 @@ export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
 
   dataSource = new MatTableDataSource();
   allTickets: Array<any> = [];
-  personTickets = new Map<Person, Array<Ticket>>();
+  personTickets = new Map<Person, Array<PersonTicket>>();
   maxPerson!: Person;
   maxTicketId!: number;
 
@@ -83,21 +83,27 @@ export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   getTopTicket() {
-    let maxScore = 0;
+    const personData: Array<{max: number, sum: number, ticket: PersonTicket}> = [];
+    let maxPriority = 0;
     this.personTickets.forEach((tickets, person) => {
+      tickets = tickets.filter(ticket => ticket.close === '');
       if (tickets.length === 0) {
         return;
       }
 
-      tickets = tickets.filter(ticket => ticket.close === '');
-      const m = this.median(tickets.map(ticket => ticket.priority));
-      if (m > maxScore) {
-        this.maxPerson = person;
-        maxScore = m;
-        const sortedTickets = tickets.sort((a, b) => b.priority - a.priority);
-        this.maxTicketId = sortedTickets[0].id;
-      }
+      let sum = 0;
+      let max = 0;
+      tickets.forEach(ticket => {
+        sum += ticket.priority;
+        max = ticket.priority > max ? ticket.priority : max;
+      });
+      personData.push({max, sum, ticket: tickets.sort((a, b) => b.priority - a.priority)[0]});
+      maxPriority = max > maxPriority ? max : maxPriority;
     });
+    const tickets = personData.filter(p => p.max >= maxPriority).sort((a, b) => b.sum - a.sum)
+      .map(p => p.ticket);
+    this.maxPerson = tickets[0].person;
+    this.maxTicketId = tickets[0].id;
   }
 
   getPersonTickets(person: Person, rows: any[]): Array<any> {
@@ -128,12 +134,6 @@ export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
     });
     return Array.from(tickets.values());
   }
-
-  median(arr: Array<number>) {
-    const mid = Math.floor(arr.length / 2),
-      nums = [...arr].sort((a, b) => a - b);
-    return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
-  };
 }
 
 
