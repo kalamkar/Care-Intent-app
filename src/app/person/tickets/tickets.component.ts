@@ -13,7 +13,7 @@ import {MatSort} from "@angular/material/sort";
   styleUrls: ['./tickets.component.scss']
 })
 export class TicketsComponent implements OnInit, AfterViewInit {
-  readonly ALL_COLUMNS: string[] = ['id', 'priority', 'open', 'close', 'category', 'title', 'menu'];
+  readonly ALL_COLUMNS: string[] = ['priority', 'open', 'close', 'id', 'category', 'title', 'menu'];
   @Input() personId: string | undefined;
 
   allTickets: Array<any> = [];

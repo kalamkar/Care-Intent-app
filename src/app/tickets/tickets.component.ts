@@ -14,13 +14,16 @@ import {MatCheckbox} from "@angular/material/checkbox";
   styleUrls: ['./tickets.component.scss']
 })
 export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
-  readonly ALL_COLUMNS: string[] = ['person', 'id', 'priority', 'open', 'close', 'category', 'title'];
+  readonly ALL_COLUMNS: string[] = ['person', 'priority', 'open', 'close', 'id', 'category', 'title'];
 
   @Input() persons: Array<Person> = [];
   @Output() count = 0;
 
   dataSource = new MatTableDataSource();
   allTickets: Array<any> = [];
+  personTickets = new Map<Person, Array<Ticket>>();
+  maxPerson!: Person;
+  maxTicketId!: number;
 
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -65,6 +68,7 @@ export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
         this.subscriptions.push(this.api.getDataByTag(person.id.value, 'ticket').subscribe(rows => {
           const tickets = this.getPersonTickets(person, rows);
           this.allTickets = this.allTickets.concat(tickets);
+          this.personTickets.set(person, tickets);
           this.updateTable();
         }));
       }
@@ -75,6 +79,25 @@ export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
     this.displayedColumns = this.showClosed ? this.ALL_COLUMNS : this.ALL_COLUMNS.filter(name => name !== 'close');
     this.dataSource.data = this.allTickets.filter(t => this.showClosed || t.close === '');
     this.count = this.dataSource.data.length;
+    this.getTopTicket();
+  }
+
+  getTopTicket() {
+    let maxScore = 0;
+    this.personTickets.forEach((tickets, person) => {
+      if (tickets.length === 0) {
+        return;
+      }
+
+      tickets = tickets.filter(ticket => ticket.close === '');
+      const m = this.median(tickets.map(ticket => ticket.priority));
+      if (m > maxScore) {
+        this.maxPerson = person;
+        maxScore = m;
+        const sortedTickets = tickets.sort((a, b) => b.priority - a.priority);
+        this.maxTicketId = sortedTickets[0].id;
+      }
+    });
   }
 
   getPersonTickets(person: Person, rows: any[]): Array<any> {
@@ -105,6 +128,12 @@ export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
     });
     return Array.from(tickets.values());
   }
+
+  median(arr: Array<number>) {
+    const mid = Math.floor(arr.length / 2),
+      nums = [...arr].sort((a, b) => a - b);
+    return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+  };
 }
 
 

@@ -1,5 +1,5 @@
 <div class="container">
-  <table mat-table [dataSource]="dataSource" matSort>
+  <table mat-table [dataSource]="dataSource" matSort matSortActive="priority" matSortDirection="desc">
     <!-- Person Column -->
     <ng-container matColumnDef="person">
       <th mat-header-cell *matHeaderCellDef> Person </th>
@@ -17,7 +17,10 @@
     <!-- Priority Column -->
     <ng-container matColumnDef="priority">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Priority </th>
-      <td mat-cell *matCellDef="let element"> {{element.priority}} </td>
+      <td mat-cell *matCellDef="let element">
+        {{element.priority}}
+        <span *ngIf="maxPerson === element.person && element.id === maxTicketId">!</span>
+      </td>
     </ng-container>
 
     <!-- Open time Column -->
@@ -46,7 +49,9 @@
           <mat-checkbox fxFlex="100px" (change)="updateTable()" [(ngModel)]="showClosed">Show closed</mat-checkbox>
         </div>
       </th>
-      <td mat-cell *matCellDef="let element" matTooltip="{{element.title}}"><div class="title">{{element.title}}</div></td>
+      <td mat-cell *matCellDef="let element" matTooltip="{{element.title}} (ticket #{{element.id}})">
+        <div class="title">{{element.title}}</div>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
