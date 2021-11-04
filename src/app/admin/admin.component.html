@@ -8,7 +8,7 @@
   <mat-tab label="Members ({{memberDataSource.data.length}})">
 
     <div class="scroll-container">
-    <table mat-table [dataSource]="memberDataSource" matSort>
+    <table mat-table [dataSource]="memberDataSource" matSort matSortActive="time" matSortDirection="desc">
       <!-- Name Column -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Name </th>
