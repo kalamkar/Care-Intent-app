@@ -102,8 +102,10 @@ export class GroupTicketsComponent implements OnInit, OnChanges, AfterViewInit {
     });
     const tickets = personData.filter(p => p.max >= maxPriority).sort((a, b) => b.sum - a.sum)
       .map(p => p.ticket);
-    this.maxPerson = tickets[0].person;
-    this.maxTicketId = tickets[0].id;
+    if (tickets.length > 0) {
+      this.maxPerson = tickets[0].person;
+      this.maxTicketId = tickets[0].id;
+    }
   }
 
   getPersonTickets(person: Person, rows: any[]): Array<any> {
