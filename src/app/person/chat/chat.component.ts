@@ -83,9 +83,9 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   }
 
   createFilteredSessions(messages: Message[]) {
-    this.sessions = [];
-    let sessionStartTime = DateTime.local().minus({days: 15});
-    let sessionId: string = sessionStartTime.toFormat('DDD');
+    this.sessions = [[]];
+    let lastMessageTime = DateTime.local().minus({days: 15});
+    let sessionId: string = '';
     messages.forEach((message: Message) => {
       const msg: DisplayMessage = message;
       let hasSessionTag = false;
@@ -102,6 +102,8 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
         msg.senderType = 'System';
       } else if (!this.isMember && message.status === 'sent' && !hasSessionTag) {
         msg.senderType = 'Member';
+      } else {
+        return;
       }
       if (message.status === 'received') {
         msg.side = this.isMember ? 'left' : 'right';
@@ -110,18 +112,13 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       }
       const messageTime = DateTime.fromISO(message.time);
       const sessionIds = message.tags.filter(tag => tag.startsWith('session:'));
-      let newSessionId = '';
-      if (sessionIds.length > 0) {
-        newSessionId = sessionIds[0];
-      } else if (messageTime > sessionStartTime.plus({minutes: 180})) {
-        sessionStartTime = messageTime;
-        newSessionId = sessionStartTime.toFormat('DDD');
-      }
-      if (this.sessions.length === 0 || sessionId !== newSessionId) {
+      if ((sessionIds && sessionIds[0] !== sessionId) || messageTime.minus({minutes: 60}) > lastMessageTime) {
+        sessionId = sessionIds[0];
         this.sessions.push([]);
-        sessionId = newSessionId;
       }
+
       this.sessions[this.sessions.length - 1].push(msg);
+      lastMessageTime = messageTime;
     });
   }
 
