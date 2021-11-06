@@ -1,15 +1,16 @@
-<div fxLayout="row wrap" fxLayoutGap="10px">
-  <mat-form-field appearance="fill" class="controls">
-    <mat-label>Sender type</mat-label>
-    <mat-select [(value)]="senderTypes" multiple>
-      <mat-option *ngFor="let senderType of ['Member', 'Coach', 'System']" [value]="senderType">{{senderType}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <button mat-mini-fab (click)="init(true)" class="controls"><mat-icon>refresh</mat-icon></button>
-  <div class="sessions" #sessionsView>
-    <div *ngFor="let session of sessions" class="session" #messages>
-      <div *ngFor="let message of session; let first = first" fxLayout="column" class="{{message.side}}">
-        <mat-chip-list *ngIf="first"><mat-chip>{{message.member | name}}</mat-chip></mat-chip-list>
+<mat-accordion>
+  <mat-expansion-panel *ngFor="let session of sessions | keyvalue">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="title">{{session.key | name}}</div>
+      </mat-panel-title>
+      <mat-panel-description>
+        <div class="description">{{session.value[session.value.length -1].content}}</div>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <div class="sessions" #sessionsView>
+      <div *ngFor="let message of session.value; let first = first" fxLayout="column" class="{{message.side}}">
         <ng-container *ngIf="senderTypes.includes(message.senderType ? message.senderType : '')"
                       [ngSwitch]="message.side">
           <div fxLayout="row" *ngSwitchCase="'left'" fxLayoutAlign="start center">
@@ -29,5 +30,6 @@
         </ng-container>
       </div>
     </div>
-  </div>
-</div>
+
+  </mat-expansion-panel>
+</mat-accordion>

@@ -24,7 +24,7 @@ export class AdminChatComponent implements OnInit, AfterViewInit, OnChanges, OnD
   @ViewChild('sessionsView', {static: true}) sessionsView: ElementRef | undefined;
 
   isLoading = true;
-  sessions = new Array<Array<DisplayMessage>>();
+  sessions = new Map<Person | undefined, Array<DisplayMessage>>();
 
   senderTypes = ['Member', 'Coach', 'System'];
 
@@ -72,7 +72,7 @@ export class AdminChatComponent implements OnInit, AfterViewInit, OnChanges, OnD
     if (this.messagesSubscription) {
       this.messagesSubscription.unsubscribe();
     }
-    this.sessions = [];
+    this.sessions.clear();
     if (!this.person || !this.person.id) {
       return;
     }
@@ -93,8 +93,6 @@ export class AdminChatComponent implements OnInit, AfterViewInit, OnChanges, OnD
   }
 
   createFilteredSessions(messages: Message[]) {
-    const sessionMap = new Map<string, DisplayMessage[]>();
-    const sessionSeq = new Array<string>();
     messages.forEach((message: Message) => {
       const msg: DisplayMessage = message;
       let hasSessionTag = false;
@@ -120,23 +118,14 @@ export class AdminChatComponent implements OnInit, AfterViewInit, OnChanges, OnD
       } else if (message.status === 'sent' && message.sender) {
         member = this.idPersons.get(message.sender.value);
       }
-      const sessionId = member && member.id ? member.id.value : '';
-      if (!sessionMap.has(sessionId)) {
-        sessionMap.set(sessionId, []);
-        sessionSeq.push(sessionId);
-        msg.member = member;
+      const sessionId = member ? member : this.person;
+      if (!this.sessions.has(sessionId)) {
+        this.sessions.set(sessionId, []);
       }
 
-      const session = sessionMap.get(sessionId);
+      const session = this.sessions.get(sessionId);
       if (session) {
         session.push(msg);
-      }
-    });
-    this.sessions = [];
-    sessionSeq.forEach(sessionId => {
-      const messages = sessionMap.get(sessionId);
-      if (messages) {
-        this.sessions.push(messages);
       }
     });
   }
@@ -153,5 +142,4 @@ export class AdminChatComponent implements OnInit, AfterViewInit, OnChanges, OnD
 interface DisplayMessage extends Message {
   side?: string;
   senderType?: string;
-  member?: Person;
 }
