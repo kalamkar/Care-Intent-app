@@ -5,7 +5,10 @@
         <div class="title">{{session.key | name}}</div>
       </mat-panel-title>
       <mat-panel-description>
-        <div class="description">{{session.value[session.value.length -1].content}}</div>
+        <div class="description">
+          {{session.value[session.value.length -1].time | date:  'MMM d, h:mm a'}} -
+          {{session.value[session.value.length -1].content}}
+        </div>
       </mat-panel-description>
     </mat-expansion-panel-header>
 
