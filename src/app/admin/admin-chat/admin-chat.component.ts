@@ -12,25 +12,26 @@ import {ApiService} from "../../services/api.service";
 // @ts-ignore
 import { DateTime } from 'luxon';
 
-
 @Component({
-  selector: 'app-chat',
-  templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.scss']
+  selector: 'app-admin-chat',
+  templateUrl: './admin-chat.component.html',
+  styleUrls: ['./admin-chat.component.scss']
 })
-export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class AdminChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() person: Person | undefined;
+  @Input() members: Array<Person> = [];
   @ViewChildren('messages') messagesView: QueryList<any> | undefined;
   @ViewChild('sessionsView', {static: true}) sessionsView: ElementRef | undefined;
 
   isLoading = true;
-  sessions = new Array<DisplayMessage[]>();
+  sessions = new Array<Array<DisplayMessage>>();
 
   senderTypes = ['Member', 'Coach', 'System'];
 
   private messagesSubscription: Subscription | undefined;
   private messagesViewSubscription: Subscription | undefined;
 
+  private idPersons = new Map<string, Person>();
 
   constructor(private api: ApiService) {
   }
@@ -48,6 +49,17 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.person) {
       this.init();
+    } else if (changes.members) {
+      this.idPersons.clear();
+      this.members.forEach(person => {
+        if (person.id) {
+          this.idPersons.set(person.id.value, person);
+        }
+        if (person.proxy) {
+          this.idPersons.set(person.proxy.value, person);
+        }
+      });
+      console.log(this.idPersons);
     }
   }
 
@@ -82,36 +94,49 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   }
 
   createFilteredSessions(messages: Message[]) {
-    this.sessions = [[]];
-    let lastMessageTime = DateTime.local().minus({days: 15});
-    let sessionId: string = '';
+    const sessionMap = new Map<string, DisplayMessage[]>();
+    const sessionSeq = new Array<string>();
     messages.forEach((message: Message) => {
       const msg: DisplayMessage = message;
       let hasSessionTag = false;
       message.tags.forEach(tag => hasSessionTag = hasSessionTag || tag.startsWith('session:'));
-      if (message.status === 'received' && !message.tags.includes('proxy')) {
-        msg.senderType = 'Member';
-      } else if (message.status === 'sent' && message.tags.includes('proxy')) {
+      if (message.status === 'received') {
         msg.senderType = 'Coach';
-      } else if (message.status === 'sent' && !message.tags.includes('proxy')) {
+      } else if (message.status === 'sent' && hasSessionTag) {
         msg.senderType = 'System';
+      } else if (message.status === 'sent' && !hasSessionTag) {
+        msg.senderType = 'Member';
       } else {
         return;
       }
       if (message.status === 'received') {
-        msg.side = 'left';
-      } else if (message.status === 'sent') {
         msg.side = 'right';
+      } else if (message.status === 'sent') {
+        msg.side = 'left';
       }
       const messageTime = DateTime.fromISO(message.time);
-      const sessionIds = message.tags.filter(tag => tag.startsWith('session:'));
-      if ((sessionIds && sessionIds[0] !== sessionId) || messageTime.minus({minutes: 60}) > lastMessageTime) {
-        sessionId = sessionIds[0];
-        this.sessions.push([]);
+      const member = this.idPersons.get(message.status === 'received' ? message.receiver.value : message.sender.value);
+      if (!member || !member.id)  {
+        console.log('Missing ' + (message.status === 'received' ? message.receiver.value : message.sender.value));
+        return;
+      }
+      if (!sessionMap.has(member.id.value)) {
+        sessionMap.set(member.id.value, []);
+        sessionSeq.push(member.id.value);
+        msg.member = member;
       }
 
-      this.sessions[this.sessions.length - 1].push(msg);
-      lastMessageTime = messageTime;
+      const session = sessionMap.get(member.id.value);
+      if (session) {
+        session.push(msg);
+      }
+    });
+    this.sessions = [];
+    sessionSeq.forEach(sessionId => {
+      const messages = sessionMap.get(sessionId);
+      if (messages) {
+        this.sessions.push(messages);
+      }
     });
   }
 
@@ -127,4 +152,5 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
 interface DisplayMessage extends Message {
   side?: string;
   senderType?: string;
+  member?: Person;
 }
