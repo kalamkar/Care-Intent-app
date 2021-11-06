@@ -59,7 +59,6 @@ export class AdminChatComponent implements OnInit, AfterViewInit, OnChanges, OnD
           this.idPersons.set(person.proxy.value, person);
         }
       });
-      console.log(this.idPersons);
     }
   }
 
@@ -115,18 +114,20 @@ export class AdminChatComponent implements OnInit, AfterViewInit, OnChanges, OnD
         msg.side = 'left';
       }
       const messageTime = DateTime.fromISO(message.time);
-      const member = this.idPersons.get(message.status === 'received' ? message.receiver.value : message.sender.value);
-      if (!member || !member.id)  {
-        console.log('Missing ' + (message.status === 'received' ? message.receiver.value : message.sender.value));
-        return;
+      let member;
+      if (message.status === 'received' && message.receiver) {
+        member = this.idPersons.get(message.receiver.value);
+      } else if (message.status === 'sent' && message.sender) {
+        member = this.idPersons.get(message.sender.value);
       }
-      if (!sessionMap.has(member.id.value)) {
-        sessionMap.set(member.id.value, []);
-        sessionSeq.push(member.id.value);
+      const sessionId = member && member.id ? member.id.value : '';
+      if (!sessionMap.has(sessionId)) {
+        sessionMap.set(sessionId, []);
+        sessionSeq.push(sessionId);
         msg.member = member;
       }
 
-      const session = sessionMap.get(member.id.value);
+      const session = sessionMap.get(sessionId);
       if (session) {
         session.push(msg);
       }
