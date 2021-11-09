@@ -31,7 +31,7 @@
 
     <!-- Close time Column -->
     <ng-container matColumnDef="close">
-      <th mat-header-cell *matHeaderCellDef> Close Time </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Close Time </th>
       <td mat-cell *matCellDef="let element"> {{element.close | date: 'MMM d, h:mm a'}} </td>
     </ng-container>
 
