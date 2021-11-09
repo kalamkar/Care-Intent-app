@@ -89,19 +89,18 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       const msg: DisplayMessage = message;
       let hasSessionTag = false;
       message.tags.forEach(tag => hasSessionTag = hasSessionTag || tag.startsWith('session:'));
-      if (message.status === 'received' && !message.tags.includes('proxy')) {
+      if (message.status === 'received' && this.person && this.person.id
+          && message.receiver.value !== this.person.id.value) {
         msg.senderType = 'Member';
-      } else if (message.status === 'sent' && message.tags.includes('proxy')) {
+        msg.side = 'left';
+      } else if (message.status === 'received') {
         msg.senderType = 'Coach';
+        msg.side = 'right';
       } else if (message.status === 'sent' && !message.tags.includes('proxy')) {
         msg.senderType = 'System';
+        msg.side = 'right';
       } else {
         return;
-      }
-      if (message.status === 'received') {
-        msg.side = 'left';
-      } else if (message.status === 'sent') {
-        msg.side = 'right';
       }
       const messageTime = DateTime.fromISO(message.time);
       const sessionIds = message.tags.filter(tag => tag.startsWith('session:'));

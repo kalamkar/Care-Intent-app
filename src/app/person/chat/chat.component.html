@@ -10,19 +10,18 @@
     <div *ngFor="let session of sessions" class="session" #messages>
       <div *ngFor="let message of session" fxLayout="column" class="{{message.side}}">
         <ng-container *ngIf="senderTypes.includes(message.senderType ? message.senderType : '')"
-                      [ngSwitch]="message.side">
-          <div fxLayout="row" *ngSwitchCase="'left'" fxLayoutAlign="start center">
+                      [ngSwitch]="message.senderType">
+          <div fxLayout="row" *ngSwitchCase="'Member'" fxLayoutAlign="start center">
             <button mat-mini-fab disabled><mat-icon>person</mat-icon></button>
             <span class="content">{{message.content}}</span>
           </div>
-          <div fxLayout="row" *ngSwitchCase="'right'" fxLayoutAlign="end center">
+          <div fxLayout="row" *ngSwitchCase="'Coach'" fxLayoutAlign="end center">
             <span class="content">{{message.content}}</span>
-            <button mat-mini-fab *ngIf="message.tags.includes('routing')">
-              <mat-icon>support_agent</mat-icon>
-            </button>
-            <button mat-mini-fab *ngIf="!message.tags.includes('routing')" disabled>
-              <mat-icon>smart_toy</mat-icon>
-            </button>
+            <button mat-mini-fab><mat-icon>support_agent</mat-icon></button>
+          </div>
+          <div fxLayout="row" *ngSwitchCase="'System'" fxLayoutAlign="end center">
+            <span class="content">{{message.content}}</span>
+            <button mat-mini-fab disabled><mat-icon>smart_toy</mat-icon></button>
           </div>
           <span class="time">{{message.time | date: 'MMM d, h:mm a'}}</span>
         </ng-container>
