@@ -92,11 +92,7 @@ export class TicketsComponent implements OnInit, AfterViewInit {
   closeTicket(ticketId: number) {
     if (this.personId) {
       this.closing.push(ticketId);
-      this.api.closeTicket(ticketId, this.personId).subscribe(response => {
-        setTimeout(() => {
-          this.init(true);
-        }, 5000);
-      });
+      this.api.closeTicket(ticketId, this.personId).subscribe();
     }
   }
 }
