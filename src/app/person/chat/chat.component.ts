@@ -11,6 +11,7 @@ import {Subscription} from "rxjs";
 import {ApiService} from "../../services/api.service";
 // @ts-ignore
 import { DateTime } from 'luxon';
+import {FormControl, FormGroup} from "@angular/forms";
 
 
 @Component({
@@ -22,6 +23,11 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() person: Person | undefined;
   @ViewChildren('messages') messagesView: QueryList<any> | undefined;
   @ViewChild('sessionsView', {static: true}) sessionsView: ElementRef | undefined;
+
+  range = new FormGroup({
+    start: new FormControl(DateTime.local().plus({days: 1}).endOf('day').minus({days: 15}).toJSDate()),
+    end: new FormControl(DateTime.local().plus({days: 1}).endOf('day').toJSDate()),
+  });
 
   isLoading = true;
   sessions = new Array<DisplayMessage[]>();
@@ -62,13 +68,13 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       this.messagesSubscription.unsubscribe();
     }
     this.sessions = [];
-    if (!this.person || !this.person.id) {
+    if (!this.person || !this.person.id || !this.range.value.start || !this.range.value.end) {
       return;
     }
 
     this.isLoading = true;
-    const endTime = DateTime.local().plus({days: 1}).endOf('day');
-    const startTime = endTime.minus({days: 15});
+    const endTime = DateTime.fromJSDate(this.range.value.end);
+    const startTime = DateTime.fromJSDate(this.range.value.start);
     this.messagesSubscription = this.api.getMessages(this.person.id.value, startTime, endTime, true,
       noCache || undefined)
       .subscribe((messages: Message[]) => {

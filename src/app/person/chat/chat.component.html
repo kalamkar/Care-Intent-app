@@ -1,11 +1,25 @@
-<div fxLayout="row wrap" fxLayoutGap="10px">
-  <mat-form-field appearance="fill" class="controls">
-    <mat-label>Sender type</mat-label>
-    <mat-select [(value)]="senderTypes" multiple>
-      <mat-option *ngFor="let senderType of ['Member', 'Coach', 'System']" [value]="senderType">{{senderType}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <button mat-mini-fab (click)="init(true)" class="controls"><mat-icon>refresh</mat-icon></button>
+<div fxLayout="row wrap">
+  <div fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="10px" class="controls">
+    <mat-form-field appearance="fill">
+      <mat-label>Sender type</mat-label>
+      <mat-select [(value)]="senderTypes" multiple>
+        <mat-option *ngFor="let senderType of ['Member', 'Coach', 'System']" [value]="senderType">{{senderType}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-mini-fab (click)="init(true)" class="controls"><mat-icon>refresh</mat-icon></button>
+    <mat-form-field appearance="fill">
+      <mat-label>Date range</mat-label>
+      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+        <input matStartDate formControlName="start" placeholder="Start date">
+        <input matEndDate formControlName="end" placeholder="End date" (dateChange)="init()">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+
+      <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+      <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+    </mat-form-field>
+  </div>
   <div class="sessions" #sessionsView>
     <div *ngFor="let session of sessions" class="session" #messages>
       <div *ngFor="let message of session" fxLayout="column" class="{{message.side}}">
