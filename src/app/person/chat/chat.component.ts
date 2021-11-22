@@ -25,7 +25,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @ViewChild('sessionsView', {static: true}) sessionsView: ElementRef | undefined;
 
   range = new FormGroup({
-    start: new FormControl(DateTime.local().plus({days: 1}).endOf('day').minus({days: 15}).toJSDate()),
+    start: new FormControl(DateTime.local().plus({days: 1}).endOf('day').minus({days: 90}).toJSDate()),
     end: new FormControl(DateTime.local().plus({days: 1}).endOf('day').toJSDate()),
   });
 
