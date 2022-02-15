@@ -53,5 +53,102 @@
                (matChipInputTokenEnd)="addTag($event)">
       </mat-chip-list>
     </mat-form-field>
+    <div fxLayout="row" *ngIf="person" fxLayoutGap="32px">
+      <div>
+        <div fxLayout="row" fxLayoutGap="12px">
+          <mat-form-field appearance="fill">
+            <mat-label>Add a conversation</mat-label>
+            <mat-select #conversations
+                        (selectionChange)="addConversation(conversations.value); conversations.options.first.select()" >
+              <mat-option>None</mat-option>
+              <mat-option value="assessment">Assessment</mat-option>
+              <mat-option value="barriers">Barrier Id</mat-option>
+              <mat-option value="chitchat">Chitchat</mat-option>
+              <mat-option value="diary">Diary</mat-option>
+              <mat-option value="education">Education</mat-option>
+              <mat-option value="followup">Follow Up</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div fxLayout="row" fxLayoutAlign="center center">
+            <button mat-stroked-button (click)="saveConversations()"><mat-icon>save</mat-icon> Save</button>
+          </div>
+        </div>
+        <mat-accordion>
+        <mat-expansion-panel *ngFor="let conv of person.conversations; let i = index" hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <button mat-icon-button *ngIf="person.conversations" color="primary" matTooltip="Move up"
+                      (click)="person.conversations.splice(i - 1, 0, person.conversations.splice(i, 1)[0]);"
+                      [disabled]="i === 0">
+                <mat-icon>arrow_upward</mat-icon>
+              </button>
+              <button mat-icon-button *ngIf="person.conversations" color="primary" matTooltip="Delete"
+                      (click)="person.conversations.splice(i)" >
+                <mat-icon>delete</mat-icon>
+              </button>
+              <span>{{conv.type}}</span>
+            </mat-panel-title>
+            <mat-panel-description>
+              <span *ngIf="conv.schedule">{{conv.schedule}}</span>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div>
+            <div *ngIf="['followup'].includes(conv.type)" fxLayout="row" fxLayoutGap="12px">
+              <mat-form-field style="width: 100px">
+                <input matInput placeholder="Schedule" [(ngModel)]="conv.schedule" [ngModelOptions]="{standalone: true}">
+              </mat-form-field>
+              <mat-form-field style="width: 100px">
+                <input matInput placeholder="Check" [(ngModel)]="conv.check" [ngModelOptions]="{standalone: true}">
+              </mat-form-field>
+            </div>
+            <div *ngIf="conv.message_id">
+              <mat-form-field>
+                <input matInput placeholder="Message ID" [(ngModel)]="conv.message_id" [ngModelOptions]="{standalone: true}">
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+      <div>
+        <div fxLayout="row" fxLayoutGap="12px">
+          <mat-form-field appearance="fill">
+            <mat-label>Add a task</mat-label>
+            <mat-select (selectionChange)="addTask(tasks.value); tasks.options.first.select()" #tasks>
+              <mat-option>None</mat-option>
+              <mat-option value="medication">Medication</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div fxLayout="row" fxLayoutAlign="center center">
+            <button mat-stroked-button (click)="saveTasks()"><mat-icon>save</mat-icon> Save</button>
+          </div>
+        </div>
+        <mat-accordion>
+        <mat-expansion-panel *ngFor="let task of person.tasks; let i = index" hideToggle>
+          <mat-expansion-panel-header fxLayout="row" fxLayoutGap="12px">
+            <mat-panel-title>
+              <button mat-icon-button *ngIf="person.tasks" color="primary" matTooltip="Move up"
+                      (click)="person.tasks.splice(i - 1, 0, person.tasks.splice(i, 1)[0]);" [disabled]="i === 0">
+                <mat-icon>arrow_upward</mat-icon>
+              </button>
+              <button mat-icon-button color="primary" matTooltip="Delete" *ngIf="person.tasks"
+                      (click)="person.tasks.splice(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <span>{{task.data}}</span>
+            </mat-panel-title>
+            <mat-panel-description>
+              <span *ngIf="task.schedule">{{task.schedule}}</span>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div>
+            <mat-form-field *ngIf="['medication'].includes(task.data)" style="width: 100px">
+              <input matInput placeholder="Schedule" [(ngModel)]="task.schedule" [ngModelOptions]="{standalone: true}">
+            </mat-form-field>
+          </div>
+        </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
   </mat-tab>
 </mat-tab-group>

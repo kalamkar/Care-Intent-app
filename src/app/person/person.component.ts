@@ -120,6 +120,52 @@ export class PersonComponent {
     }
   }
 
+  addConversation(conversationType: string): void {
+    if (!this.person || !conversationType) {
+      return;
+    }
+    if (!this.person.conversations) {
+      this.person.conversations = [];
+    }
+    const conv: {[_:string]: string} = {'type': conversationType};
+    if (conversationType === 'followup') {
+      conv['check'] = 'tasks'
+    }
+    this.person.conversations.push(conv)
+  }
+
+  addTask(taskData: string): void {
+    if (!this.person || !taskData) {
+      return;
+    }
+    if (!this.person.tasks) {
+      this.person.tasks = [];
+    }
+    this.person.tasks.push({'data': taskData})
+  }
+
+  saveConversations(): void {
+    if (this.person && this.person.conversations) {
+      this.api.editResource('person', {'id': this.person.id, 'conversations': this.person.conversations})
+        .subscribe((person: Person) => {
+          this.snackBar.open('Conversations updated', 'Ok', {duration: 3000});
+        }, error => {
+          this.snackBar.open('Failed to update conversations', 'Ok');
+        });
+    }
+  }
+
+  saveTasks(): void {
+    if (this.person && this.person.conversations) {
+      this.api.editResource('person', {'id': this.person.id, 'tasks': this.person.tasks})
+        .subscribe((person: Person) => {
+          this.snackBar.open('Tasks updated', 'Ok', {duration: 3000});
+        }, error => {
+          this.snackBar.open('Failed to update tasks', 'Ok');
+        });
+    }
+  }
+
   openTicket() {
     if (!this.person || !this.person.id) {
       return
