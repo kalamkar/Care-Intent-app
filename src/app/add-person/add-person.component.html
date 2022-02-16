@@ -5,6 +5,9 @@
   <mat-form-field>
     <input matInput placeholder="Last" [(ngModel)]="person.name.last" [ngModelOptions]="{standalone: true}">
   </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Timezone" [(ngModel)]="person.timezone" [ngModelOptions]="{standalone: true}">
+  </mat-form-field>
   <mat-form-field *ngFor="let identifier of person.identifiers">
     <input matInput placeholder="{{identifier.type}}" [(ngModel)]="identifier.value" [ngModelOptions]="{standalone: true}">
   </mat-form-field>

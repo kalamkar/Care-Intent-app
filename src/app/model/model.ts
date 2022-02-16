@@ -29,7 +29,8 @@ export interface Person {
   tags?: string[],
   proxy?: {type: string, value: string},
   conversations?: Array<any>,
-  tasks?: Array<any>
+  tasks?: Array<any>,
+  timezone: string
 }
 
 export interface Group {

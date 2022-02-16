@@ -103,7 +103,6 @@ export class PersonComponent {
       });
     }
     event.chipInput!.clear();
-
   }
 
   removeTag(tag: string): void {
@@ -148,7 +147,15 @@ export class PersonComponent {
     if (this.person && this.person.conversations) {
       this.api.editResource('person', {'id': this.person.id, 'conversations': this.person.conversations})
         .subscribe((person: Person) => {
-          this.snackBar.open('Conversations updated', 'Ok', {duration: 3000});
+          if (!this.person || !this.person.id) {
+            this.snackBar.open('Failed to update conversation schedule', 'Ok');
+            return;
+          }
+          this.api.updateSchedule(this.person.id.value).subscribe(response => {
+            this.snackBar.open('Conversations updated', 'Ok', {duration: 3000});
+          }, error => {
+            this.snackBar.open('Failed to update conversation schedule', 'Ok');
+          });
         }, error => {
           this.snackBar.open('Failed to update conversations', 'Ok');
         });

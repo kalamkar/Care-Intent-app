@@ -19,12 +19,14 @@ export class AddPersonComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: {person: Person | undefined,
                 parentId: Identifier, relationType: string}) {
     if (this.data.person) {
-      this.person = {id: this.data.person.id, name: this.data.person.name, identifiers: this.data.person.identifiers};
+      this.person = {
+        id: this.data.person.id,
+        name: this.data.person.name || {first: '', last: ''},
+        identifiers: this.data.person.identifiers,
+        timezone: this.data.person.timezone || ''
+      };
     } else {
-      this.person = {name: {first: '', last: ''}, identifiers: [{type: 'phone', value: ''}]};
-    }
-    if (!this.person.name) {
-      this.person.name = {first: '', last: ''};
+      this.person = {name: {first: '', last: ''}, identifiers: [{type: 'phone', value: ''}], timezone: ''};
     }
   }
 

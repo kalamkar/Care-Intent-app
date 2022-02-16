@@ -175,6 +175,14 @@ export class ApiService {
       this.getOptions(true, {'Content-Type': 'application/json'}));
   }
 
+  public updateSchedule(personId: string) {
+    this.setDirty(personId);
+    const url = environment.apiUrl + '/person/' + personId + '/message';
+    const message: any = {'content': '', 'content_type': 'text/plain', status: 'engage', tags: ['schedule_only']};
+    return this.post<any>(url, JSON.stringify(message),
+      this.getOptions(true, {'Content-Type': 'application/json'}));
+  }
+
   public closeTicket(ticketId: number, personId: string) {
     this.setDirty(personId);
     const url = environment.apiUrl + '/person/' + personId + '/message';
