@@ -84,7 +84,7 @@
                 <mat-icon>arrow_upward</mat-icon>
               </button>
               <button mat-icon-button *ngIf="person.conversations" color="primary" matTooltip="Delete"
-                      (click)="person.conversations.splice(i)" >
+                      (click)="person.conversations.splice(i, 1)" >
                 <mat-icon>delete</mat-icon>
               </button>
             </mat-panel-description>
@@ -130,7 +130,7 @@
                 <mat-icon>arrow_upward</mat-icon>
               </button>
               <button mat-icon-button color="primary" matTooltip="Delete" *ngIf="person.tasks"
-                      (click)="person.tasks.splice(i)">
+                      (click)="person.tasks.splice(i, 1)">
                 <mat-icon>delete</mat-icon>
               </button>
             </mat-panel-description>
