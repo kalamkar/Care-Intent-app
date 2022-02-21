@@ -103,6 +103,9 @@
                 <input matInput placeholder="Message IDs" [(ngModel)]="conv.message_id" [ngModelOptions]="{standalone: true}">
               </mat-form-field>
             </div>
+            <div *ngIf="conv.type === 'barriers' && conv.barriers" fxLayout="column">
+              <div *ngFor="let barrier of conv.barriers">{{barrier.content}} ({{barrier.type}})</div>
+            </div>
           </div>
         </mat-expansion-panel>
         </mat-accordion>
