@@ -97,6 +97,9 @@
               <mat-form-field style="width: 100px">
                 <input matInput placeholder="Check" [(ngModel)]="conv.check" [ngModelOptions]="{standalone: true}">
               </mat-form-field>
+              <mat-form-field style="width: 100px">
+                <input matInput placeholder="Repeat duration" [(ngModel)]="conv.repeat" [ngModelOptions]="{standalone: true}">
+              </mat-form-field>
             </div>
             <div *ngIf="conv.type === 'followup' && conv.check !== 'tasks' && conv.schedule">
               <mat-form-field>

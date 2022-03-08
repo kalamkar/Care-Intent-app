@@ -128,7 +128,8 @@ export class PersonComponent {
     }
     const conv: {[_:string]: string} = {'type': conversationType};
     if (conversationType === 'followup') {
-      conv['check'] = 'tasks'
+      conv['check'] = 'tasks';
+      conv['repeat'] = ''
     }
     this.person.conversations.push(conv)
   }
