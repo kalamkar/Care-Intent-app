@@ -35,8 +35,8 @@ export class GroupComponent implements OnChanges {
   private membersSubscription: Subscription | undefined;
   private adminsSubscription: Subscription | undefined;
 
-  memberColumns: string[] = ['name', 'coach', 'time', 'summary', 'menu'];
-  adminColumns: string[] = ['name', 'time', 'summary', 'menu'];
+  memberColumns: string[] = ['name', 'coach', 'sent_time', 'receive_time', 'summary', 'menu'];
+  adminColumns: string[] = ['name', 'sent_time', 'receive_time', 'summary', 'menu'];
 
   constructor(private api: ApiService,
               private context: ContextService,
@@ -86,16 +86,11 @@ export class GroupComponent implements OnChanges {
       let data: unknown[] = [];
       this.members = members;
       members.forEach(member => {
-        let time = null;
-        if (member.session && member.session.last_receive_time) {
-          time = member.session.last_receive_time;
-        } else if (member.session && member.session.last_sent_time) {
-          time = member.session.last_sent_time;
-        } else if (member.session && member.session.last_message_time) {
-          time = member.session.last_message_time;
-        }
-        data.push({'member': member, 'summary': '',  time: time?
-            DateTime.fromFormat(time, 'ccc, dd LLL yyyy HH:mm:ss z') : null });
+        const sent_time = member.session ? member.session.last_sent_time || member.session.last_message_time : null;
+        const receive_time = member.session ? member.session.last_receive_time : null;
+        data.push({'member': member, 'summary': '',
+          sent_time: sent_time ? DateTime.fromFormat(sent_time, 'ccc, dd LLL yyyy HH:mm:ss z') : null,
+          receive_time: receive_time ? DateTime.fromFormat(receive_time, 'ccc, dd LLL yyyy HH:mm:ss z') : null});
         this.api.getParents(member.id, RelationType.member, 'person').subscribe(coaches => {
           this.memberCoaches.set(member.id.value, coaches);
         });
@@ -111,8 +106,11 @@ export class GroupComponent implements OnChanges {
       noCache || undefined).subscribe((admins) => {
         let data: unknown[] = [];
         admins.forEach(admin => {
-          data.push({'admin': admin, 'summary': '', time: admin.session && admin.session.last_message_time?
-              DateTime.fromFormat(admin.session.last_message_time, 'ccc, dd LLL yyyy HH:mm:ss z') : null});
+          const sent_time = admin.session ? admin.session.last_sent_time || admin.session.last_message_time : null;
+          const receive_time = admin.session ? admin.session.last_receive_time : null;
+          data.push({'admin': admin, 'summary': '',
+            sent_time: sent_time ? DateTime.fromFormat(sent_time, 'ccc, dd LLL yyyy HH:mm:ss z') : null,
+            receive_time: receive_time ? DateTime.fromFormat(receive_time, 'ccc, dd LLL yyyy HH:mm:ss z') : null});
         });
         this.adminDataSource.data = data;
       });

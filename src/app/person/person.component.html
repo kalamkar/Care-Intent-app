@@ -15,14 +15,14 @@
 </div>
 
 <mat-tab-group (selectedTabChange)="chat.scrollToBottom()">
-  <mat-tab label="Tickets">
-    <app-tickets [personId]="personId"></app-tickets>
-  </mat-tab>
-
   <mat-tab label="Conversation">
     <div class="scroll-container">
     <app-chat [person]="person" #chat></app-chat>
     </div>
+  </mat-tab>
+
+  <mat-tab label="Tickets">
+    <app-tickets [personId]="personId"></app-tickets>
   </mat-tab>
 
   <mat-tab label="Survey">
