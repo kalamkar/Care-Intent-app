@@ -86,8 +86,16 @@ export class GroupComponent implements OnChanges {
       let data: unknown[] = [];
       this.members = members;
       members.forEach(member => {
-        data.push({'member': member, 'summary': '',  time: member.session && member.session.last_message_time?
-            DateTime.fromFormat(member.session.last_message_time, 'ccc, dd LLL yyyy HH:mm:ss z') : null });
+        let time = null;
+        if (member.session && member.session.last_receive_time) {
+          time = member.session.last_receive_time;
+        } else if (member.session && member.session.last_sent_time) {
+          time = member.session.last_sent_time;
+        } else if (member.session && member.session.last_message_time) {
+          time = member.session.last_message_time;
+        }
+        data.push({'member': member, 'summary': '',  time: time?
+            DateTime.fromFormat(time, 'ccc, dd LLL yyyy HH:mm:ss z') : null });
         this.api.getParents(member.id, RelationType.member, 'person').subscribe(coaches => {
           this.memberCoaches.set(member.id.value, coaches);
         });
