@@ -174,6 +174,17 @@ export class PersonComponent {
     }
   }
 
+  saveMessages(): void {
+    if (this.person && this.person.message_id) {
+      this.api.editResource('person', {'id': this.person.id, 'message_id': this.person.message_id})
+        .subscribe((person: Person) => {
+          this.snackBar.open('Messages updated', 'Ok', {duration: 3000});
+        }, error => {
+          this.snackBar.open('Failed to update messages', 'Ok');
+        });
+    }
+  }
+
   openTicket() {
     if (!this.person || !this.person.id) {
       return

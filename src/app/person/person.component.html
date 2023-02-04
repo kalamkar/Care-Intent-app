@@ -53,6 +53,12 @@
                (matChipInputTokenEnd)="addTag($event)">
       </mat-chip-list>
     </mat-form-field>
+    <div fxLayout="row" fxLayoutGap="32px" *ngIf="person" >
+      <mat-form-field style="width: 800px">
+        <input matInput placeholder="Message IDs" [(ngModel)]="person.message_id" [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
+      <button mat-stroked-button (click)="saveMessages()"><mat-icon>save</mat-icon> Save</button>
+    </div>
     <div fxLayout="row" *ngIf="person" fxLayoutGap="32px" style="padding-bottom: 8px;">
       <div>
         <div fxLayout="row" fxLayoutGap="12px">
@@ -101,17 +107,9 @@
                 <input matInput placeholder="Repeat duration" [(ngModel)]="conv.repeat" [ngModelOptions]="{standalone: true}">
               </mat-form-field>
             </div>
-            <div *ngIf="conv.type === 'followup' && conv.check !== 'tasks' && conv.schedule">
-              <mat-form-field>
-                <input matInput placeholder="Message IDs" [(ngModel)]="conv.message_id" [ngModelOptions]="{standalone: true}">
-              </mat-form-field>
-            </div>
             <div *ngIf="conv.type === 'education'" fxLayout="row" fxLayoutGap="12px">
               <mat-form-field style="width: 100px">
                 <input matInput placeholder="Schedule" [(ngModel)]="conv.schedule" [ngModelOptions]="{standalone: true}">
-              </mat-form-field>
-              <mat-form-field>
-                <input matInput placeholder="Message IDs" [(ngModel)]="conv.message_id" [ngModelOptions]="{standalone: true}">
               </mat-form-field>
             </div>
             <div *ngIf="conv.type === 'barriers' && conv.barriers" fxLayout="column">

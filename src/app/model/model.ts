@@ -30,6 +30,7 @@ export interface Person {
   proxy?: {type: string, value: string},
   conversations?: Array<any>,
   tasks?: Array<any>,
+  message_id?: string,
   timezone: string
 }
 
